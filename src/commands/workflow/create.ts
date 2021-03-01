@@ -92,7 +92,7 @@ export class CreateWorkflowCommand extends Command {
 
       if (flags.type === `button`) {
         if (flags.button) {
-          set(workflow, [`config`, `trigger`, `on_button`], `action_button_${flags.phrase}_tap`)
+          set(workflow, [`config`, `trigger`, `on_button`], `action_button_${flags.button}_tap`)
         } else {
           throw new Error(`Trigger type 'button' requires specifying a button action. For instance '--button single'`)
         }
