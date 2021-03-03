@@ -35,6 +35,7 @@ export class APIError extends CLIError {
   body: APIErrorOptions
 
   constructor(httpError: HTTPError) {
+    super(httpError)
     if (!httpError) throw new Error(`invalid error`)
     let options: APIErrorOptions = httpError.body
     if (!options || !options.message) throw httpError

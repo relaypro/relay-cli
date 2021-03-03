@@ -28,12 +28,11 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`relay autocomplete [SHELL]`](#relay-autocomplete-shell)
-* [`relay commands`](#relay-commands)
 * [`relay devices`](#relay-devices)
 * [`relay help [COMMAND]`](#relay-help-command)
 * [`relay login`](#relay-login)
 * [`relay logout`](#relay-logout)
+* [`relay update [CHANNEL]`](#relay-update-channel)
 * [`relay whoami`](#relay-whoami)
 * [`relay workflow:args`](#relay-workflowargs)
 * [`relay workflow:args:get ARG`](#relay-workflowargsget-arg)
@@ -45,53 +44,6 @@ USAGE
 * [`relay workflow:install ID`](#relay-workflowinstall-id)
 * [`relay workflow:list`](#relay-workflowlist)
 * [`relay workflow:uninstall ID`](#relay-workflowuninstall-id)
-
-## `relay autocomplete [SHELL]`
-
-display autocomplete installation instructions
-
-```
-USAGE
-  $ relay autocomplete [SHELL]
-
-ARGUMENTS
-  SHELL  shell type
-
-OPTIONS
-  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
-
-EXAMPLES
-  $ relay autocomplete
-  $ relay autocomplete bash
-  $ relay autocomplete zsh
-  $ relay autocomplete --refresh-cache
-```
-
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.3.0/src/commands/autocomplete/index.ts)_
-
-## `relay commands`
-
-list all the commands
-
-```
-USAGE
-  $ relay commands
-
-OPTIONS
-  -h, --help              show CLI help
-  -j, --json              display unfiltered api data in json format
-  -x, --extended          show extra columns
-  --columns=columns       only show provided columns (comma-separated)
-  --csv                   output is csv format [alias: --output=csv]
-  --filter=filter         filter property by partial string matching, ex: name=foo
-  --hidden                show hidden commands
-  --no-header             hide table header from output
-  --no-truncate           do not truncate output to fit screen
-  --output=csv|json|yaml  output in a more machine friendly format
-  --sort=sort             property to sort by (prepend '-' for descending)
-```
-
-_See code: [@oclif/plugin-commands](https://github.com/oclif/plugin-commands/blob/v1.3.0/src/commands/commands.ts)_
 
 ## `relay devices`
 
@@ -145,6 +97,17 @@ USAGE
 ```
 
 _See code: [dist/commands/logout.ts](https://github.com/relaypro/relay-js/blob/v0.0.0/dist/commands/logout.ts)_
+
+## `relay update [CHANNEL]`
+
+update the relay CLI
+
+```
+USAGE
+  $ relay update [CHANNEL]
+```
+
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.10/src/commands/update.ts)_
 
 ## `relay whoami`
 
