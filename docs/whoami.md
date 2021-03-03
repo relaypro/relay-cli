@@ -17,4 +17,4 @@ ALIASES
   $ relay whoami
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/relaypro/relay-js/blob/v0.0.1/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/relaypro/relay-js/blob/v0.0.2/dist/commands/whoami.ts)_

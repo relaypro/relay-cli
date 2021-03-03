@@ -14,4 +14,4 @@ USAGE
   $ relay devices
 ```
 
-_See code: [dist/commands/devices.ts](https://github.com/relaypro/relay-js/blob/v0.0.1/dist/commands/devices.ts)_
+_See code: [dist/commands/devices.ts](https://github.com/relaypro/relay-js/blob/v0.0.2/dist/commands/devices.ts)_
