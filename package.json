@@ -110,8 +110,11 @@
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf dist && tsc -b && npx oclif-dev manifest && npx oclif-dev readme --multi",
     "version": "npx oclif-dev readme --multi && git add README.md",
-    "notary": "xcrun -r altool --notarize-app -f dist/macos/relay-v${npm_package_version}.pkg --primary-bundle-id \"com.relaygo.cli\" --apiKey \"$APPLE_API_KEY\" --apiIssuer \"$APPLE_API_ISSUER\"",
-    "notary-info": "xcrun altool --notarization-info \"$npm_config_request\" --apiKey \"$APPLE_API_KEY\" --apiIssuer \"$APPLE_API_ISSUER\""
+    "notary": "xcrun -r altool --notarize-app -f dist/macos/relay-v$npm_package_version.pkg --primary-bundle-id \"com.relaygo.cli\" --apiKey \"$APPLE_API_KEY\" --apiIssuer \"$APPLE_API_ISSUER\"",
+    "notary-info": "xcrun altool --notarization-info \"$npm_config_request\" --apiKey \"$APPLE_API_KEY\" --apiIssuer \"$APPLE_API_ISSUER\"",
+    "staple": "npm run staple-do && npm run staple-validate",
+    "staple-do": "xcrun stapler staple dist/macos/relay-v$npm_package_version.pkg",
+    "staple-validate": "xcrun stapler validate dist/macos/relay-v$npm_package_version.pkg"
   },
   "types": "dist/index.d.ts"
 }
