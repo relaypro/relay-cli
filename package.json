@@ -6,7 +6,7 @@
   "bin": {
     "relay": "./bin/run"
   },
-  "bugs": "https://github.com/relaypro/cli/issues",
+  "bugs": "https://github.com/relaypro/relay-cli/issues",
   "dependencies": {
     "@oclif/command": "1.8.0",
     "@oclif/config": "1.17.0",
@@ -47,7 +47,7 @@
     "/package-lock.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/relaypro/cli",
+  "homepage": "https://github.com/relaypro/relay-cli",
   "keywords": [
     "relay",
     "relaypro",
@@ -84,7 +84,7 @@
         ]
       },
       "s3": {
-        "xz": true,
+        "xz": false,
         "bucket": "relaygo-link",
         "folder": "cli",
         "templates": {
@@ -104,15 +104,14 @@
       }
     }
   },
-  "repository": "relaypro/relay-js",
+  "repository": "relaypro/relay-cli",
   "scripts": {
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf dist && tsc -b && npx oclif-dev manifest && npx oclif-dev readme --multi",
     "version": "npx oclif-dev readme --multi && git add README.md",
     "notary": "xcrun -r altool --notarize-app -f dist/macos/relay-v${npm_package_version}.pkg --primary-bundle-id \"com.relaygo.cli\" --apiKey \"$APPLE_API_KEY\" --apiIssuer \"$APPLE_API_ISSUER\"",
-    "notary-info": "xcrun altool --notarization-info \"$npm_config_request\" --apiKey \"$APPLE_API_KEY\" --apiIssuer \"$APPLE_API_ISSUER\"",
-    "env": "node"
+    "notary-info": "xcrun altool --notarization-info \"$npm_config_request\" --apiKey \"$APPLE_API_KEY\" --apiIssuer \"$APPLE_API_ISSUER\""
   },
   "types": "dist/index.d.ts"
 }
