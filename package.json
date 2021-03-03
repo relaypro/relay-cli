@@ -116,5 +116,8 @@
     "staple-do": "xcrun stapler staple dist/macos/relay-v$npm_package_version.pkg",
     "staple-validate": "xcrun stapler validate dist/macos/relay-v$npm_package_version.pkg"
   },
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
 }
