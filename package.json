@@ -65,6 +65,12 @@
       "@oclif/plugin-not-found",
       "@oclif/plugin-update"
     ],
+    "helpClass": "./dist/lib/help",
+    "hooks": {
+      "prerun": [
+        "./dist/hooks/prerun/analytics"
+      ]
+    },
     "topics": {
       "workflow": {
         "description": "manage workflow configurations"
