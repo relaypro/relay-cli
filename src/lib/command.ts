@@ -5,6 +5,8 @@ import deps from './deps'
 
 const pjson = require('../../package.json')
 
+const debug = require(`debug`)(`error`)
+
 export abstract class Command extends Base {
   base = `${pjson.name}@${pjson.version}`
   _relay!: APIClient
@@ -14,4 +16,14 @@ export abstract class Command extends Base {
     this._relay = new deps.APIClient(this.config)
     return this._relay
   }
+
+  async catch(error: any): Promise<any> {
+    debug(error)
+    return super.catch(error)
+  }
+
+  async finally(possibleError: Error | undefined): Promise<any> {
+    return super.finally(possibleError)
+  }
+
 }
