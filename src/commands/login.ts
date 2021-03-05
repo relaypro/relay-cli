@@ -5,12 +5,12 @@ export default class Login extends Command {
   static description = 'login with your Relay credentials'
 
   static flags = {
-    interactive: flags.boolean({char: 'i', description: 'login with username/password'}),
+    interactive: flags.boolean({
+      char: 'i',
+      description: 'login with username/password',
+      hidden: true,
+    }),
   }
-
-  static args = [
-
-  ]
 
   async run() {
     const { flags } = await this.parse(Login)

@@ -29,8 +29,20 @@ export class Vars {
     return `RScqSh4k`
   }
 
+  get authCodeId(): string {
+    return `Rk7Qq5jp`
+  }
+
   get authSecret(): string {
     return `LU64MEJ8Byij3J38`
+  }
+
+  get authRedirectUri(): string {
+    return `http://localhost:8080/authorization-code/callback`
+  }
+
+  get stratusUrl(): string {
+    return `https://api-d.republicdev.info/stratus/rest`
   }
 }
 

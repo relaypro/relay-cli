@@ -104,7 +104,7 @@ export class APIClient {
               if (process.env.RELAY_API_KEY) {
                 throw new Error(`The token provided to RELAY_API_KEY is invalid. Please double-heck that you have the correct token, or run 'relay login' without RELAY_API_KEY set.`)
               }
-              const tokens: any = deps.config.get(`tokens`)
+              const tokens: any = deps.config.get(`session.tokens`)
               if (tokens?.[vars.apiHost]?.refresh_token) {
                 debug(`attempting refresh`)
                 if (!self.authPromise) self.authPromise = self.refresh()
@@ -135,7 +135,7 @@ export class APIClient {
       if (process.env.RELAY_API_TOKEN && !process.env.RELAY_API_KEY) deps.cli.warn(`RELAY_API_TOKEN is set but you probably meant RELAY_API_KEY`)
       this._auth = process.env.RELAY_API_KEY
       if (!this._auth) {
-        const tokens: any = deps.config.get(`tokens`)
+        const tokens: any = deps.config.get(`session.tokens`)
         this._auth = tokens?.[vars.apiHost]?.access_token
       }
     }
@@ -186,12 +186,12 @@ export class APIClient {
     return result.body
   }
   async devices(): Promise<any> {
-    const subscriberId = deps.config.get(`subscriberId`)
+    const subscriberId = deps.config.get(`session.subscriber.default.id`)
     const { body: { devices } } = await this.get<any>(`/ibot/subscriber/${subscriberId}/device_ids`)
     return devices
   }
   async workflows(): Promise<any> {
-    const subscriberId = deps.config.get(`subscriberId`)
+    const subscriberId = deps.config.get(`session.subscriber.default.id`)
     const { body: { results } } = await this.get<any>(`/ibot/workflow?subscriber_id=${subscriberId}`)
     return map(results, row => {
       if (isString(row.config)) {
@@ -205,7 +205,7 @@ export class APIClient {
     return find(workflows, ({ workflow_id }) => includes(workflow_id, id))
   }
   async saveWorkflow(workflow: any): Promise<any> {
-    const subscriberId = deps.config.get(`subscriberId`)
+    const subscriberId = deps.config.get(`session.subscriber.default.id`)
     const { body: results } = await this.post<any>(`/ibot/workflow?subscriber_id=${subscriberId}`, {
       body: workflow,
     })
@@ -217,8 +217,14 @@ export class APIClient {
     })
   }
   async removeWorkflow(id: string): Promise<boolean> {
-    const subscriberId = deps.config.get(`subscriberId`)
+    const subscriberId = deps.config.get(`session.subscriber.default.id`)
     await this.delete(`/ibot/workflow/${id}?subscriber_id=${subscriberId}`)
     return true
+  }
+  reset(): void {
+    deps.config.clear()
+  }
+  session(): any {
+    return deps.config.get(`session`)
   }
 }
