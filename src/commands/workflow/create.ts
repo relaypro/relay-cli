@@ -60,7 +60,6 @@ export class CreateWorkflowCommand extends Command {
   static args = [
     {
       name: `ID`,
-      required: true,
       description: `device / user ID to install workflow on`,
     }
   ]
