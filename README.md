@@ -4,9 +4,8 @@ relay
 Relay Workflow developer CLI
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/relay.svg)](https://npmjs.org/package/relay)
-[![Downloads/week](https://img.shields.io/npm/dw/relay.svg)](https://npmjs.org/package/relay)
-[![License](https://img.shields.io/npm/l/relay.svg)](https://github.com/BrandonSmith/relay/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/@relaypro/cli)](https://www.npmjs.com/package/@relaypro/cli)
+[![License](https://img.shields.io/npm/l/@relaypro/cli)](https://github.com/relaypro/relay-cli/blob/main/package.json)
 
 <!-- toc -->
 * [Usage](#usage)
@@ -40,3 +39,7 @@ USAGE
 * [`relay workflow`](docs/workflow.md) - manage workflow configurations
 
 <!-- commandsstop -->
+
+<!-- contribution -->
+# Contributing
+<!-- contributionstop -->
