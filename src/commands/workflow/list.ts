@@ -5,20 +5,26 @@ import { last, isEmpty } from 'lodash'
 
 import { formatWorkflowArgs, formatWorkflowType } from '../../lib/utils'
 
-const debug = require('debug')(`workflow`)
+import * as flags from '../../lib/flags'
+
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+
+const debug = debugFn(`workflow`)
 
 export default class Workflow extends Command {
-  static description = 'list workflow configurations'
+  static description = `list workflow configurations`
 
   static flags = {
+    ...flags.subscriber,
     ...cli.table.flags(),
   }
 
-  async run() {
+  async run(): Promise<void> {
     const { flags } = this.parse(Workflow)
 
     try {
-      const workflows = await this.relay.workflows()
+      const workflows = await this.relay.workflows(flags[`subscriber-id`])
 
       debug(workflows)
 

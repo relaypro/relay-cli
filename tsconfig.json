@@ -23,7 +23,8 @@
     "skipLibCheck": true,
     "importHelpers": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "composite": true
 	},
   "include": [
     "src/**/*"

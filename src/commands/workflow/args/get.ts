@@ -3,7 +3,17 @@ import { forEach, isEmpty, reduce, size } from 'lodash'
 import { Command } from '../../../lib/command'
 import * as flags from '../../../lib/flags'
 
-const debug = require('debug')(`workflow`)
+import { ArgValueType } from '../../../lib/api'
+
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+const debug = debugFn(`workflow`)
+
+type ArgType = {
+  arg: string,
+  value: ArgValueType
+  type: `string` | `number` | `boolean`
+}
 
 export class UnsetArgsCommand extends Command {
 
@@ -13,6 +23,7 @@ export class UnsetArgsCommand extends Command {
 
   static flags = {
     [`workflow-id`]: flags.workflowId,
+    ...flags.subscriber,
   }
 
   static args = [
@@ -22,25 +33,31 @@ export class UnsetArgsCommand extends Command {
     }
   ]
 
-  async run() {
+  async run(): Promise<void> {
     const { argv, flags } = this.parse(UnsetArgsCommand)
     const workflowId = flags[`workflow-id`]
+    const subscriberId = flags[`subscriber-id`]
 
     if (argv.length === 0) {
-      this.error('Usage: relay workflow:args:get ARG\nMust specify ARG.')
+      this.error(`Usage: relay workflow:args:get ARG\nMust specify ARG.`)
     }
 
     debug(argv)
 
-    const workflow = await this.relay.workflow(workflowId)
+    const workflow = await this.relay.workflow(subscriberId, workflowId)
     if (workflow) {
 
       const unsets: string[] = []
       const args = workflow?.config?.trigger?.start?.workflow?.args
-      const mappedArgs = reduce<string, Record<string, any>[]>(argv, (mappedArgs, arg) => {
+      const mappedArgs = reduce<string, ArgType[]>(argv, (mappedArgs, arg) => {
         const value = args[arg]
+        const type = typeof value
         if (value !== undefined) {
-          mappedArgs.push({ arg, value, type: typeof value })
+          if (type === `string` || type === `number` || type === `boolean`) {
+            mappedArgs.push({ arg, value, type })
+          } else {
+            throw new Error(`arg ${arg} is of invalid type ${type}`)
+          }
         } else {
           unsets.push(arg)
         }

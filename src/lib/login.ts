@@ -8,38 +8,25 @@ import open from 'open'
 import { APIClient, APIError } from './api-client'
 
 import { vars } from './vars'
-import deps from './deps'
 import color from './color'
 import http from 'http'
 import { URL } from 'url'
-import { isEmpty, map, size } from 'lodash'
+import { isEmpty, map } from 'lodash'
 import { Socket } from 'net'
 
-const crypto = require(`crypto`)
-const { MultiSelect } = require('enquirer')
-const debug = require('debug')('login')
+import debugFn from 'debug'
+import crypto = require('crypto') // eslint-disable-line quotes
+import { AccountEnvelope, clearSubscribers, deleteSession, getToken, resolveSubscriber, saveSubscribers, setToken, Subscriber, TokenAccount, Tokens, User } from './session'
+import { getOrThrow, uuid, base64url } from './utils'
 
+const debug = debugFn(`login`)
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Login {
   export interface Options {
     method?: `interactive`,
     mfa?: string,
   }
-}
-
-interface Subscriber {
-  id: string,
-  email: string,
-  name: string,
-}
-
-interface ConfigEntry {
-  username: string
-  access_token: string
-  refresh_token: string
-}
-
-interface Map {
-  [ k: string ]: string
 }
 
 const createBasicAuthorization = (id: string, secret: string) => {
@@ -52,7 +39,8 @@ export class Login {
   constructor(private readonly config: Config.IConfig, private readonly relay: APIClient) {}
 
   async login(opts: Login.Options = {}): Promise<void> {
-    // debug(opts)
+    debug(this.config)
+    debug(opts)
     let loggedIn = false
     try {
       setTimeout(() => {
@@ -61,9 +49,9 @@ export class Login {
 
       if (process.env.RELAY_API_KEY) cli.error(`Cannot log in with RELAY_API_KEY set`)
 
-      const tokens: any = deps.config.get(`session.tokens`)
+      const tokens = getToken()
 
-      const previousUsername = tokens && tokens[vars.apiHost] && tokens[vars.apiHost].username
+      const previousUsername = tokens?.username
 
       try {
         if (previousUsername) {
@@ -73,46 +61,41 @@ export class Login {
       } catch(err) {
         cli.warn(err)
       }
-      let auth = await this.browser()
-      let subscribers = await this.fetchSubscribers(auth.access_token)
+      const auth = await this.browser()
+      const subscribers = await this.fetchSubscribers(auth.access_token)
       debug(`subscribers`, subscribers)
 
       if (!isEmpty(subscribers)) {
-        this.saveToken(auth)
-        this.saveSubscribers(subscribers)
-        if (size(subscribers) === 1 && subscribers[0]) {
-          this.saveDefaultSubscriber(subscribers[0])
+        setToken(auth)
+        saveSubscribers(subscribers)
+        const success = await resolveSubscriber(subscribers)
+        if (success) {
+          cli.log(`Logged in`)
+          loggedIn = true
         } else {
-          const subscriberPrompt = new MultiSelect({
-            name: `subscriber`,
-            message: `Pick your default account`,
-            limit: 1,
-            choices: map(subscribers, value => ({ name: value.name, value }))
-          })
-
-          const subscriber = await subscriberPrompt.run()
-          this.saveDefaultSubscriber(subscriber)
+          cli.warn(`Default Relay account not set... logging out.`)
+          this.logout()
         }
       } else {
         throw new Error(`Failed to discover subscriber id`)
       }
     } catch(err) {
+      this.logout()
       throw new APIError(err)
-    } finally {
-      loggedIn = true
     }
   }
 
-  async logout() {
-    deps.config.delete(`session`)
+  async logout(): Promise<void> {
+    deleteSession()
+    clearSubscribers()
   }
 
-  async refresh() {
+  async refresh(): Promise<void> {
     const auth = await this.refreshOAuthToken()
-    await this.saveToken(auth)
+    setToken(auth)
   }
 
-  private async browser(): Promise<ConfigEntry> {
+  private async browser(): Promise<TokenAccount> {
     // set up callback server
     const { url, codeVerifier } = this.createAuthorization()
 
@@ -152,18 +135,18 @@ export class Login {
       code_verifier: codeVerifier,
     }
 
-    let headers: Map = {
+    const headers: Record<string, string> = {
       accept: `application/json`,
       'content-type': `application/x-www-form-urlencoded`,
     }
 
     const tokenOptions = { headers, body: encode(body) }
     // debug(`token request`, tokenOptions)
-    const { body: auth } = await HTTP.post<any>(`${vars.authUrl}/oauth2/token`, tokenOptions)
+    const { body: auth } = await HTTP.post<Tokens>(`${vars.authUrl}/oauth2/token`, tokenOptions)
 
     const validateOptions = { headers: { authorization: `Bearer ${auth.access_token}`}}
     // debug(`validate request`, validateOptions)
-    const { body: user } = await HTTP.get<any>(`${vars.authUrl}/oauth2/validate`, validateOptions)
+    const { body: user } = await HTTP.get<User>(`${vars.authUrl}/oauth2/validate`, validateOptions)
 
     // if (!auth.refresh_token) {
     //   debug(`no refresh_token`)
@@ -224,7 +207,7 @@ export class Login {
             debug(`http responded`)
             res.end(() => {
               debug(`http ended`)
-              // @ts-expect-error
+              // @ts-expect-error accessing hidden property `_httpMessage` of socket to expedite server closing
               const serverResponse = socket._httpMessage
               if (serverResponse) {
                 if (!serverResponse.headersSent) {
@@ -325,63 +308,66 @@ export class Login {
     }
   }
 
-  private async interactive(login?: string): Promise<ConfigEntry> {
-    cli.log('Enter your login credentials\n')
-    login = await cli.prompt(`Email`, { default: login })
-    const password = await cli.prompt(`Password`, { type: `hide` })
-    let auth
-    try {
-      auth = await this.createPasswordGrantToken(login!, password)
-    } catch(err) {
-      if (err.body.error === `mfa_required`) {
-        const mfa = await cli.prompt(`Two-factor code`, { type: `mask` })
-        auth = await this.createPasswordGrantToken(login!, password, { mfa })
-      } else if (err.body.error === `invalid_grant`) {
-        throw new Error(err.body.error_description)
-      } else {
-        throw err
-      }
-    }
-    this.relay.auth = auth.access_token
-    return auth
-  }
+  // private async interactive(login?: string): Promise<ConfigEntry> {
+  //   cli.log(`Enter your login credentials\n`)
+  //   login = await cli.prompt(`Email`, { default: login })
+  //   if (login !== `string` || isEmpty(login)) {
+  //     throw new Error(`must provide an email for login`)
+  //   }
+  //   const password = await cli.prompt(`Password`, { type: `hide` })
+  //   let auth
+  //   try {
+  //     auth = await this.createPasswordGrantToken(login, password)
+  //   } catch(err) {
+  //     if (err.body.error === `mfa_required`) {
+  //       const mfa = await cli.prompt(`Two-factor code`, { type: `mask` })
+  //       auth = await this.createPasswordGrantToken(login, password, { mfa })
+  //     } else if (err.body.error === `invalid_grant`) {
+  //       throw new Error(err.body.error_description)
+  //     } else {
+  //       throw err
+  //     }
+  //   }
+  //   this.relay.auth = auth.access_token
+  //   return auth
+  // }
 
-  private async createPasswordGrantToken(username: string, password: string, opts: { mfa?: string } = {}): Promise<ConfigEntry> {
-    const body: Map = {
-      grant_type: `password`,
-      client_id: `VH9364WE`,
-      username,
-      password,
-      scope: `openid profile`,
-    }
+  // private async createPasswordGrantToken(username: string, password: string, opts: { mfa?: string } = {}): Promise<ConfigEntry> {
+  //   const body: Record<string, string> = {
+  //     grant_type: `password`,
+  //     client_id: `VH9364WE`,
+  //     username,
+  //     password,
+  //     scope: `openid profile`,
+  //   }
 
-    if (opts.mfa) {
-      body.mfa_code = opts.mfa
-    }
+  //   if (opts.mfa) {
+  //     body.mfa_code = opts.mfa
+  //   }
 
-    let headers: Map = {
-      accept: `application/json`,
-      'content-type': `application/x-www-form-urlencoded`,
-      authorization: createBasicAuthorization(vars.authId, vars.authSecret),
-    }
+  //   const headers: Record<string, string> = {
+  //     accept: `application/json`,
+  //     'content-type': `application/x-www-form-urlencoded`,
+  //     authorization: createBasicAuthorization(vars.authId, vars.authSecret),
+  //   }
 
-    const options = { headers, body: encode(body) }
+  //   const options = { headers, body: encode(body) }
 
-    debug(`createPasswordGrantToken`, options)
+  //   debug(`createPasswordGrantToken`, options)
 
-    const { body: auth } = await HTTP.post<any>(`${vars.authUrl}/oauth2/token`, options)
+  //   const { body: auth } = await HTTP.post<Tokens>(`${vars.authUrl}/oauth2/token`, options)
 
-    return {
-      access_token: auth.access_token,
-      username: username,
-      refresh_token: auth.refresh_token,
-    }
-  }
+  //   return {
+  //     access_token: auth.access_token,
+  //     username: username,
+  //     refresh_token: auth.refresh_token,
+  //   }
+  // }
 
-  private async refreshOAuthToken() {
-    const tokens: any = deps.config.get(`session.tokens`)
-    const refreshToken = tokens?.[vars.apiHost]?.refresh_token
-    const username = tokens?.[vars.apiHost]?.username
+  private async refreshOAuthToken(): Promise<TokenAccount> {
+    const tokens = getToken()
+    const refreshToken = tokens?.refresh_token
+    const username = tokens?.username
 
     if (!refreshToken) {
       throw new Error(`no refresh token to refresh`)
@@ -392,7 +378,7 @@ export class Login {
       refresh_token: refreshToken,
     }
 
-    let headers: Map = {
+    const headers: Record<string, string> = {
       accept: `application/json`,
       'content-type': `application/x-www-form-urlencoded`,
       authorization: createBasicAuthorization(vars.authId, vars.authSecret),
@@ -402,7 +388,7 @@ export class Login {
 
     debug(`refreshOAuthToken`, options)
 
-    const { body: auth } = await HTTP.post<any>(`${vars.authUrl}/oauth2/token`, options)
+    const { body: auth } = await HTTP.post<Tokens>(`${vars.authUrl}/oauth2/token`, options)
 
     return {
       access_token: auth.access_token,
@@ -411,46 +397,29 @@ export class Login {
     }
   }
 
-  private saveToken(entry: ConfigEntry) {
-    const tokens: any = deps.config.get(`session.tokens`) || {}
-    tokens[vars.apiHost] = entry
-    deps.config.set(`session.tokens`, tokens)
-  }
-
-  private saveSubscribers(subscribers: Subscriber[]) {
-    deps.config.set(`session.subscriber.all`, subscribers)
-  }
-
-  private saveDefaultSubscriber(subscriber: Subscriber) {
-    deps.config.set(`session.subscriber.default`, subscriber)
-  }
-
   private async fetchSubscribers(token: string): Promise<Subscriber[]> {
     const options = {
       headers: {
         authorization: `Bearer ${token}`
       }
     }
-    const { body: accounts } = await HTTP.get<Record<string, any>[]>(`${vars.stratusUrl}/v3/subscribers;view=dash_overview`, options)
+
+    const timeout = setTimeout(() => {
+      cli.action.start(`Retrieving authorized subscribers`)
+    }, 2000)
+
+    const { body: accounts } = await HTTP.get<Record<string, AccountEnvelope>[]>(`${vars.stratusUrl}/v3/subscribers;view=dash_overview`, options)
+
+    clearTimeout(timeout)
+
+    if (cli.action.running) {
+      cli.action.stop()
+    }
+
     return map(accounts, account => ({
-      name: account.account.account_name,
-      id: account.account.subscriber_id,
-      email: account.account.owner_email,
+      id: getOrThrow(account, [`account`, `subscriber_id`]),
+      email: getOrThrow(account, [`account`, `owner_email`]),
+      name:  getOrThrow(account, [`account`, `account_name`]),
     }))
   }
-}
-
-function uuid(): string {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  }
-  return s4() + '_' + s4() + '_' + s4() + '_' + s4() + '_' +
-    s4() + '_' + s4() + '_' + s4() + '_' + s4() + '_' +
-    s4() + '_' + s4() + '_' + s4()
-}
-
-function base64url(str: string): string {
-  return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
 }

@@ -3,7 +3,9 @@ import { join, omit } from 'lodash'
 import { Command } from '../../../lib/command'
 import * as flags from '../../../lib/flags'
 
-const debug = require('debug')(`workflow`)
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+const debug = debugFn(`workflow`)
 
 export class UnsetArgsCommand extends Command {
 
@@ -13,21 +15,23 @@ export class UnsetArgsCommand extends Command {
 
   static flags = {
     [`workflow-id`]: flags.workflowId,
+    ...flags.subscriber,
   }
 
-  async run() {
+  async run(): Promise<void> {
     const { argv, flags } = this.parse(UnsetArgsCommand)
     const workflowId = flags[`workflow-id`]
+    const subscriberId = flags[`subscriber-id`]
 
     if (argv.length === 0) {
-      this.error('Usage: relay workflow:args:unset KEY1 [KEY2 ...]\nMust specify KEY to unset.')
+      this.error(`Usage: relay workflow:args:unset KEY1 [KEY2 ...]\nMust specify KEY to unset.`)
     }
 
     debug(argv)
 
     cli.action.start(`Unsetting args ${join(argv, `, `)} on Workflow ID: ${workflowId}`)
 
-    const workflow = await this.relay.workflow(workflowId)
+    const workflow = await this.relay.workflow(subscriberId, workflowId)
     if (workflow) {
       debug(`existing args`, workflow.config.trigger.start.workflow.args)
       workflow.config.trigger.start.workflow.args = omit(

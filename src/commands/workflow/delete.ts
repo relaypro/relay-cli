@@ -2,9 +2,13 @@ import { cli } from 'cli-ux'
 
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
 
-const { Confirm } = require('enquirer')
-const debug = require('debug')(`workflow`)
+const debug = debugFn(`workflow`)
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
 export class DeleteWorkflowCommand extends Command {
 
@@ -12,14 +16,16 @@ export class DeleteWorkflowCommand extends Command {
 
   static flags = {
     [`workflow-id`]: flags.workflowId,
+    ...flags.subscriber,
   }
 
-  async run() {
+  async run(): Promise<void> {
     const { flags } = this.parse(DeleteWorkflowCommand)
     const workflowId = flags[`workflow-id`]
+    const subscriberId = flags[`subscriber-id`]
 
     try {
-      const workflow = await this.relay.workflow(workflowId)
+      const workflow = await this.relay.workflow(subscriberId, workflowId)
 
       debug(workflow)
 

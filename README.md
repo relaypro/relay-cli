@@ -11,6 +11,7 @@ Relay Workflow developer CLI
 * [Usage](#usage)
 * [Commands](#commands)
 * [Command Topics](#command-topics)
+* [Contributing](#contributing)
 <!-- tocstop -->
 # Usage
 <!-- usage -->

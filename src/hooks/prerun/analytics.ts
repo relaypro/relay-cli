@@ -1,6 +1,8 @@
 import { Hook } from "@oclif/config"
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
 
-const debug = require(`debug`)(`analytics`)
+const debug = debugFn(`analytics`)
 
 export const analytics: Hook<`prerun`> = async function (options) {
   // debug(options)

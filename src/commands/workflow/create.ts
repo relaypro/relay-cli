@@ -5,7 +5,11 @@ import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
 import { formatWorkflowArgs, formatWorkflowType, parseArg } from '../../lib/utils'
 
-const debug = require('debug')(`workflow`)
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+import { Workflow } from '../../lib/api'
+
+const debug = debugFn(`workflow`)
 
 export class CreateWorkflowCommand extends Command {
 
@@ -64,7 +68,7 @@ export class CreateWorkflowCommand extends Command {
     }
   ]
 
-  async run() {
+  async run(): Promise<void> {
     const { flags, argv, raw } = this.parse(CreateWorkflowCommand)
 
     const workflow = {}
@@ -99,6 +103,7 @@ export class CreateWorkflowCommand extends Command {
 
       set(workflow, [`config`, `trigger`, `start`, `workflow`, `uri`], flags.uri)
 
+      /* eslint-disable @typescript-eslint/no-explicit-any */
       const normalArgFlags = filter(raw, ({ flag }: any) => `arg` === flag)
       const normalArgs = reduce(normalArgFlags, (args, flag) => {
         const [, name, value] = parseArg(flag.input)
@@ -116,13 +121,14 @@ export class CreateWorkflowCommand extends Command {
         const nameValue = CreateWorkflowCommand.flags.number.parse(flag.input, null)
         return { ...args, ...nameValue }
       }, {})
+      /* eslint-enable @typescript-eslint/no-explicit-any */
 
       const args = { ...normalArgs, ...booleanArgs, ...numberArgs }
       set(workflow, [`config`, `trigger`, `start`, `workflow`, `args`], args)
 
       set(workflow, `install`, argv)
 
-      const savedWorkflow = await this.relay.saveWorkflow(workflow)
+      const savedWorkflow = await this.relay.saveWorkflow(workflow as Workflow)
 
       cli.styledHeader(`Installed Workflow`)
 

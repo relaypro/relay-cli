@@ -1,9 +1,15 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { Command } from '../../../lib/command'
 
-const debug = require('debug')(`dev`)
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+const debug = debugFn(`dev`)
 
 export default class Dev extends Command {
-  static description = 'workflow development'
+  static description = `workflow development`
+
+  static hidden = true
 
   static args = [
     {
@@ -13,7 +19,7 @@ export default class Dev extends Command {
     }
   ]
 
-  async run() {
+  async run(): Promise<void> {
     const { args } = this.parse(Dev)
 
     debug(args)

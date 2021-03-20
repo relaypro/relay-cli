@@ -13,5 +13,3 @@ logout and forget any tokens
 USAGE
   $ relay logout
 ```
-
-_See code: [dist/commands/logout.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/logout.ts)_

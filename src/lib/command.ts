@@ -3,12 +3,12 @@ import { Command as Base } from '@oclif/command'
 import { APIClient } from './api-client'
 import deps from './deps'
 
-const pjson = require('../../package.json')
-
-const debug = require(`debug`)(`error`)
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+const debug = debugFn(`error`)
 
 export abstract class Command extends Base {
-  base = `${pjson.name}@${pjson.version}`
+
   _relay!: APIClient
 
   get relay(): APIClient {
@@ -17,12 +17,12 @@ export abstract class Command extends Base {
     return this._relay
   }
 
-  async catch(error: any): Promise<any> {
+  async catch(error: unknown): Promise<unknown> {
     debug(error)
     return super.catch(error)
   }
 
-  async finally(possibleError: Error | undefined): Promise<any> {
+  async finally(possibleError: Error | undefined): Promise<unknown> {
     return super.finally(possibleError)
   }
 

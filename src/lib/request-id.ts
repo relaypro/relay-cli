@@ -5,7 +5,7 @@ export const requestIdHeader = `Request-Id`
 export class RequestId {
   static ids: string[] = []
 
-  static track(...ids: string[]) {
+  static track(...ids: string[]): string[] {
     const tracked = RequestId.ids
     ids = ids.filter(id => !(tracked.includes(id)))
     RequestId.ids = [...ids, ...tracked]
@@ -23,7 +23,7 @@ export class RequestId {
     RequestId.ids = []
   }
 
-  static get headerValue() {
+  static get headerValue(): string {
     return RequestId.ids.join(`,`)
   }
 }

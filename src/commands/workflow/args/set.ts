@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cli } from 'cli-ux'
 import { filter, join, keys, reduce } from 'lodash'
 import { Command } from '../../../lib/command'
@@ -5,7 +7,9 @@ import * as flags from '../../../lib/flags'
 
 import { parseArg } from '../../../lib/utils'
 
-const debug = require('debug')(`workflow`)
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+const debug = debugFn(`workflow`)
 
 export class SetArgsCommand extends Command {
 
@@ -17,12 +21,14 @@ export class SetArgsCommand extends Command {
     [`workflow-id`]: flags.workflowId,
     boolean: flags.booleanValue(),
     number: flags.numberValue(),
+    ...flags.subscriber,
   }
 
-  async run() {
+  async run(): Promise<void> {
     const parsed = this.parse(SetArgsCommand)
     const { flags, argv, raw } = parsed
     const workflowId = flags[`workflow-id`]
+    const subscriberId = flags[`subscriber-id`]
     // debug(parsed)
     try {
       const normalArgs = reduce(argv, (args: Record<string, any>, input) => {
@@ -51,7 +57,7 @@ export class SetArgsCommand extends Command {
 
       cli.action.start(`Setting args ${join(keys(args), `, `)} on Workflow ID: ${workflowId}`)
 
-      const workflow = await this.relay.workflow(workflowId)
+      const workflow = await this.relay.workflow(subscriberId, workflowId)
 
       if (workflow) {
         debug(`existing args`, workflow.config.trigger.start.workflow.args)

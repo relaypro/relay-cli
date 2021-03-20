@@ -3,7 +3,10 @@ import { join } from 'lodash'
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
 
-const debug = require('debug')(`workflow`)
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+
+const debug = debugFn(`workflow`)
 
 export class InstallWorkflowCommand extends Command {
 
@@ -11,6 +14,7 @@ export class InstallWorkflowCommand extends Command {
 
   static flags = {
     [`workflow-id`]: flags.workflowId,
+    ...flags.subscriber,
   }
 
   static args = [
@@ -21,14 +25,14 @@ export class InstallWorkflowCommand extends Command {
     }
   ]
 
-  async run() {
+  async run(): Promise<void> {
     const { flags, argv } = this.parse(InstallWorkflowCommand)
-
     const workflowId = flags[`workflow-id`]
+    const subscriberId = flags[`subscriber-id`]
 
     try {
       cli.action.start(`Installing Workflow ${workflowId} on ${join(argv, `, `)}`)
-      const workflow = await this.relay.workflow(workflowId)
+      const workflow = await this.relay.workflow(subscriberId, workflowId)
 
       if (workflow) {
         debug(`existing install`, workflow.install)

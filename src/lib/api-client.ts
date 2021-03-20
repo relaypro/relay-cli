@@ -10,8 +10,15 @@ import { Login } from './login'
 import { RequestId, requestIdHeader } from './request-id'
 import { vars } from './vars'
 
-const debug = require('debug')('api-client')
+import debugFn = require('debug') // eslint-disable-line quotes
+import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber } from './session'
+import { DeviceId, DeviceIds, Workflow, Workflows } from './api'
+import { getOrThrow } from './utils'
 
+
+const debug = debugFn(`api-client`)
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace APIClient {
   export interface Options extends HTTPRequestOptions {
     retryAuth?: boolean
@@ -37,12 +44,12 @@ export class APIError extends CLIError {
   constructor(httpError: HTTPError) {
     super(httpError)
     if (!httpError) throw new Error(`invalid error`)
-    let options: APIErrorOptions = httpError.body
+    const options: APIErrorOptions = httpError.body
     if (!options || !options.message) throw httpError
-    let info = []
+    const info = []
     if (options.id) info.push(`Error ID: ${options.id}`)
     if (options.url) info.push(`See ${options.url} for more information.`)
-    if (info.length) super([options.message, ''].concat(info).join('\n'))
+    if (info.length) super([options.message, ``].concat(info).join(`\n`))
     else super(options.message)
     this.http = httpError
     this.body = options
@@ -50,8 +57,7 @@ export class APIError extends CLIError {
 }
 
 export class APIClient {
-  preauthPromises: { [k: string]: Promise<HTTP<any>>}
-  authPromise?: Promise<HTTP<any>>
+  authPromise?: Promise<void>
   http: typeof HTTP
   private readonly _login = new Login(this.config, this)
   private _auth?: string
@@ -61,17 +67,16 @@ export class APIClient {
     if (options.required === undefined) options.required = true
     options.preauth = options.preauth !== false
     this.options = options
-    let apiUrl = url.URL ? new url.URL(vars.apiUrl) : url.parse(vars.apiUrl)
-    let envHeaders = JSON.parse(process.env.RELAY_HEADERS || `{}`)
-    this.preauthPromises = {}
-    let self = this as any
+    const apiUrl = new url.URL(vars.apiUrl)
+    const envHeaders = JSON.parse(process.env.RELAY_HEADERS || `{}`)
+    const self = this as APIClient
     const opts = {
       host: apiUrl.hostname,
       port: apiUrl.port,
       protocol: apiUrl.protocol,
       headers: {
         accpet: `application/json`,
-        'user-agent': `relay-cli/${self.config.version} ${self.config.platform}`,
+        'user-agent': this.config.userAgent,
         ...envHeaders,
       },
     }
@@ -104,8 +109,8 @@ export class APIClient {
               if (process.env.RELAY_API_KEY) {
                 throw new Error(`The token provided to RELAY_API_KEY is invalid. Please double-heck that you have the correct token, or run 'relay login' without RELAY_API_KEY set.`)
               }
-              const tokens: any = deps.config.get(`session.tokens`)
-              if (tokens?.[vars.apiHost]?.refresh_token) {
+              const tokens = getToken()
+              if (tokens?.refresh_token) {
                 debug(`attempting refresh`)
                 if (!self.authPromise) self.authPromise = self.refresh()
                 await self.authPromise
@@ -135,8 +140,8 @@ export class APIClient {
       if (process.env.RELAY_API_TOKEN && !process.env.RELAY_API_KEY) deps.cli.warn(`RELAY_API_TOKEN is set but you probably meant RELAY_API_KEY`)
       this._auth = process.env.RELAY_API_KEY
       if (!this._auth) {
-        const tokens: any = deps.config.get(`session.tokens`)
-        this._auth = tokens?.[vars.apiHost]?.access_token
+        const tokens = getToken()
+        this._auth = tokens?.access_token
       }
     }
     return this._auth
@@ -147,31 +152,31 @@ export class APIClient {
     this._auth = token
   }
 
-  refresh() {
+  refresh(): Promise<void> {
     this._auth = undefined
     return this._login.refresh()
   }
 
-  get<T>(url: string, options: APIClient.Options = {}) {
+  get<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
     return this.http.get<T>(url, options)
   }
-  post<T>(url: string, options: APIClient.Options = {}) {
+  post<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
     return this.http.post<T>(url, options)
   }
-  put<T>(url: string, options: APIClient.Options = {}) {
+  put<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
     return this.http.put<T>(url, options)
   }
-  delete<T>(url: string, options: APIClient.Options = {}) {
+  delete<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
     return this.http.delete<T>(url, options)
   }
-  request<T>(url: string, options: APIClient.Options = {}) {
+  request<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
     return this.http.request<T>(url, options)
   }
 
-  login(opts: Login.Options = {}) {
+  login(opts: Login.Options = {}): Promise<void> {
     return this._login.login(opts)
   }
-  async logout() {
+  async logout(): Promise<void> {
     try {
       await this._login.logout()
     } catch (err) {
@@ -182,17 +187,21 @@ export class APIClient {
     return this.http.defaults
   }
   async whoami(): Promise<Record<string, string>> {
-    const result = await this.get<Record<string, string>>(`${vars.authUrl}/oauth2/validate`)
-    return result.body
+    const subscriber = getDefaultSubscriber()
+    const { body: user } = await this.get<Record<string, string>>(`${vars.authUrl}/oauth2/validate`)
+    return {
+      Name: `${user.given_name} ${user.family_name}`,
+      Email: `${user.email}`,
+      [`User ID`]: `${user.userid}`,
+      [`Default Subscriber`]: subscriber.id,
+    }
   }
-  async devices(): Promise<any> {
-    const subscriberId = deps.config.get(`session.subscriber.default.id`)
-    const { body: { devices } } = await this.get<any>(`/ibot/subscriber/${subscriberId}/device_ids`)
+  async devices(subscriberId: string): Promise<DeviceId[]> {
+    const { body: { devices } } = await this.get<DeviceIds>(`/ibot/subscriber/${subscriberId}/device_ids`)
     return devices
   }
-  async workflows(): Promise<any> {
-    const subscriberId = deps.config.get(`session.subscriber.default.id`)
-    const { body: { results } } = await this.get<any>(`/ibot/workflow?subscriber_id=${subscriberId}`)
+  async workflows(subscriberId: string): Promise<Workflow[]> {
+    const { body: { results } } = await this.get<Workflows>(`/ibot/workflow?subscriber_id=${subscriberId}`)
     return map(results, row => {
       if (isString(row.config)) {
         row.config = JSON.parse(row.config)
@@ -200,13 +209,13 @@ export class APIClient {
       return row
     })
   }
-  async workflow(id: string): Promise<any> {
-    const workflows = await this.workflows()
+  async workflow(subscriberId: string, id: string): Promise<Workflow|undefined> {
+    const workflows = await this.workflows(subscriberId)
     return find(workflows, ({ workflow_id }) => includes(workflow_id, id))
   }
-  async saveWorkflow(workflow: any): Promise<any> {
-    const subscriberId = deps.config.get(`session.subscriber.default.id`)
-    const { body: results } = await this.post<any>(`/ibot/workflow?subscriber_id=${subscriberId}`, {
+  async saveWorkflow(workflow: Workflow): Promise<Workflow[]> {
+    const subscriberId = getDefaultSubscriberId()
+    const { body: { results } } = await this.post<Workflows>(`/ibot/workflow?subscriber_id=${subscriberId}`, {
       body: workflow,
     })
     return map(results, row => {
@@ -217,14 +226,23 @@ export class APIClient {
     })
   }
   async removeWorkflow(id: string): Promise<boolean> {
-    const subscriberId = deps.config.get(`session.subscriber.default.id`)
+    const subscriberId = getDefaultSubscriberId()
     await this.delete(`/ibot/workflow/${id}?subscriber_id=${subscriberId}`)
     return true
   }
-  reset(): void {
-    deps.config.clear()
+  clear(): void {
+    clearConfig()
+    clearSubscribers()
   }
-  session(): any {
-    return deps.config.get(`session`)
+  session(): Session {
+    return getSession()
+  }
+  async subscribers(): Promise<Subscriber[]> {
+    const { body: accounts } = await this.request<Record<string, AccountEnvelope>[]>(`${vars.stratusUrl}/v3/subscribers;view=dash_overview`)
+    return map(accounts, account => ({
+      id: getOrThrow(account, [`account`, `subscriber_id`]),
+      email: getOrThrow(account, [`account`, `owner_email`]),
+      name:  getOrThrow(account, [`account`, `account_name`]),
+    }))
   }
 }

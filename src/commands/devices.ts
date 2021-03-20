@@ -1,15 +1,26 @@
 import { cli } from 'cli-ux'
 import { map } from 'lodash'
 import { Command } from '../lib/command'
+import * as flags from '../lib/flags'
 
-const debug = require('debug')(`devices`)
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+
+const debug = debugFn(`devices`)
 
 export class DevicesCommand extends Command {
 
   static description = `list all device ids`
 
-  async run() {
-    const devices = await this.relay.devices()
+  static flags = {
+    ...flags.subscriber
+  }
+
+  async run(): Promise<void> {
+    const { flags } = this.parse(DevicesCommand)
+
+    debug(`run`)
+    const devices = await this.relay.devices(flags[`subscriber-id`])
     const mappedDevices = map(devices, d => ({ id: d }))
 
     cli.table(mappedDevices, {

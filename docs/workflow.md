@@ -7,9 +7,8 @@ manage workflow configurations
 * [`relay workflow:args:get ARG`](#relay-workflowargsget-arg)
 * [`relay workflow:args:set`](#relay-workflowargsset)
 * [`relay workflow:args:unset`](#relay-workflowargsunset)
-* [`relay workflow:create ID`](#relay-workflowcreate-id)
+* [`relay workflow:create [ID]`](#relay-workflowcreate-id)
 * [`relay workflow:delete`](#relay-workflowdelete)
-* [`relay workflow:dev FILE`](#relay-workflowdev-file)
 * [`relay workflow:install ID`](#relay-workflowinstall-id)
 * [`relay workflow:list`](#relay-workflowlist)
 * [`relay workflow:uninstall ID`](#relay-workflowuninstall-id)
@@ -26,8 +25,6 @@ OPTIONS
   -w, --workflow-id=workflow-id  (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/args/index.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/args/index.ts)_
-
 ## `relay workflow:args:get ARG`
 
 display a single workflow arguments
@@ -39,8 +36,6 @@ USAGE
 OPTIONS
   -w, --workflow-id=workflow-id  (required) workflow id
 ```
-
-_See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/args/get.ts)_
 
 ## `relay workflow:args:set`
 
@@ -56,8 +51,6 @@ OPTIONS
   -w, --workflow-id=workflow-id  (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/args/set.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/args/set.ts)_
-
 ## `relay workflow:args:unset`
 
 unset one or more workflow arguments
@@ -70,15 +63,13 @@ OPTIONS
   -w, --workflow-id=workflow-id  (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/args/unset.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/args/unset.ts)_
-
-## `relay workflow:create ID`
+## `relay workflow:create [ID]`
 
 create or update a workflow
 
 ```
 USAGE
-  $ relay workflow:create ID
+  $ relay workflow:create [ID]
 
 ARGUMENTS
   ID  device / user ID to install workflow on
@@ -97,8 +88,6 @@ OPTIONS
   --uri=uri                    (required)
 ```
 
-_See code: [dist/commands/workflow/create.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/create.ts)_
-
 ## `relay workflow:delete`
 
 destructively delete and remove a workflow
@@ -110,22 +99,6 @@ USAGE
 OPTIONS
   -w, --workflow-id=workflow-id  (required) workflow id
 ```
-
-_See code: [dist/commands/workflow/delete.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/delete.ts)_
-
-## `relay workflow:dev FILE`
-
-workflow development
-
-```
-USAGE
-  $ relay workflow:dev FILE
-
-ARGUMENTS
-  FILE  nodejs app entry point
-```
-
-_See code: [dist/commands/workflow/dev/index.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/dev/index.ts)_
 
 ## `relay workflow:install ID`
 
@@ -141,8 +114,6 @@ ARGUMENTS
 OPTIONS
   -w, --workflow-id=workflow-id  (required) workflow id
 ```
-
-_See code: [dist/commands/workflow/install.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/install.ts)_
 
 ## `relay workflow:list`
 
@@ -163,8 +134,6 @@ OPTIONS
   --sort=sort             property to sort by (prepend '-' for descending)
 ```
 
-_See code: [dist/commands/workflow/list.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/list.ts)_
-
 ## `relay workflow:uninstall ID`
 
 uninstall an existing workflow from one or more devices
@@ -179,5 +148,3 @@ ARGUMENTS
 OPTIONS
   -w, --workflow-id=workflow-id  (required) workflow id
 ```
-
-_See code: [dist/commands/workflow/uninstall.ts](https://github.com/relaypro/relay-cli/blob/v0.0.3/dist/commands/workflow/uninstall.ts)_
