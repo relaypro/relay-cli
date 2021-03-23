@@ -2,7 +2,7 @@ import { cli } from 'cli-ux'
 import { map } from 'lodash'
 import { Command } from '../lib/command'
 
-const debug = require('debug')(`devices`)
+// const debug = require('debug')(`devices`)
 
 export class DevicesCommand extends Command {
 
