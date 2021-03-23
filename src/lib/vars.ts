@@ -1,8 +1,44 @@
-import * as url from 'url'
+import { URL } from 'url'
+
+const config = {
+  qa: {
+    host: `all-api-qa-ibot.nocell.io`,
+    authHost: `auth.relaygo.info`,
+    id: `RScqSh4k`,
+    secret: `LU64MEJ8Byij3J38`,
+  },
+  pro: {
+    host: `all-main-pro-ibot.nocell.io`,
+    authHost: `auth.relaygo.com`,
+    id: ``,
+    secret: ``,
+  }
+}
 
 export class Vars {
+  get env(): `qa`|`pro` {
+    if (process.env.RELAY_ENV) {
+      if (process.env.RELAY_ENV !== `qa` && process.env.RELAY_ENV !== `pro`) {
+        throw new Error(`RELAY_ENV must be set to either "qa" or "pro"`)
+      } else {
+        return process.env.RELAY_ENV
+      }
+    } else {
+      return `qa`
+    }
+  }
+
   get host(): string {
-    return this.envHost || `all-main-qa-ibot.nocell.io`
+    const h = process.env.RELAY_HOST || config[this.env].host
+    if (!h.includes(this.env)) {
+      process.env.RELAY_ENV && console.error(`RELAY_ENV=${process.env.RELAY_ENV}`)
+      process.env.RELAY_HOST && console.error(`RELAY_HOST=${process.env.RELAY_HOST}`)
+      console.error(`Host and environment must align`)
+      throw new Error(`Environment / host mismatch`)
+    } else {
+      return h
+    }
+
   }
 
   get apiUrl(): string {
@@ -11,26 +47,26 @@ export class Vars {
 
   get apiHost(): string {
     if (this.host.startsWith(`http`)) {
-      const u = url.parse(this.host)
+      const u = new URL(this.host)
       if (u.host) return u.host
     }
     return `${this.host}`
   }
 
-  get envHost(): string | undefined {
-    return process.env.RELAY_HOST
+  get authHost(): string {
+    return config[this.env].authHost
   }
 
   get authUrl(): string {
-    return process.env.RELAY_LOGIN_HOST || `https://auth.republicdev.info`
+    return `https://${this.authHost}`
   }
 
   get authId(): string {
-    return `RScqSh4k`
+    return config[this.env].id
   }
 
   get authSecret(): string {
-    return `LU64MEJ8Byij3J38`
+    return config[this.env].secret
   }
 }
 
