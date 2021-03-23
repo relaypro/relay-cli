@@ -21,14 +21,6 @@ import { getOrThrow, uuid, base64url } from './utils'
 
 const debug = debugFn(`login`)
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-export namespace Login {
-  export interface Options {
-    method?: `interactive`,
-    mfa?: string,
-  }
-}
-
 const createBasicAuthorization = (id: string, secret: string) => {
   const auth = (Buffer.from(`${id}:${secret}`)).toString(`base64`)
   return `Basic ${auth}`
@@ -38,9 +30,8 @@ export class Login {
 
   constructor(private readonly config: Config.IConfig, private readonly relay: APIClient) {}
 
-  async login(opts: Login.Options = {}): Promise<void> {
+  async login(): Promise<void> {
     debug(this.config)
-    debug(opts)
     let loggedIn = false
     try {
       setTimeout(() => {
@@ -307,62 +298,6 @@ export class Login {
       codeVerifier
     }
   }
-
-  // private async interactive(login?: string): Promise<ConfigEntry> {
-  //   cli.log(`Enter your login credentials\n`)
-  //   login = await cli.prompt(`Email`, { default: login })
-  //   if (login !== `string` || isEmpty(login)) {
-  //     throw new Error(`must provide an email for login`)
-  //   }
-  //   const password = await cli.prompt(`Password`, { type: `hide` })
-  //   let auth
-  //   try {
-  //     auth = await this.createPasswordGrantToken(login, password)
-  //   } catch(err) {
-  //     if (err.body.error === `mfa_required`) {
-  //       const mfa = await cli.prompt(`Two-factor code`, { type: `mask` })
-  //       auth = await this.createPasswordGrantToken(login, password, { mfa })
-  //     } else if (err.body.error === `invalid_grant`) {
-  //       throw new Error(err.body.error_description)
-  //     } else {
-  //       throw err
-  //     }
-  //   }
-  //   this.relay.auth = auth.access_token
-  //   return auth
-  // }
-
-  // private async createPasswordGrantToken(username: string, password: string, opts: { mfa?: string } = {}): Promise<ConfigEntry> {
-  //   const body: Record<string, string> = {
-  //     grant_type: `password`,
-  //     client_id: `VH9364WE`,
-  //     username,
-  //     password,
-  //     scope: `openid profile`,
-  //   }
-
-  //   if (opts.mfa) {
-  //     body.mfa_code = opts.mfa
-  //   }
-
-  //   const headers: Record<string, string> = {
-  //     accept: `application/json`,
-  //     'content-type': `application/x-www-form-urlencoded`,
-  //     authorization: createBasicAuthorization(vars.authId, vars.authSecret),
-  //   }
-
-  //   const options = { headers, body: encode(body) }
-
-  //   debug(`createPasswordGrantToken`, options)
-
-  //   const { body: auth } = await HTTP.post<Tokens>(`${vars.authUrl}/oauth2/token`, options)
-
-  //   return {
-  //     access_token: auth.access_token,
-  //     username: username,
-  //     refresh_token: auth.refresh_token,
-  //   }
-  // }
 
   private async refreshOAuthToken(): Promise<TokenAccount> {
     const tokens = getToken()
