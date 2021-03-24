@@ -42,7 +42,7 @@ export class CreateWorkflowCommand extends Command {
       multiple: false,
       required: true,
       default: `phrase`,
-      options: [`phrase`, `button`, `http`],
+      options: [`phrase`, `button`, `http`, `call`],
     }),
     phrase: flags.string({
       multiple: false,
@@ -99,6 +99,10 @@ export class CreateWorkflowCommand extends Command {
         } else {
           throw new Error(`Trigger type 'button' requires specifying a button action. For instance '--button single'`)
         }
+      }
+
+      if (flags.type === `call`) {
+        set(workflow, [`config`, `trigger`, `on_call_request`], `.*`)
       }
 
       set(workflow, [`config`, `trigger`, `start`, `workflow`, `uri`], flags.uri)

@@ -20,7 +20,7 @@ $ npm install -g @relaypro/cli
 $ relay COMMAND
 running command...
 $ relay (-v|--version|version)
-@relaypro/cli/0.0.3 darwin-x64 node-v14.15.4
+@relaypro/cli/0.0.4 darwin-x64 node-v14.15.4
 $ relay --help [COMMAND]
 USAGE
   $ relay COMMAND
@@ -32,6 +32,7 @@ USAGE
 # Command Topics
 
 * [`relay devices`](docs/devices.md) - list all device ids
+* [`relay env`](docs/env.md) - displays the configured environment
 * [`relay help`](docs/help.md) - display help for relay
 * [`relay login`](docs/login.md) - login with your Relay credentials
 * [`relay logout`](docs/logout.md) - logout and forget any tokens

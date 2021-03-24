@@ -37,6 +37,9 @@ export const formatWorkflowType = (workflow: any): string => { // eslint-disable
       case `on_button`: {
         return `button:${replace(trigger, /action_button_|_tap/g, ``)}`
       }
+      case `on_call_request`: {
+        return `call`
+      }
     }
   }
   return `unknown`
