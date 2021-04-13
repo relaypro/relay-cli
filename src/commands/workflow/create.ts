@@ -28,7 +28,8 @@ export class CreateWorkflowCommand extends Command {
     }),
     transient: flags.boolean({
       char: `t`,
-      default: false,
+      default: true,
+      allowNo: true,
     }),
     hidden: flags.boolean({
       char: `i`,
