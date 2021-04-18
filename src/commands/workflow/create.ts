@@ -43,7 +43,7 @@ export class CreateWorkflowCommand extends Command {
       multiple: false,
       required: true,
       default: `phrase`,
-      options: [`phrase`, `button`, `http`, `call`],
+      options: [`phrase`, `button`, `http`, `place_call`, `answer_call`],
     }),
     phrase: flags.string({
       multiple: false,
@@ -102,8 +102,12 @@ export class CreateWorkflowCommand extends Command {
         }
       }
 
-      if (flags.type === `call`) {
+      if (flags.type === `place_call`) {
         set(workflow, [`config`, `trigger`, `on_call_request`], `.*`)
+      }
+
+      if (flags.type === `answer_call`) { 
+        set(workflow, [`config`, `trigger`, `on_incoming_call`], `.*`)
       }
 
       set(workflow, [`config`, `trigger`, `start`, `workflow`, `uri`], flags.uri)
