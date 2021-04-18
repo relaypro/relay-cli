@@ -43,7 +43,12 @@ export class CreateWorkflowCommand extends Command {
       multiple: false,
       required: true,
       default: `phrase`,
-      options: [`phrase`, `button`, `http`, `place_call`, `answer_call`],
+      options: [`phrase`, `button`, `http`, `call`],
+    }),
+    call: flags.enum({
+      multiple: false,
+      default: `outbound`,
+      options: [`inbound`, `outbound`],
     }),
     phrase: flags.string({
       multiple: false,
@@ -102,12 +107,18 @@ export class CreateWorkflowCommand extends Command {
         }
       }
 
-      if (flags.type === `place_call`) {
-        set(workflow, [`config`, `trigger`, `on_call_request`], `.*`)
-      }
-
-      if (flags.type === `answer_call`) { 
-        set(workflow, [`config`, `trigger`, `on_incoming_call`], `.*`)
+      if (flags.type === `call`) {
+        if (flags.call) {
+          if (flags.call === `outbound`) {
+            set(workflow, [`config`, `trigger`, `on_call_request`], `.*`)
+          } else if (flags.call === `inbound`) {
+            set(workflow, [`config`, `trigger`, `on_incoming_call`], `.*`)
+          } else {
+            throw new Error(`Available call actions are 'inbound' and 'outbound'`)
+          }
+        } else {
+          throw new Error(`Trigger type 'call' requires specifying a call action. For instance '--call inbound'`)
+        }
       }
 
       set(workflow, [`config`, `trigger`, `start`, `workflow`, `uri`], flags.uri)
