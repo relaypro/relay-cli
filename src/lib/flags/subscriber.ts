@@ -8,5 +8,11 @@ export const subscriberId = flags.string({
   hidden: false,
   multiple: false,
   env: `RELAY_SUBSCRIBER_ID`,
-  default: () => getDefaultSubscriberId()
+  default: () => {
+    try {
+      return getDefaultSubscriberId()
+    } catch {
+      return undefined
+    }
+  }
 })
