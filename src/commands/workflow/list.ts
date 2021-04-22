@@ -13,7 +13,7 @@ import debugFn = require('debug')
 const debug = debugFn(`workflow`)
 
 export default class Workflow extends Command {
-  static description = `list workflow configurations`
+  static description = `List workflow configurations`
 
   static flags = {
     ...flags.subscriber,

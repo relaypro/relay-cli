@@ -10,7 +10,7 @@ const debug = debugFn(`workflow`)
 
 export class UninstallWorkflowCommand extends Command {
 
-  static description = `uninstall an existing workflow from one or more devices`
+  static description = `Uninstall an existing workflow from one or more devices`
 
   static flags = {
     [`workflow-id`]: flags.workflowId,

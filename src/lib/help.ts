@@ -1,5 +1,11 @@
 import * as Config from '@oclif/config'
 import Help from '@oclif/plugin-help'
+import CommandHelp from '@oclif/plugin-help/lib/command'
+import { orderBy } from 'lodash'
+
+// eslint-disable-next-line quotes
+// import debugFn = require('debug')
+// const debug = debugFn(`cli`)
 
 export default class RelayHelp extends Help {
   // acts as a "router"
@@ -55,6 +61,14 @@ export default class RelayHelp extends Help {
 
   // the formatting for an individual command
   formatCommand(command: Config.Command): string {
-    return super.formatCommand(command)
+    const help = new RelayCommandHelp(command, this.config, this.opts)
+    return help.generate()
+  }
+}
+
+class RelayCommandHelp extends CommandHelp {
+  protected flags(flags: Config.Command.Flag[]): string | undefined {
+    const priorityFlagOrder = orderBy(flags, [f => f.required || false], [`desc`])
+    return super.flags(priorityFlagOrder)
   }
 }

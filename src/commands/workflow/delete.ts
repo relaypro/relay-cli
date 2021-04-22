@@ -12,7 +12,7 @@ const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
 export class DeleteWorkflowCommand extends Command {
 
-  static description = `destructively delete and remove a workflow`
+  static description = `Destructively delete and remove a workflow`
 
   static flags = {
     [`workflow-id`]: flags.workflowId,

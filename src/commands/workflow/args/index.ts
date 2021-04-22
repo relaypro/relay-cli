@@ -9,7 +9,7 @@ const debug = debugFn(`workflow`)
 
 export class SetArgsCommand extends Command {
 
-  static description = `list a workflow's args`
+  static description = `List a workflow's args`
 
   static flags = {
     [`workflow-id`]: flags.workflowId,

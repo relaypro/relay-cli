@@ -10,7 +10,7 @@ const debug = debugFn(`workflow`)
 
 export class InstallWorkflowCommand extends Command {
 
-  static description = `install an existing workflow into one or more devices`
+  static description = `Install an existing workflow into one or more devices`
 
   static flags = {
     [`workflow-id`]: flags.workflowId,

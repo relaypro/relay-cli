@@ -3,10 +3,11 @@ import { isNaN, toNumber } from 'lodash'
 import { parseArg } from '../utils'
 
 export const numberValue = flags.build({
-  char: `n`,
-  description: `number arg name/value pair`,
+  char: `r`,
+  description: `Number name/value pair workflow arg`,
   multiple: true,
   required: false,
+  helpValue: `arg1=100.0`,
   parse: input => {
     const [success, name, value] = parseArg(input)
     if (success) {

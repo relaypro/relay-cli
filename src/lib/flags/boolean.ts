@@ -3,9 +3,10 @@ import { parseArg } from '../utils'
 
 export const booleanValue = flags.build({
   char: `b`,
-  description: `boolean arg name/value pair`,
+  description: `Boolean name/value pair workflow arg`,
   multiple: true,
   required: false,
+  helpValue: `arg1=[true|false]`,
   parse: input => {
     const [success, name, value] = parseArg(input)
     if (success && (value === `true` || value === `false`)) {
@@ -13,5 +14,5 @@ export const booleanValue = flags.build({
     } else {
       throw new Error(`${input} is invalid. Must be in the format of 'foo=true' or 'foo=false'`)
     }
-  }
+  },
 })
