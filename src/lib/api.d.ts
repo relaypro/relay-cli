@@ -5,7 +5,19 @@ export type DeviceIds = {
   devices: DeviceId[]
 }
 
-export type ArgValueType = string | number | boolean
+export type Subscriber = {
+  subscriber_id: string,
+  users: string[]
+}
+
+export type Group = {
+  group_id: string,
+  name: string,
+  owner: string,
+  subscribers: Subscriber[],
+}
+
+export type ArgValueType = string | number | boolean | string[]
 
 export type Args = {
   [x: string]: ArgValueType

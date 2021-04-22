@@ -4,10 +4,11 @@ import last from 'lodash/last'
 
 import type { ParsingToken } from '@oclif/parser/lib/parse'
 
-import { booleanValue, numberValue, WorkflowFlags } from './flags'
+import { booleanValue, numberValue, TimerFlags, TimerOptions, TimerWorkflow, WorkflowFlags } from './flags'
 import { formatWorkflowArgs, formatWorkflowType, parseArg } from './utils'
 import { NewWorkflow, Workflow } from './api'
 import { cli } from 'cli-ux'
+import { getTimestampFromFlag, getTimestampNow } from './datetime'
 
 const parseArgs = (tokens: ParsingToken[]) => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -59,6 +60,53 @@ export const createWorkflow = (flags: WorkflowFlags, argv: string[], tokens: Par
     install: argv
   }
 
+  return workflow
+}
+
+export const createTimerWorkflow = (flags: TimerFlags, argv: string[], tokens: ParsingToken[]): TimerWorkflow => {
+  const workflow: TimerWorkflow = createWorkflow(flags, argv, tokens) as TimerWorkflow
+
+  if (flags.trigger === `immediately`) {
+    workflow.config.trigger.on_timer = { start_time: `immediately` }
+  } else if (!flags.start) {
+    throw new Error(`Trigger type timer with repeating rule requires specifying a start time. For instance '--start ${getTimestampNow()}'`)
+  } else {
+    const options: TimerOptions = {}
+    options.start_time = getTimestampFromFlag(flags.start, flags.timezone)
+
+    if (flags.trigger === `schedule`) {
+      // schedule... set count to 1
+      if (flags.until !== undefined || flags.count !== undefined) {
+        throw new Error(`Trigger type schedule runs once in the future and cannot define "count" or "until" values`)
+      }
+      options.count = 1
+    } else {
+      // repeat
+      if (flags.until && flags.count !== undefined) {
+        throw new Error(`Trigger type timer with repeating rule cannot define both a "count" and "until" value`)
+      } else if (flags.until === undefined && flags.count === undefined) {
+        throw new Error(`Trigger type timer with repeating rule must define one of "count" or "until" value`)
+      }
+
+      if (flags.until) {
+        options.until = getTimestampFromFlag(flags.until, flags.timezone)
+      }
+
+      if (flags.frequency) {
+        options.frequency = flags.frequency
+      }
+
+      if (flags.interval !== undefined) {
+        options.interval = flags.interval
+      }
+
+      if (flags.count !== undefined) {
+        options.count = flags.count
+      }
+    }
+
+    workflow.config.trigger.on_timer = options
+  }
   return workflow
 }
 

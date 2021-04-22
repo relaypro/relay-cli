@@ -11,38 +11,40 @@ const { AutoComplete, Select } = require('enquirer') // eslint-disable-line quot
 
 const debug = debugFn(`login`)
 
-export interface Subscriber {
+export type Subscriber = {
   id: string,
   email: string,
   name: string,
 }
 
-export interface User {
-  email: string
+export type User = {
+  email: string,
+  userid: string,
 }
 
-export interface AccountEnvelope {
+export type AccountEnvelope = {
   account: Account
 }
 
-export interface Account {
+export type Account = {
   account_name: string
   subscriber_id: string
   owner_email: string
 }
 
-export interface Tokens {
+export type Tokens = {
   access_token: string,
   refresh_token?: string
 }
 
-export interface TokenAccount extends Tokens {
-  username?: string
+export type TokenAccount = Tokens & {
+  username: string,
+  uuid: string,
 }
 
 export type SessionTokens = Record<string, TokenAccount>
 
-export interface Session {
+export type Session = {
   subscriber: Subscriber
 }
 

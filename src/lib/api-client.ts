@@ -2,7 +2,7 @@ import * as Config from '@oclif/config'
 import { CLIError, warn } from '@oclif/errors'
 import { cli } from 'cli-ux'
 import { HTTP, HTTPError, HTTPRequestOptions } from 'http-call'
-import { find, includes, isString, map } from 'lodash'
+import { find, includes, isString, map, filter } from 'lodash'
 import * as url from 'url'
 
 import deps from './deps'
@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber } from './session'
-import { DeviceId, DeviceIds, NewWorkflow, Workflow, Workflows } from './api'
+import { DeviceId, DeviceIds, Group, NewWorkflow, Workflow, Workflows } from './api'
 import { getOrThrow } from './utils'
 
 
@@ -199,6 +199,11 @@ export class APIClient {
   async devices(subscriberId: string): Promise<DeviceId[]> {
     const { body: { devices } } = await this.get<DeviceIds>(`/ibot/subscriber/${subscriberId}/device_ids`)
     return devices
+  }
+  async groups(subscriberId: string): Promise<Group[]> {
+    let { body } = await this.get<Group[]>(`/ibot/groups?subscriber_id=${subscriberId}`)
+    body = isString(body) ? JSON.parse(body) : body
+    return filter(body, { owner: subscriberId })
   }
   async workflows(subscriberId: string): Promise<Workflow[]> {
     const { body: { results } } = await this.get<Workflows>(`/ibot/workflow?subscriber_id=${subscriberId}`)

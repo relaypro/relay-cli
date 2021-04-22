@@ -2,10 +2,10 @@ import * as flags from '@oclif/command/lib/flags'
 export * from '@oclif/command/lib/flags'
 
 import { subscriberId } from './subscriber'
-
 import { workflowId } from './workflow'
 import { booleanValue } from './boolean'
 import { numberValue } from './number'
+export { timerFlags, TimerOptions, TimerWorkflow } from './timer'
 
 const subscriber = {
   [`subscriber-id`]: subscriberId,
@@ -17,6 +17,16 @@ export type WorkflowFlags = {
   transient: boolean,
   hidden: boolean,
   http: boolean,
+}
+
+export type TimerFlags = WorkflowFlags & {
+  trigger: string,
+  timezone: string,
+  start?: string,
+  until?: string,
+  count?: number,
+  frequency?: string,
+  interval?: number
 }
 
 const workflowArgs = [
