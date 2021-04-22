@@ -173,8 +173,8 @@ export class APIClient {
     return this.http.request<T>(url, options)
   }
 
-  login(opts: Login.Options = {}): Promise<void> {
-    return this._login.login(opts)
+  login(): Promise<void> {
+    return this._login.login()
   }
   async logout(): Promise<void> {
     try {
