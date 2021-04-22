@@ -161,8 +161,9 @@ export class Login {
 
     return {
       access_token: auth.access_token,
-      username: user.email,
       refresh_token: auth.refresh_token,
+      uuid: user.userid,
+      username: user.email,
     }
   }
 
@@ -302,10 +303,17 @@ export class Login {
   private async refreshOAuthToken(): Promise<TokenAccount> {
     const tokens = getToken()
     const refreshToken = tokens?.refresh_token
-    const username = tokens?.username
 
     if (!refreshToken) {
       throw new Error(`no refresh token to refresh`)
+    }
+
+    if (!tokens?.username) {
+      throw new Error(`no username`)
+    }
+
+    if (!uuid) {
+      throw new Error(`no user uuid`)
     }
 
     const body: Record<string, string> = {
@@ -326,8 +334,8 @@ export class Login {
     const { body: auth } = await HTTP.post<Tokens>(`${vars.authUrl}/oauth2/token`, options)
 
     return {
+      ...tokens,
       access_token: auth.access_token,
-      username: username,
       refresh_token: auth.refresh_token,
     }
   }
