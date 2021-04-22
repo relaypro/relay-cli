@@ -1,13 +1,13 @@
-import * as ansiStyles from 'ansi-styles'
+// import * as ansiStyles from 'ansi-styles'
 import chalk from 'chalk'
-import * as supports from 'supports-color'
+// import * as supports from 'supports-color'
 
 const dim = process.env.ConEmuANSI === `ON` ? chalk.gray : chalk.dim
 
 let enabled: never
 
 export const CustomColors: {
-  supports: typeof supports,
+  // supports: typeof supports,
   gray: (s: string) => string,
   grey: (s: string) => string,
   dim: (s: string) => string,
@@ -16,7 +16,7 @@ export const CustomColors: {
   workflow: (s: string) => string,
   relay: (s: string) => string
 } = {
-  supports,
+  // supports,
   gray: dim,
   grey: dim,
   dim,
@@ -26,8 +26,8 @@ export const CustomColors: {
   relay: (s: string) => {
     if (!enabled) return s
     if (!color.supports) return s
-    const has256 = (color.supportsColor && color.supportsColor.has256) || (process.env.TERM || ``).indexOf(`256`) !== -1
-    return has256 ? `\u001b[38;5;104m${s}${ansiStyles.reset.open}` : chalk.magenta(s)
+    // const has256 = (color.supportsColor && color.supportsColor.has256) || (process.env.TERM || ``).indexOf(`256`) !== -1
+    return /*has256 ? `\u001b[38;5;104m${s}${ansiStyles.reset.open}` :*/ chalk.magenta(s)
   }
 }
 
