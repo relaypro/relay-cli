@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber } from './session'
-import { DeviceId, DeviceIds, Workflow, Workflows } from './api'
+import { DeviceId, DeviceIds, NewWorkflow, Workflow, Workflows } from './api'
 import { getOrThrow } from './utils'
 
 
@@ -213,12 +213,12 @@ export class APIClient {
     const workflows = await this.workflows(subscriberId)
     return find(workflows, ({ workflow_id }) => includes(workflow_id, id))
   }
-  async saveWorkflow(workflow: Workflow): Promise<Workflow[]> {
+  async saveWorkflow(workflow: NewWorkflow): Promise<Workflow[]> {
     const subscriberId = getDefaultSubscriberId()
-    const { body: { results } } = await this.post<Workflows>(`/ibot/workflow?subscriber_id=${subscriberId}`, {
+    const { body } = await this.post<Workflow[]>(`/ibot/workflow?subscriber_id=${subscriberId}`, {
       body: workflow,
     })
-    return map(results, row => {
+    return map(body, row => {
       if (isString(row.config)) {
         row.config = JSON.parse(row.config)
       }
