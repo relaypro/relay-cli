@@ -21,11 +21,6 @@ import { getOrThrow, uuid, base64url } from './utils'
 
 const debug = debugFn(`login`)
 
-const createBasicAuthorization = (id: string, secret: string) => {
-  const auth = (Buffer.from(`${id}:${secret}`)).toString(`base64`)
-  return `Basic ${auth}`
-}
-
 export class Login {
 
   constructor(private readonly config: Config.IConfig, private readonly relay: APIClient) {}
@@ -324,7 +319,6 @@ export class Login {
     const headers: Record<string, string> = {
       accept: `application/json`,
       'content-type': `application/x-www-form-urlencoded`,
-      authorization: createBasicAuthorization(vars.authId, vars.authSecret),
     }
 
     const options = { headers, body: encode(body) }

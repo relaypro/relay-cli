@@ -4,8 +4,7 @@ const config = {
   qa: {
     host: `all-api-qa-ibot.nocell.io`,
     authHost: `auth.relaygo.info`,
-    id: `RScqSh4k`,
-    secret: `LU64MEJ8Byij3J38`,
+    id: `4EgeETYm`,
   },
   pro: {
     host: `all-main-pro-ibot.nocell.io`,
@@ -67,10 +66,6 @@ export class Vars {
 
   get authCodeId(): string {
     return `Rk7Qq5jp`
-  }
-
-  get authSecret(): string {
-    return config[this.env].secret
   }
 
   get authRedirectUri(): string {
