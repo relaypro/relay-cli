@@ -1,5 +1,5 @@
 import { Command } from '../../../lib/command'
-import { enum as enumFlag, integer, workflowArgs, workflowFlags } from '../../../lib/flags'
+import { enum as enumFlag, workflowArgs, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -20,7 +20,7 @@ const mapType = (type: Direction): CallType => types[type] as CallType
 
 export class CallWorkflowCommand extends Command {
 
-  static description = `Create or update a workflow triggered by crossing a charging or discharging threshold of any device on the account`
+  static description = `Create or update a workflow triggered by inbound or outbound calling`
 
   static strict = false
 

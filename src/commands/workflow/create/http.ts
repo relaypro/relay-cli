@@ -15,7 +15,7 @@ const mapTap = (method: string): HttpMethod => `${method}` as HttpMethod
 
 export class HttpWorkflowCommand extends Command {
 
-  static description = `Create or update a workflow triggered by event emitted by Relay device`
+  static description = `Create or update a workflow triggered by an HTTP request`
 
   static strict = false
 
