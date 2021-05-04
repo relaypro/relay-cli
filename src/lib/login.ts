@@ -8,7 +8,6 @@ import open from 'open'
 import { APIClient, APIError } from './api-client'
 
 import { vars } from './vars'
-import color from './color'
 import http from 'http'
 import { URL } from 'url'
 import { isEmpty, map } from 'lodash'
@@ -89,7 +88,7 @@ export class Login {
     const showUrl = () => {
       if (!urlDisplayed) {
         cli.warn(`Cannot open browser.`)
-        cli.warn(`Copy and paste into a browser: ${color.greenBright(cli.url(`Click here to login`, url))}`)
+        cli.warn(`Copy and paste into a browser: ${cli.url(`Click here to login`, url)}`)
       }
       urlDisplayed = true
     }
