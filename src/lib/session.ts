@@ -34,7 +34,8 @@ export type Account = {
 
 export type Tokens = {
   access_token: string,
-  refresh_token?: string
+  refresh_token?: string,
+  expires_in?: number,
 }
 
 export type TokenAccount = Tokens & {

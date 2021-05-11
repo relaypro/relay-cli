@@ -75,9 +75,10 @@ export class Login {
     clearSubscribers()
   }
 
-  async refresh(): Promise<void> {
+  async refresh(): Promise<TokenAccount> {
     const auth = await this.refreshOAuthToken()
     setToken(auth)
+    return auth
   }
 
   private async browser(): Promise<TokenAccount> {
@@ -115,7 +116,7 @@ export class Login {
     const body = {
       grant_type: `authorization_code`,
       redirect_uri: vars.authRedirectUri,
-      client_id: vars.authCodeId,
+      client_id: vars.authId,
       code,
       code_verifier: codeVerifier,
     }
@@ -133,24 +134,24 @@ export class Login {
     // debug(`validate request`, validateOptions)
     const { body: user } = await HTTP.get<User>(`${vars.authUrl}/oauth2/validate`, validateOptions)
 
-    // if (!auth.refresh_token) {
-    //   debug(`no refresh_token`)
+    if (!auth.refresh_token) {
+      debug(`no refresh_token`)
 
-    //   const expiresHours = (auth.expires_in||7200)/60/60
+      const expiresHours = (auth.expires_in||7200)/60/60
 
-    //   cli.log(`Your login session will expire in ${expiresHours} hours.`)
-    //   cli.log(`If you sign in again and check "Remember me", your session will not expire`)
+      cli.log(`Your login session will expire in ${expiresHours} hours.`)
+      // cli.log(`If you sign in again and check "Remember me", your session will not expire`)
 
-    //   const prompt = new Toggle({
-    //     message: `Sign in again?`,
-    //     enabled: `Yes`,
-    //     disabled: `No, expire in ${expiresHours} hours`,
-    //   })
+      // const prompt = new Toggle({
+      //   message: `Sign in again?`,
+      //   enabled: `Yes`,
+      //   disabled: `No, expire in ${expiresHours} hours`,
+      // })
 
-    //   if (await prompt.run()) {
-    //     return await this.browser()
-    //   }
-    // }
+      // if (await prompt.run()) {
+      //   return await this.browser()
+      // }
+    }
 
 
     return {
@@ -244,7 +245,7 @@ export class Login {
           }
 
           if (req?.url) {
-            const url = new URL(req.url, `http://localhost:8080`)
+            const url = new URL(req.url, vars.authRedirectHost)
             const authUrl = new URL(vars.authRedirectUri)
 
             if (url.pathname === authUrl.pathname) {
@@ -267,8 +268,8 @@ export class Login {
         server.on(`error`, err => {
           serverReject(err)
         })
-        server.listen(8080, () => {
-          debug(`listening on 8080`)
+        server.listen(vars.authRedirectPort, () => {
+          debug(`listening on ${vars.authRedirectPort}`)
           serverResolve({ codePromise })
         })
       })
@@ -280,10 +281,10 @@ export class Login {
     const codeVerifier = uuid()
     const codeChallenge = base64url(crypto.createHash(`sha256`).update(codeVerifier).digest(`base64`))
     const params = {
-      client_id: vars.authCodeId,
+      client_id: vars.authId,
       response_type: `code`,
       scope: `openid profile`,
-      redirect_uri: `http://localhost:8080/authorization-code/callback`,
+      redirect_uri: vars.authRedirectUri,
       state: uuid(),
       code_challenge_method: `S256`,
       code_challenge: codeChallenge,
@@ -313,6 +314,7 @@ export class Login {
     const body: Record<string, string> = {
       grant_type: `refresh_token`,
       refresh_token: refreshToken,
+      client_id: vars.authId,
     }
 
     const headers: Record<string, string> = {
@@ -355,7 +357,7 @@ export class Login {
     return map(accounts, account => ({
       id: getOrThrow(account, [`account`, `subscriber_id`]),
       email: getOrThrow(account, [`account`, `owner_email`]),
-      name:  getOrThrow(account, [`account`, `account_name`]),
+      name: getOrThrow(account, [`account`, `account_name`]),
     }))
   }
 }

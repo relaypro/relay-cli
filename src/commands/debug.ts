@@ -23,8 +23,11 @@ export default class Debug extends Command {
     }),
     path: flags.string({
       char: `p`,
-      default: ``,
       dependsOn: [`dump`],
+    }),
+    [`refresh-auth`]: flags.boolean({
+      char: `r`,
+      default: false,
     })
   }
 
@@ -35,13 +38,24 @@ export default class Debug extends Command {
       debug(`dump`)
       const session = this.relay.session()
       debug(`session`)
-      cli.styledJSON(get(session, flags.path, session))
+      cli.styledJSON(get(session, flags.path || ``, session))
     }
 
     if (flags.clear) {
       debug(`clear`)
       this.relay.clear()
       this.log(`Relay CLI configuration cleared`)
+    }
+
+    if (flags[`refresh-auth`]) {
+      try {
+        const tokens = await this.relay.refresh()
+        cli.styledHeader(`Auth token refreshed`)
+        cli.styledJSON(tokens)
+      } catch(e) {
+        debug(`failed to refresh token`, e)
+        cli.error(`Failed to refresh token`)
+      }
     }
   }
 }

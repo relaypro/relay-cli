@@ -10,7 +10,6 @@ const config = {
     host: `all-main-pro-ibot.nocell.io`,
     authHost: `auth.relaygo.com`,
     id: ``,
-    secret: ``,
   }
 }
 
@@ -64,12 +63,16 @@ export class Vars {
     return config[this.env].id
   }
 
-  get authCodeId(): string {
-    return `Rk7Qq5jp`
+  get authRedirectPort(): number {
+    return 8079
+  }
+
+  get authRedirectHost(): string {
+    return `http://localhost:${this.authRedirectPort}`
   }
 
   get authRedirectUri(): string {
-    return `http://localhost:8080/authorization-code/callback`
+    return `${this.authRedirectHost}/authorization-code/callback`
   }
 
   get stratusUrl(): string {

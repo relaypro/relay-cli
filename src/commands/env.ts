@@ -13,7 +13,7 @@ RELAY_ENV=pro
 
 # API
 RELAY_HOST=all-api-qa-ibot.nocell.io      # default
-RELAY_HOST=all-api-pro-ibot.nocell.io
+RELAY_HOST=all-main-pro-ibot.nocell.io
 `.trim()]
 
   async run(): Promise<void> {
