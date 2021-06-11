@@ -76,7 +76,7 @@ export class Vars {
   }
 
   get stratusUrl(): string {
-    return `https://api-d.republicdev.info/stratus/rest`
+    return `https://all-qa-api-proxy.nocell.io/stratus/rest`
   }
 }
 
