@@ -13,6 +13,7 @@ const subscriber = {
 
 export type WorkflowFlags = {
   install: string[],
+  absorb?: string[],
   name: string,
   uri: string,
   transient: boolean,
@@ -64,6 +65,13 @@ const workflowFlags = {
     char: `h`,
     default: false,
     description: `Allow this workflow to be triggered with an HTTP request`,
+  }),
+  absorb: flags.string({
+    required: false,
+    multiple: true,
+    options: [`on_call_request`, `on_incoming_call`],
+    description: `If matching workflow is already running, absorb and deliver specified triggering events as in-workflow events instead`,
+    hidden: true,
   }),
   arg: flags.string({
     char: `a`,

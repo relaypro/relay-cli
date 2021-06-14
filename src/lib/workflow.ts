@@ -46,6 +46,7 @@ export const createWorkflow = (flags: WorkflowFlags, tokens: ParsingToken[]): Ne
       transient: flags.transient,
       hidden: flags.hidden,
       allow_remote_invoke: flags.http,
+      absorb_triggers: flags.absorb,
     },
     config: {
       trigger: {
