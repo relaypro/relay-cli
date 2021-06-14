@@ -1,5 +1,5 @@
 import { Command } from '../../../lib/command'
-import { enum as enumFlag, workflowArgs, workflowFlags } from '../../../lib/flags'
+import { enum as enumFlag, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -30,16 +30,12 @@ export class HttpWorkflowCommand extends Command {
     }),
   }
 
-  static args = [
-    ...workflowArgs
-  ]
-
   async run(): Promise<void> {
-    const { flags, argv, raw } = this.parse(HttpWorkflowCommand)
+    const { flags, raw } = this.parse(HttpWorkflowCommand)
 
     try {
 
-      const workflow: HttpWorkflow = createWorkflow(flags, argv, raw) as HttpWorkflow
+      const workflow: HttpWorkflow = createWorkflow(flags, raw) as HttpWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_http = mapTap(flags.trigger)

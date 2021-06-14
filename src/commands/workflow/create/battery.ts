@@ -1,5 +1,5 @@
 import { Command } from '../../../lib/command'
-import { enum as enumFlag, integer, workflowArgs, workflowFlags } from '../../../lib/flags'
+import { enum as enumFlag, integer, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -36,16 +36,12 @@ export class BatteryWorkflowCommand extends Command {
     }),
   }
 
-  static args = [
-    ...workflowArgs
-  ]
-
   async run(): Promise<void> {
-    const { flags, argv, raw } = this.parse(BatteryWorkflowCommand)
+    const { flags, raw } = this.parse(BatteryWorkflowCommand)
 
     try {
 
-      const workflow: BatteryWorkflow = createWorkflow(flags, argv, raw) as BatteryWorkflow
+      const workflow: BatteryWorkflow = createWorkflow(flags, raw) as BatteryWorkflow
 
       if (!flags.trigger) {
         throw new Error(`Trigger type battery requires specifying a trigger of charge or discharge. For instance '--trigger discharge'`)

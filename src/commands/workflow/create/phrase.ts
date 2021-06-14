@@ -1,5 +1,5 @@
 import { Command } from '../../../lib/command'
-import { string, workflowArgs, workflowFlags } from '../../../lib/flags'
+import { string, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -26,16 +26,12 @@ export class PhraseWorkflowCommand extends Command {
     }),
   }
 
-  static args = [
-    ...workflowArgs
-  ]
-
   async run(): Promise<void> {
-    const { flags, argv, raw } = this.parse(PhraseWorkflowCommand)
+    const { flags, raw } = this.parse(PhraseWorkflowCommand)
 
     try {
 
-      const workflow: PhraseWorkflow = createWorkflow(flags, argv, raw) as PhraseWorkflow
+      const workflow: PhraseWorkflow = createWorkflow(flags, raw) as PhraseWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_phrase = flags.trigger

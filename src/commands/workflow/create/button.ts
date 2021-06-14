@@ -1,5 +1,5 @@
 import { Command } from '../../../lib/command'
-import { enum as enumFlag, workflowArgs, workflowFlags } from '../../../lib/flags'
+import { enum as enumFlag, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -30,16 +30,12 @@ export class ButtonWorkflowCommand extends Command {
     }),
   }
 
-  static args = [
-    ...workflowArgs
-  ]
-
   async run(): Promise<void> {
-    const { flags, argv, raw } = this.parse(ButtonWorkflowCommand)
+    const { flags, raw } = this.parse(ButtonWorkflowCommand)
 
     try {
 
-      const workflow: ButtonWorkflow = createWorkflow(flags, argv, raw) as ButtonWorkflow
+      const workflow: ButtonWorkflow = createWorkflow(flags, raw) as ButtonWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_button = mapTap(flags.trigger)

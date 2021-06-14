@@ -12,6 +12,7 @@ const subscriber = {
 }
 
 export type WorkflowFlags = {
+  install: string[],
   name: string,
   uri: string,
   transient: boolean,
@@ -29,14 +30,13 @@ export type TimerFlags = WorkflowFlags & {
   interval?: number
 }
 
-const workflowArgs = [
-  {
-    name: `ID`,
-    description: `device / user ID to install workflow on`,
-  },
-]
-
 const workflowFlags = {
+  install: flags.string({
+    char: `i`,
+    multiple: true,
+    required: false,
+    description: `device / user ID to install workflow on`
+  }),
   name: flags.string({
     char: `n`,
     multiple: false,
@@ -56,7 +56,7 @@ const workflowFlags = {
     description: `Allow workflow to run in the background; otherwise terminate workflow`,
   }),
   hidden: flags.boolean({
-    char: `i`,
+    char: `e`,
     default: false,
     description: `Hide channel from originating device`,
   }),
@@ -82,5 +82,4 @@ export {
   numberValue,
   subscriber,
   workflowFlags,
-  workflowArgs,
 }

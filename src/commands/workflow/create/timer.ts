@@ -1,5 +1,5 @@
 import { Command } from '../../../lib/command'
-import { workflowArgs, workflowFlags, timerFlags } from '../../../lib/flags'
+import { workflowFlags, timerFlags } from '../../../lib/flags'
 
 import { createTimerWorkflow, printWorkflows } from '../../../lib/workflow'
 
@@ -18,10 +18,6 @@ export class TimerWorkflowCommand extends Command {
     ...workflowFlags,
     ...timerFlags,
   }
-
-  static args = [
-    ...workflowArgs
-  ]
 
   async run(): Promise<void> {
     const { flags, argv, raw } = this.parse(TimerWorkflowCommand)

@@ -36,7 +36,7 @@ const parseArgs = (tokens: ParsingToken[]) => {
   return { ...normalArgs, ...booleanArgs, ...numberArgs }
 }
 
-export const createWorkflow = (flags: WorkflowFlags, argv: string[], tokens: ParsingToken[]): NewWorkflow => {
+export const createWorkflow = (flags: WorkflowFlags, tokens: ParsingToken[]): NewWorkflow => {
 
   const args = parseArgs(tokens)
 
@@ -57,7 +57,7 @@ export const createWorkflow = (flags: WorkflowFlags, argv: string[], tokens: Par
         }
       }
     },
-    install: argv
+    install: flags.install
   }
 
   return workflow

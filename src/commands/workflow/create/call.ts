@@ -1,5 +1,5 @@
 import { Command } from '../../../lib/command'
-import { enum as enumFlag, workflowArgs, workflowFlags } from '../../../lib/flags'
+import { enum as enumFlag, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -35,16 +35,12 @@ export class CallWorkflowCommand extends Command {
     }),
   }
 
-  static args = [
-    ...workflowArgs
-  ]
-
   async run(): Promise<void> {
-    const { flags, argv, raw } = this.parse(CallWorkflowCommand)
+    const { flags, raw } = this.parse(CallWorkflowCommand)
 
     try {
 
-      const workflow: CallWorkflow = createWorkflow(flags, argv, raw) as CallWorkflow
+      const workflow: CallWorkflow = createWorkflow(flags, raw) as CallWorkflow
 
       if (!flags.trigger) {
         throw new Error(`Trigger type call requires specifying a trigger of inbound or outbound. For instance '--trigger outbound'`)
