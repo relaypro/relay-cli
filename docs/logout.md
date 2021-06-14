@@ -14,4 +14,4 @@ USAGE
   $ relay logout
 ```
 
-_See code: [dist/commands/logout.ts](https://github.com/relaypro/relay-cli/blob/v0.0.4/dist/commands/logout.ts)_
+_See code: [dist/commands/logout.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/logout.ts)_
