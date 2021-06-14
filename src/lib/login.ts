@@ -24,7 +24,7 @@ export class Login {
 
   constructor(private readonly config: Config.IConfig, private readonly relay: APIClient) {}
 
-  async login(): Promise<void> {
+  async login(): Promise<TokenAccount> {
     debug(this.config)
     let loggedIn = false
     try {
@@ -61,6 +61,8 @@ export class Login {
           cli.warn(`Default Relay account not set... logging out.`)
           this.logout()
         }
+
+        return auth
       } else {
         throw new Error(`Failed to discover subscriber id`)
       }

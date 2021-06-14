@@ -11,7 +11,7 @@ import { RequestId, requestIdHeader } from './request-id'
 import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
-import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber } from './session'
+import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
 import { DeviceId, DeviceIds, Group, NewWorkflow, Workflow, Workflows } from './api'
 import { getOrThrow } from './utils'
 
@@ -57,7 +57,7 @@ export class APIError extends CLIError {
 }
 
 export class APIClient {
-  authPromise?: Promise<void>
+  authPromise?: Promise<TokenAccount>
   http: typeof HTTP
   private readonly _login = new Login(this.config, this)
   private _auth?: string
@@ -152,7 +152,7 @@ export class APIClient {
     this._auth = token
   }
 
-  refresh(): Promise<void> {
+  refresh(): Promise<TokenAccount> {
     this._auth = undefined
     return this._login.refresh()
   }
@@ -173,7 +173,7 @@ export class APIClient {
     return this.http.request<T>(url, options)
   }
 
-  login(): Promise<void> {
+  login(): Promise<TokenAccount> {
     return this._login.login()
   }
   async logout(): Promise<void> {

@@ -58,14 +58,14 @@ export const createWorkflow = (flags: WorkflowFlags, tokens: ParsingToken[]): Ne
         }
       }
     },
-    install: flags.install
+    install: flags.install || []
   }
 
   return workflow
 }
 
-export const createTimerWorkflow = (flags: TimerFlags, argv: string[], tokens: ParsingToken[]): TimerWorkflow => {
-  const workflow: TimerWorkflow = createWorkflow(flags, argv, tokens) as TimerWorkflow
+export const createTimerWorkflow = (flags: TimerFlags, tokens: ParsingToken[]): TimerWorkflow => {
+  const workflow: TimerWorkflow = createWorkflow(flags, tokens) as TimerWorkflow
 
   if (flags.trigger === `immediately`) {
     workflow.config.trigger.on_timer = { start_time: `immediately` }

@@ -20,11 +20,11 @@ export class TimerWorkflowCommand extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags, argv, raw } = this.parse(TimerWorkflowCommand)
+    const { flags, raw } = this.parse(TimerWorkflowCommand)
 
     try {
 
-      const workflow = createTimerWorkflow(flags, argv, raw)
+      const workflow = createTimerWorkflow(flags, raw)
 
       debug(workflow)
 

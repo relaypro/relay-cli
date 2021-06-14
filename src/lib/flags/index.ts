@@ -12,7 +12,7 @@ const subscriber = {
 }
 
 export type WorkflowFlags = {
-  install: string[],
+  install?: string[],
   absorb?: string[],
   name: string,
   uri: string,

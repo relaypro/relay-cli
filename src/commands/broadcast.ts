@@ -71,7 +71,9 @@ export default class Broadcast extends Command {
       hidden: true,
     }
 
-    const workflow: TimerWorkflow = createTimerWorkflow(workflowFlags, [selfId], raw)
+    const workflow: TimerWorkflow = createTimerWorkflow(workflowFlags, raw)
+
+    workflow.install = [selfId]
 
     const allDevices = await this.relay.devices(subscriber_id)
 
