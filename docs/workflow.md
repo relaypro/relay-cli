@@ -32,8 +32,6 @@ OPTIONS
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/args/index.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/args/index.ts)_
-
 ## `relay workflow:args:get ARG`
 
 display a single workflow arguments
@@ -46,8 +44,6 @@ OPTIONS
   -s, --subscriber-id=subscriber-id  (required) [default: cd11920e-140a-4f3d-869d-e7bba0d24c72] subscriber id
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
-
-_See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/args/get.ts)_
 
 ## `relay workflow:args:set`
 
@@ -64,8 +60,6 @@ OPTIONS
   -r, --number=arg1=100.0            Number name/value pair workflow arg
 ```
 
-_See code: [dist/commands/workflow/args/set.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/args/set.ts)_
-
 ## `relay workflow:args:unset`
 
 unset one or more workflow arguments
@@ -78,8 +72,6 @@ OPTIONS
   -s, --subscriber-id=subscriber-id  (required) [default: cd11920e-140a-4f3d-869d-e7bba0d24c72] subscriber id
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
-
-_See code: [dist/commands/workflow/args/unset.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/args/unset.ts)_
 
 ## `relay workflow:create:battery`
 
@@ -112,8 +104,6 @@ OPTIONS
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
 
-_See code: [dist/commands/workflow/create/battery.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/create/battery.ts)_
-
 ## `relay workflow:create:button`
 
 Create or update a workflow triggered by button taps
@@ -134,8 +124,6 @@ OPTIONS
   -r, --number=arg1=100.0          Number name/value pair workflow arg
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
-
-_See code: [dist/commands/workflow/create/button.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/create/button.ts)_
 
 ## `relay workflow:create:call`
 
@@ -158,8 +146,6 @@ OPTIONS
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
 
-_See code: [dist/commands/workflow/create/call.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/create/call.ts)_
-
 ## `relay workflow:create:event`
 
 Create or update a workflow triggered by event emitted by Relay device
@@ -180,8 +166,6 @@ OPTIONS
   -r, --number=arg1=100.0          Number name/value pair workflow arg
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
-
-_See code: [dist/commands/workflow/create/event.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/create/event.ts)_
 
 ## `relay workflow:create:http`
 
@@ -204,8 +188,6 @@ OPTIONS
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
 
-_See code: [dist/commands/workflow/create/http.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/create/http.ts)_
-
 ## `relay workflow:create:phrase`
 
 Create or update a workflow triggered by a spoken phrase
@@ -226,8 +208,6 @@ OPTIONS
   -r, --number=arg1=100.0          Number name/value pair workflow arg
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
-
-_See code: [dist/commands/workflow/create/phrase.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/create/phrase.ts)_
 
 ## `relay workflow:create:timer`
 
@@ -284,8 +264,6 @@ OPTIONS
   -v, --interval=interval
 ```
 
-_See code: [dist/commands/workflow/create/timer.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/create/timer.ts)_
-
 ## `relay workflow:delete`
 
 Destructively delete and remove a workflow
@@ -298,8 +276,6 @@ OPTIONS
   -s, --subscriber-id=subscriber-id  (required) [default: cd11920e-140a-4f3d-869d-e7bba0d24c72] subscriber id
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
-
-_See code: [dist/commands/workflow/delete.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/delete.ts)_
 
 ## `relay workflow:install ID`
 
@@ -316,8 +292,6 @@ OPTIONS
   -s, --subscriber-id=subscriber-id  (required) [default: cd11920e-140a-4f3d-869d-e7bba0d24c72] subscriber id
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
-
-_See code: [dist/commands/workflow/install.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/install.ts)_
 
 ## `relay workflow:list`
 
@@ -339,8 +313,6 @@ OPTIONS
   --sort=sort                        property to sort by (prepend '-' for descending)
 ```
 
-_See code: [dist/commands/workflow/list.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/list.ts)_
-
 ## `relay workflow:uninstall ID`
 
 Uninstall an existing workflow from one or more devices
@@ -356,5 +328,3 @@ OPTIONS
   -s, --subscriber-id=subscriber-id  (required) [default: cd11920e-140a-4f3d-869d-e7bba0d24c72] subscriber id
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
-
-_See code: [dist/commands/workflow/uninstall.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/workflow/uninstall.ts)_

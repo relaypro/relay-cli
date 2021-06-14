@@ -24,5 +24,3 @@ EXAMPLE
   RELAY_HOST=all-api-qa-ibot.nocell.io      # default
   RELAY_HOST=all-main-pro-ibot.nocell.io
 ```
-
-_See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/env.ts)_

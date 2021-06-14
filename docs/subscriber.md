@@ -17,8 +17,6 @@ USAGE
   $ relay subscriber:get
 ```
 
-_See code: [dist/commands/subscriber/get.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/subscriber/get.ts)_
-
 ## `relay subscriber:list`
 
 list subscribers
@@ -28,8 +26,6 @@ USAGE
   $ relay subscriber:list
 ```
 
-_See code: [dist/commands/subscriber/list.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/subscriber/list.ts)_
-
 ## `relay subscriber:refresh`
 
 refresh available subscribers
@@ -38,8 +34,6 @@ refresh available subscribers
 USAGE
   $ relay subscriber:refresh
 ```
-
-_See code: [dist/commands/subscriber/refresh.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/subscriber/refresh.ts)_
 
 ## `relay subscriber:set`
 
@@ -52,5 +46,3 @@ USAGE
 OPTIONS
   -s, --subscriber-id=subscriber-id  subscriber id
 ```
-
-_See code: [dist/commands/subscriber/set.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0-beta/dist/commands/subscriber/set.ts)_
