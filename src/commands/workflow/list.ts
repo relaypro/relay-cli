@@ -33,7 +33,7 @@ export default class Workflow extends Command {
         cli.table(workflows, {
           workflow_id: {
             header: `ID`,
-            get: row => last(row.workflow_id.split(`_`))
+            get: row => row.workflow_id //last(row.workflow_id.split(`_`))
           },
           name: {},
           type: {
