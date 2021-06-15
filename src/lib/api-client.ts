@@ -187,6 +187,7 @@ export class APIClient {
     return this.http.defaults
   }
   async whoami(): Promise<Record<string, string>> {
+    // TODO use parameterized subscriberId
     const subscriber = getDefaultSubscriber()
     const { body: user } = await this.get<Record<string, string>>(`${vars.authUrl}/oauth2/validate`)
     return {
@@ -219,6 +220,7 @@ export class APIClient {
     return find(workflows, ({ workflow_id }) => includes(workflow_id, id))
   }
   async saveWorkflow(workflow: NewWorkflow): Promise<Workflow[]> {
+    // TODO use parameterized subscriberId
     const subscriberId = getDefaultSubscriberId()
     const { body } = await this.post<Workflow[]>(`/ibot/workflow?subscriber_id=${subscriberId}`, {
       body: workflow,
@@ -231,9 +233,23 @@ export class APIClient {
     })
   }
   async removeWorkflow(id: string): Promise<boolean> {
+    // TODO use parameterized subscriberId
     const subscriberId = getDefaultSubscriberId()
     await this.delete(`/ibot/workflow/${id}?subscriber_id=${subscriberId}`)
     return true
+  }
+  async triggerWorkflow(subscriberId: string, workflowId: string, args: Record<string, string>): Promise<void> {
+    const tokenAccount = getToken()
+
+    const uri = `/ibot/workflow/${workflowId}?subscriber_id=${subscriberId}&user_id=${tokenAccount?.uuid}`
+    const body = {
+      action: `invoke`,
+      action_args: args,
+    }
+
+    debug(`triggerWorkflow`, { uri, body })
+
+    await this.post<void>(uri, { body })
   }
   clear(): void {
     clearConfig()

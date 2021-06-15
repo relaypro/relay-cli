@@ -1,6 +1,6 @@
 import filter from 'lodash/filter'
 import reduce from 'lodash/reduce'
-import last from 'lodash/last'
+// import last from 'lodash/last'
 
 import type { ParsingToken } from '@oclif/parser/lib/parse'
 
@@ -10,7 +10,7 @@ import { NewWorkflow, Workflow } from './api'
 import { cli } from 'cli-ux'
 import { getTimestampFromFlag, getTimestampNow } from './datetime'
 
-const parseArgs = (tokens: ParsingToken[]) => {
+export const parseArgs = (tokens: ParsingToken[]): Record<string, never> => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const normalArgFlags = filter(tokens, ({ flag }: any) => `arg` === flag)
   const normalArgs = reduce(normalArgFlags, (args, flag) => {
