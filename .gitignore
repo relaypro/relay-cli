@@ -6,3 +6,4 @@ yarn-error.log
 .vscode
 tmp
 .nyc_output
+tsconfig.tsbuildinfo
