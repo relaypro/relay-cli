@@ -1,7 +1,7 @@
 import cli from 'cli-ux'
 
 import { Command } from '../../lib/command'
-import { last, isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 
 import { formatWorkflowArgs, formatWorkflowType } from '../../lib/utils'
 
