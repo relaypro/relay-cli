@@ -4,9 +4,9 @@ import { Command } from '../lib/command'
 
 export default class Reset extends Command {
   static hidden = true
-  static description = 'reset Relay CLI configuration'
+  static description = `reset Relay CLI configuration`
 
-  async run() {
+  async run(): Promise<void> {
     // this.relay.reset()
     this.log(`Relay CLI configuration cleared`)
   }
