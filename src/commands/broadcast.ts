@@ -67,7 +67,6 @@ export default class Broadcast extends Command {
       name: `broadcast-${uuid()}`,
       uri: `relay-local://broadcast`,
       transient: false,
-      http: false,
       hidden: true,
     }
 

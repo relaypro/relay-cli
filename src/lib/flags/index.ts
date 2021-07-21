@@ -18,7 +18,6 @@ export type WorkflowFlags = {
   uri: string,
   transient: boolean,
   hidden: boolean,
-  http: boolean,
 }
 
 export type TimerFlags = WorkflowFlags & {
@@ -60,11 +59,6 @@ const workflowFlags = {
     char: `e`,
     default: false,
     description: `Hide channel from originating device`,
-  }),
-  http: flags.boolean({
-    char: `h`,
-    default: false,
-    description: `Allow this workflow to be triggered with an HTTP request`,
   }),
   absorb: flags.string({
     required: false,

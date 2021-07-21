@@ -55,7 +55,6 @@ export type Workflow = {
   options: {
     hidden: boolean
     transient: boolean
-    allow_remote_invoke: boolean
   }
   config: {
     trigger: {
