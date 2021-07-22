@@ -68,3 +68,15 @@ export type NewWorkflow = Omit<Workflow, `workflow_id`>
 export type Workflows = {
   results: Workflow[]
 }
+
+export type CustomAudio = {
+  id?: string,
+  subscriber_id: string,
+  audio_format: string,
+  short_name: string
+}
+
+export type CustomAudioUpload = {
+  result: CustomAudio,
+  s3_upload_url: string,
+}

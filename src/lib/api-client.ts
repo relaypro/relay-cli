@@ -2,7 +2,7 @@ import * as Config from '@oclif/config'
 import { CLIError, warn } from '@oclif/errors'
 import { cli } from 'cli-ux'
 import { HTTP, HTTPError, HTTPRequestOptions } from 'http-call'
-import { find, includes, isString, map, filter } from 'lodash'
+import { find, includes, isString, map, filter, isEmpty } from 'lodash'
 import * as url from 'url'
 
 import deps from './deps'
@@ -12,8 +12,11 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
-import { DeviceId, DeviceIds, Group, NewWorkflow, Workflow, Workflows } from './api'
+import { CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Group, NewWorkflow, Workflow, Workflows } from './api'
 import { getOrThrow } from './utils'
+import { createReadStream } from 'fs'
+import { access, stat } from 'fs/promises'
+import { R_OK } from 'constants'
 
 
 const debug = debugFn(`api-client`)
@@ -265,5 +268,45 @@ export class APIClient {
       email: getOrThrow(account, [`account`, `owner_email`]),
       name:  getOrThrow(account, [`account`, `account_name`]),
     }))
+  }
+  async listAudio(subscriberId: string): Promise<CustomAudio[]> {
+    const { body } = await this.get<CustomAudio[]>(`/ibot/custom_audio?subscriber_id=${subscriberId}`)
+    return body
+  }
+  async deleteAudio(subscriberId: string, id: string): Promise<void> {
+    await this.delete<never>(`/ibot/custom_audio/${id}?subscriber_id=${subscriberId}`)
+  }
+  async uploadAudio(subscriberId: string, name: string, filePath: string): Promise<string> {
+    const url = `/ibot/custom_audio?subscriber_id=${subscriberId}`
+
+    await access(filePath, R_OK)
+    const stats = await stat(filePath)
+
+    const body: CustomAudio = {
+      audio_format: `wave`,
+      subscriber_id: subscriberId,
+      short_name: name,
+    }
+    debug({ url, body })
+    const { body: response } = await this.post<CustomAudioUpload>(url, { body })
+    debug(response)
+    const id = response?.result?.id
+    if (id !== undefined) {
+      const stream = createReadStream(filePath)
+      const uploadUrl = response?.s3_upload_url
+
+      debug(uploadUrl)
+
+      await deps.HTTP.HTTP.put<never>(uploadUrl, {
+        body: stream,
+        headers: {
+          'content-type': `audio/wave`,
+          'content-length': stats.size,
+        }
+      })
+      return id
+    } else {
+      throw new Error(`Failed to upload custom audio`)
+    }
   }
 }
