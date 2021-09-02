@@ -175,7 +175,9 @@ export class APIClient {
   request<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
     return this.http.request<T>(url, options)
   }
-
+  generateToken(): Promise<string> {
+    return this._login.generateSdkTokenAccount()
+  }
   login(): Promise<TokenAccount> {
     return this._login.login()
   }

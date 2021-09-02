@@ -4,12 +4,14 @@ const config = {
   qa: {
     host: `all-api-qa-ibot.nocell.io`,
     authHost: `auth.relaygo.info`,
-    id: `4EgeETYm`,
+    cli_id: `4EgeETYm`,
+    sdk_id: `rGGK996c`,
   },
   pro: {
     host: `all-main-pro-ibot.nocell.io`,
     authHost: `auth.relaygo.com`,
-    id: ``,
+    cli_id: `8h63MEhC`,
+    sdk_id: `TgDsXRuD`,
   }
 }
 
@@ -59,8 +61,12 @@ export class Vars {
     return `https://${this.authHost}`
   }
 
-  get authId(): string {
-    return config[this.env].id
+  get authCliId(): string {
+    return config[this.env].cli_id
+  }
+
+  get authSdkId(): string {
+    return config[this.env].sdk_id
   }
 
   get authRedirectPort(): number {

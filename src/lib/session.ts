@@ -76,7 +76,6 @@ export const setToken = (token: TokenAccount, host: string = vars.apiHost): void
   deps.config.set(`session.tokens`, tokens)
 }
 
-
 export const saveSubscribers = (subscribers: Subscriber[]): void => {
   deps.susbscriberConfig.set(`all`, subscribers)
 }

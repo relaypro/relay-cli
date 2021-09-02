@@ -22,7 +22,8 @@ RELAY_HOST=all-main-pro-ibot.nocell.io
       env: vars.env,
       api: vars.host,
       auth: vars.authHost,
-      authId: vars.authId,
+      auth_cli_id: vars.authCliId,
+      auth_sdk_id: vars.authSdkId,
     })
     cli.log(``)
     cli.styledHeader(`USAGE`)

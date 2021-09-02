@@ -11,7 +11,6 @@ import { vars } from './vars'
 import http from 'http'
 import { URL } from 'url'
 import { isEmpty, map } from 'lodash'
-import { Socket } from 'net'
 
 import debugFn from 'debug'
 import crypto = require('crypto') // eslint-disable-line quotes
@@ -46,7 +45,7 @@ export class Login {
       } catch(err) {
         cli.warn(err)
       }
-      const auth = await this.browser()
+      const auth = await this.generateCliTokenAccount()
       const subscribers = await this.fetchSubscribers(auth.access_token)
       debug(`subscribers`, subscribers)
 
@@ -78,14 +77,27 @@ export class Login {
   }
 
   async refresh(): Promise<TokenAccount> {
-    const auth = await this.refreshOAuthToken()
+    const auth = await this.refreshOAuthToken(vars.authCliId)
     setToken(auth)
     return auth
   }
 
-  private async browser(): Promise<TokenAccount> {
+  async generateSdkTokenAccount(): Promise<string> {
+    const { refresh_token } = await this.generateToken(vars.authSdkId)
+    if (refresh_token) {
+      return refresh_token
+    } else {
+      throw new Error(`failed-to-generate-sdk-token`)
+    }
+  }
+
+  private async generateCliTokenAccount(): Promise<TokenAccount> {
+    return this.generateToken(vars.authCliId)
+  }
+
+  private async generateToken(client_id: string): Promise<TokenAccount> {
     // set up callback server
-    const { url, codeVerifier } = this.createAuthorization()
+    const { url, codeVerifier } = this.createAuthorization(client_id)
 
     let urlDisplayed = false
     const showUrl = () => {
@@ -96,10 +108,9 @@ export class Login {
       urlDisplayed = true
     }
     const { codePromise } = await this.startHttpCodeServer()
-    // await cli.open(url)
     debug(url)
     cli.log(`Opening browser to login`)
-    cli.wait(500)
+    await cli.wait(500)
     const cp = await open(url, { wait: false })
     cp.on(`error`, err => {
       cli.warn(err)
@@ -118,7 +129,7 @@ export class Login {
     const body = {
       grant_type: `authorization_code`,
       redirect_uri: vars.authRedirectUri,
-      client_id: vars.authId,
+      client_id,
       code,
       code_verifier: codeVerifier,
     }
@@ -276,11 +287,11 @@ export class Login {
     })
   }
 
-  private createAuthorization(): { url: string, codeVerifier: string } {
+  private createAuthorization(client_id: string): { url: string, codeVerifier: string } {
     const codeVerifier = uuid()
     const codeChallenge = base64url(crypto.createHash(`sha256`).update(codeVerifier).digest(`base64`))
     const params = {
-      client_id: vars.authId,
+      client_id,
       response_type: `code`,
       scope: `openid profile`,
       redirect_uri: vars.authRedirectUri,
@@ -294,7 +305,7 @@ export class Login {
     }
   }
 
-  private async refreshOAuthToken(): Promise<TokenAccount> {
+  private async refreshOAuthToken(client_id: string): Promise<TokenAccount> {
     const tokens = getToken()
     const refreshToken = tokens?.refresh_token
 
@@ -313,7 +324,7 @@ export class Login {
     const body: Record<string, string> = {
       grant_type: `refresh_token`,
       refresh_token: refreshToken,
-      client_id: vars.authId,
+      client_id,
     }
 
     const headers: Record<string, string> = {
