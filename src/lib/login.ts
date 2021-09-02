@@ -172,9 +172,9 @@ export class Login {
           codeReject(new Error(`timed out waiting for browser login`))
         }, 3 * 60 * 1000) // three minutes
 
-        let socket: Socket
         const server = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
           clearTimeout(timeout)
+          req.socket.ref()
 
           const respond = (statusCode: number, message: string, cb: () => void) => {
             const body = `
@@ -196,20 +196,17 @@ export class Login {
             debug(`http responded`)
             res.end(() => {
               debug(`http ended`)
-              // @ts-expect-error accessing hidden property `_httpMessage` of socket to expedite server closing
-              const serverResponse = socket._httpMessage
-              if (serverResponse) {
-                if (!serverResponse.headersSent) {
-                  serverResponse.setHeader(`connection`, `close`)
-                }
-              }
-              socket.destroy()
+              req.socket.unref()
+              req.socket.destroy()
               server.close(err => {
                 server.unref()
                 debug(`server closed`)
                 if (err) {
                   debug(err)
                 }
+              })
+              setImmediate(() => {
+                server.emit(`close`)
                 cb()
               })
             })
@@ -264,8 +261,8 @@ export class Login {
             failure(`no-url`)
           }
         })
-        server.on(`connection`, s => {
-          socket = s
+        server.on(`connection`, socket => {
+          socket.unref()
         })
         server.on(`error`, err => {
           serverReject(err)
