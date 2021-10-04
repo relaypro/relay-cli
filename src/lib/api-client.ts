@@ -2,7 +2,7 @@ import * as Config from '@oclif/config'
 import { CLIError, warn } from '@oclif/errors'
 import { cli } from 'cli-ux'
 import { HTTP, HTTPError, HTTPRequestOptions } from 'http-call'
-import { find, includes, isString, map, filter, isEmpty } from 'lodash'
+import { find, includes, isString, map, filter } from 'lodash'
 import * as url from 'url'
 
 import deps from './deps'
@@ -185,7 +185,9 @@ export class APIClient {
     try {
       await this._login.logout()
     } catch (err) {
-      warn(err)
+      if (err instanceof Error || typeof err === `string`) {
+        warn(err)
+      }
     }
   }
   get defaults(): typeof HTTP.defaults {
