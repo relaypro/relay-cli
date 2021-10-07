@@ -32,7 +32,7 @@ OPTIONS
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/args/index.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/args/index.ts)_
+_See code: [dist/commands/workflow/args/index.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/args/index.ts)_
 
 ## `relay workflow:args:get ARG`
 
@@ -47,7 +47,7 @@ OPTIONS
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/args/get.ts)_
+_See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/args/get.ts)_
 
 ## `relay workflow:args:set`
 
@@ -64,7 +64,7 @@ OPTIONS
   -r, --number=arg1=100.0            Number name/value pair workflow arg
 ```
 
-_See code: [dist/commands/workflow/args/set.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/args/set.ts)_
+_See code: [dist/commands/workflow/args/set.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/args/set.ts)_
 
 ## `relay workflow:args:unset`
 
@@ -79,7 +79,7 @@ OPTIONS
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/args/unset.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/args/unset.ts)_
+_See code: [dist/commands/workflow/args/unset.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/args/unset.ts)_
 
 ## `relay workflow:create:battery`
 
@@ -103,8 +103,6 @@ OPTIONS
 
   -e, --hidden                     Hide channel from originating device
 
-  -h, --http                       Allow this workflow to be triggered with an HTTP request
-
   -i, --install=install            device / user ID to install workflow on
 
   -r, --number=arg1=100.0          Number name/value pair workflow arg
@@ -112,7 +110,7 @@ OPTIONS
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
 
-_See code: [dist/commands/workflow/create/battery.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/create/battery.ts)_
+_See code: [dist/commands/workflow/create/battery.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/create/battery.ts)_
 
 ## `relay workflow:create:button`
 
@@ -129,13 +127,12 @@ OPTIONS
   -a, --arg=arg                    String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
   -e, --hidden                     Hide channel from originating device
-  -h, --http                       Allow this workflow to be triggered with an HTTP request
   -i, --install=install            device / user ID to install workflow on
   -r, --number=arg1=100.0          Number name/value pair workflow arg
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
 
-_See code: [dist/commands/workflow/create/button.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/create/button.ts)_
+_See code: [dist/commands/workflow/create/button.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/create/button.ts)_
 
 ## `relay workflow:create:call`
 
@@ -152,13 +149,12 @@ OPTIONS
   -a, --arg=arg                    String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
   -e, --hidden                     Hide channel from originating device
-  -h, --http                       Allow this workflow to be triggered with an HTTP request
   -i, --install=install            device / user ID to install workflow on
   -r, --number=arg1=100.0          Number name/value pair workflow arg
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
 
-_See code: [dist/commands/workflow/create/call.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/create/call.ts)_
+_See code: [dist/commands/workflow/create/call.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/create/call.ts)_
 
 ## `relay workflow:create:event`
 
@@ -175,13 +171,12 @@ OPTIONS
   -a, --arg=arg                    String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
   -e, --hidden                     Hide channel from originating device
-  -h, --http                       Allow this workflow to be triggered with an HTTP request
   -i, --install=install            device / user ID to install workflow on
   -r, --number=arg1=100.0          Number name/value pair workflow arg
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
 
-_See code: [dist/commands/workflow/create/event.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/create/event.ts)_
+_See code: [dist/commands/workflow/create/event.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/create/event.ts)_
 
 ## `relay workflow:create:http`
 
@@ -198,13 +193,12 @@ OPTIONS
   -a, --arg=arg                    String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
   -e, --hidden                     Hide channel from originating device
-  -h, --http                       Allow this workflow to be triggered with an HTTP request
   -i, --install=install            device / user ID to install workflow on
   -r, --number=arg1=100.0          Number name/value pair workflow arg
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
 
-_See code: [dist/commands/workflow/create/http.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/create/http.ts)_
+_See code: [dist/commands/workflow/create/http.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/create/http.ts)_
 
 ## `relay workflow:create:phrase`
 
@@ -221,13 +215,12 @@ OPTIONS
   -a, --arg=arg                    String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
   -e, --hidden                     Hide channel from originating device
-  -h, --http                       Allow this workflow to be triggered with an HTTP request
   -i, --install=install            device / user ID to install workflow on
   -r, --number=arg1=100.0          Number name/value pair workflow arg
   -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
 ```
 
-_See code: [dist/commands/workflow/create/phrase.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/create/phrase.ts)_
+_See code: [dist/commands/workflow/create/phrase.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/create/phrase.ts)_
 
 ## `relay workflow:create:timer`
 
@@ -267,9 +260,6 @@ OPTIONS
   -f, --frequency=(minutely|hourly|daily|weekly|monthly|yearly)
       [default: hourly]
 
-  -h, --http
-      Allow this workflow to be triggered with an HTTP request
-
   -i, --install=install
       device / user ID to install workflow on
 
@@ -284,7 +274,7 @@ OPTIONS
   -v, --interval=interval
 ```
 
-_See code: [dist/commands/workflow/create/timer.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/create/timer.ts)_
+_See code: [dist/commands/workflow/create/timer.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/create/timer.ts)_
 
 ## `relay workflow:delete`
 
@@ -299,7 +289,7 @@ OPTIONS
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/delete.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/delete.ts)_
+_See code: [dist/commands/workflow/delete.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/delete.ts)_
 
 ## `relay workflow:install ID`
 
@@ -317,7 +307,7 @@ OPTIONS
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/install.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/install.ts)_
+_See code: [dist/commands/workflow/install.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/install.ts)_
 
 ## `relay workflow:list`
 
@@ -339,7 +329,7 @@ OPTIONS
   --sort=sort                        property to sort by (prepend '-' for descending)
 ```
 
-_See code: [dist/commands/workflow/list.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/list.ts)_
+_See code: [dist/commands/workflow/list.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/list.ts)_
 
 ## `relay workflow:uninstall ID`
 
@@ -357,4 +347,4 @@ OPTIONS
   -w, --workflow-id=workflow-id      (required) workflow id
 ```
 
-_See code: [dist/commands/workflow/uninstall.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/workflow/uninstall.ts)_
+_See code: [dist/commands/workflow/uninstall.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/workflow/uninstall.ts)_

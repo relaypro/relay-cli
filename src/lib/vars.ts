@@ -4,12 +4,14 @@ const config = {
   qa: {
     host: `all-api-qa-ibot.nocell.io`,
     authHost: `auth.relaygo.info`,
+    stratusHost: `all-qa-api-proxy.nocell.io`,
     cli_id: `4EgeETYm`,
     sdk_id: `rGGK996c`,
   },
   pro: {
     host: `all-main-pro-ibot.nocell.io`,
     authHost: `auth.relaygo.com`,
+    stratusHost: `all-pro-api-proxy.nocell.io`,
     cli_id: `8h63MEhC`,
     sdk_id: `TgDsXRuD`,
   }
@@ -81,8 +83,12 @@ export class Vars {
     return `${this.authRedirectHost}/authorization-code/callback`
   }
 
+  get stratusHost(): string {
+    return config[this.env].stratusHost
+  }
+
   get stratusUrl(): string {
-    return `https://all-qa-api-proxy.nocell.io/stratus/rest`
+    return `https://${this.stratusHost}/stratus/rest`
   }
 }
 

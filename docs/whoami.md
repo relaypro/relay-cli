@@ -14,4 +14,4 @@ USAGE
   $ relay whoami
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/relaypro/relay-cli/blob/v0.1.0/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/whoami.ts)_
