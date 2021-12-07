@@ -2,13 +2,16 @@
 import { flags } from '@oclif/command'
 
 import { NewWorkflow } from '../api'
+import { getTimestampFarFuture, getTimestampNextHour } from '../datetime'
 
 export type TimerOptions = {
+  timezone?: string,
   start_time?: string,
   until?: string,
   frequency?: string,
   count?: number,
   interval?: number,
+  byweekday?: number[],
 }
 
 export type TimerWorkflow = NewWorkflow & { config: { trigger: { on_timer: TimerOptions }}}
@@ -26,14 +29,14 @@ export const timerFlags = {
     required: true,
     multiple: false,
     default: `local`,
-    options: [`local`, `utc`, `America/New_York`, `America/Chicago`, `America/Denver`, `America/Los_Angeles`, `America/Phoenix`, `Pacific/Honolulu`],
-    helpValue: `one of "local", "utc", offset like "UTC-5", or valid IANA (https://www.iana.org/time-zones) time zone like "America/New_York"`
+    options: [`local`, `America/New_York`, `America/Chicago`, `America/Denver`, `America/Los_Angeles`, `America/Phoenix`, `Pacific/Honolulu`],
   }),
   start: flags.string({
     char: `s`,
+    default: getTimestampNextHour(),
   }),
   until: flags.string({
-    char: `e`,
+    char: `l`,
     exclusive: [`count`],
   }),
   count: flags.integer({
@@ -43,10 +46,19 @@ export const timerFlags = {
   frequency: flags.enum({
     char: `f`,
     multiple: false,
-    default: `hourly`,
-    options: [`minutely`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`],
+    default: `daily`,
+    options: [`daily`, `weekly`, `monthly`, `yearly`],
+    hidden: true,
   }),
   interval: flags.integer({
     char: `v`,
+    default: 1,
+    hidden: true,
+  }),
+  day: flags.string({
+    char: `d`,
+    multiple: true,
+    default: [`MO`,`TU`,`WE`,`TH`,`FR`,`SA`,`SU`],
+    description: `Days of the week to repeat on`,
   }),
 }

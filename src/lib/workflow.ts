@@ -8,7 +8,7 @@ import { booleanValue, numberValue, TimerFlags, TimerOptions, TimerWorkflow, Wor
 import { formatWorkflowArgs, formatWorkflowType, parseArg } from './utils'
 import { NewWorkflow, Workflow } from './api'
 import { cli } from 'cli-ux'
-import { getTimestampFromFlag, getTimestampNow } from './datetime'
+import { getTimestampFarFuture, getTimestampFromFlag, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
 
 export const parseArgs = (tokens: ParsingToken[]): Record<string, never> => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -72,7 +72,11 @@ export const createTimerWorkflow = (flags: TimerFlags, tokens: ParsingToken[]): 
     throw new Error(`Trigger type timer with repeating rule requires specifying a start time. For instance '--start ${getTimestampNow()}'`)
   } else {
     const options: TimerOptions = {}
-    options.start_time = getTimestampFromFlag(flags.start, flags.timezone)
+    options.start_time = withoutZ(flags.start)
+
+    if (flags.timezone) {
+      options.timezone = resolveTimezone(flags.timezone)
+    }
 
     if (flags.trigger === `schedule`) {
       // schedule... set count to 1
@@ -88,10 +92,6 @@ export const createTimerWorkflow = (flags: TimerFlags, tokens: ParsingToken[]): 
         throw new Error(`Trigger type timer with repeating rule must define one of "count" or "until" value`)
       }
 
-      if (flags.until) {
-        options.until = getTimestampFromFlag(flags.until, flags.timezone)
-      }
-
       if (flags.frequency) {
         options.frequency = flags.frequency
       }
@@ -102,6 +102,16 @@ export const createTimerWorkflow = (flags: TimerFlags, tokens: ParsingToken[]): 
 
       if (flags.count !== undefined) {
         options.count = flags.count
+      } else {
+        options.until = getTimestampFarFuture()
+      }
+
+      if (flags.until) {
+        options.until = withoutZ(flags.until)
+      }
+
+      if (flags.day) {
+        options.byweekday = resolveDayValues(flags.day)
       }
     }
 

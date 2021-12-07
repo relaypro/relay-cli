@@ -27,7 +27,8 @@ export type TimerFlags = WorkflowFlags & {
   until?: string,
   count?: number,
   frequency?: string,
-  interval?: number
+  interval?: number,
+  day?: string[],
 }
 
 const workflowFlags = {

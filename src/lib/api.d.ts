@@ -80,3 +80,13 @@ export type CustomAudioUpload = {
   result: CustomAudio,
   s3_upload_url: string,
 }
+
+export type DayLabel = `MO`|`TU`|`WE`|`TH`|`TH`|`FR`|`SA`|`SU`
+export type DayName = `Monday`|`Tuesday`|`Wednesday`|`Thursday`|`Friday`|`Saturday`|`Sunday`
+export type DayValue = 1|2|3|4|5|6|7
+
+export type Day = {
+  label: DayLabel,
+  name: DayName,
+  value: DayValue,
+}
