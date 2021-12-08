@@ -8,7 +8,7 @@ import { createWorkflow, printWorkflows } from '../../../lib/workflow'
 
 const debug = debugFn(`workflow:create:phrase`)
 
-type PhraseWorkflow = NewWorkflow & { config: { trigger: { on_phrase: string }}}
+type PhraseWorkflow = NewWorkflow & { config: { trigger: { on_phrase: string|string[] }}}
 
 export class PhraseWorkflowCommand extends Command {
 
@@ -20,7 +20,7 @@ export class PhraseWorkflowCommand extends Command {
     ...workflowFlags,
     trigger: string({
       required: true,
-      multiple: false,
+      multiple: true,
       description: `Phrase spoken to Relay Assistant to trigger this workflow`,
       helpValue: `"hello world"`
     }),
