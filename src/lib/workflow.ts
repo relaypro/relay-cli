@@ -8,7 +8,7 @@ import { booleanValue, numberValue, TimerFlags, TimerOptions, TimerWorkflow, Wor
 import { formatWorkflowArgs, formatWorkflowType, parseArg } from './utils'
 import { NewWorkflow, Workflow } from './api'
 import { cli } from 'cli-ux'
-import { getTimestampFarFuture, getTimestampFromFlag, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
+import { getTimestampFarFuture, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
 
 export const parseArgs = (tokens: ParsingToken[]): Record<string, never> => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
