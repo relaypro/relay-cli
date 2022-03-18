@@ -14,4 +14,4 @@ USAGE
   $ relay token:generate
 ```
 
-_See code: [dist/commands/token/generate.ts](https://github.com/relaypro/relay-cli/blob/v0.2.1/dist/commands/token/generate.ts)_
+_See code: [dist/commands/token/generate.ts](https://github.com/relaypro/relay-cli/blob/v0.2.3/dist/commands/token/generate.ts)_
