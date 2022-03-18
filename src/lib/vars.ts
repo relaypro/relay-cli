@@ -12,8 +12,8 @@ const config = {
     host: `all-main-pro-ibot.nocell.io`,
     authHost: `auth.relaygo.com`,
     stratusHost: `all-pro-api-proxy.nocell.io`,
-    cli_id: `8h63MEhC`,
-    sdk_id: `TgDsXRuD`,
+    cli_id: `83756T4P`,
+    sdk_id: `RJZKRhh9`,
   }
 }
 
