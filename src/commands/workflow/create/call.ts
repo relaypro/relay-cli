@@ -1,10 +1,10 @@
-import { Command } from '../../../lib/command'
+import { CreateCommand } from '../../../lib/command'
 import { enum as enumFlag, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow, printWorkflows } from '../../../lib/workflow'
+import { createWorkflow } from '../../../lib/workflow'
 
 const debug = debugFn(`workflow:create:call`)
 
@@ -18,7 +18,7 @@ const types = {
 }
 const mapType = (type: Direction): CallType => types[type] as CallType
 
-export class CallWorkflowCommand extends Command {
+export class CallWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered by inbound or outbound calling`
 
@@ -48,11 +48,7 @@ export class CallWorkflowCommand extends Command {
         workflow.config.trigger[mapType(flags.trigger as Direction)] = `.*`
       }
 
-      debug(workflow)
-
-      const workflows = await this.relay.saveWorkflow(workflow)
-
-      printWorkflows(workflows)
+      await this.saveWorkflow(workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

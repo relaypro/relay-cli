@@ -3,7 +3,7 @@ import cli from 'cli-ux'
 import { Command } from '../../lib/command'
 import isEmpty from 'lodash/isEmpty'
 
-import { formatWorkflowArgs, formatWorkflowType } from '../../lib/utils'
+import { printWorkflows } from '../../lib/utils'
 
 import * as flags from '../../lib/flags'
 
@@ -29,37 +29,10 @@ export default class Workflow extends Command {
       debug(workflows)
 
       if (!isEmpty(workflows)) {
-        cli.styledHeader(`Installed Workflows`)
-        cli.table(workflows, {
-          workflow_id: {
-            header: `ID`,
-            get: row => row.workflow_id //last(row.workflow_id.split(`_`))
-          },
-          name: {},
-          type: {
-            get: formatWorkflowType,
-          },
-          uri: {
-            get: row => row.config.trigger.start.workflow.uri,
-            extended: true,
-          },
-          args: {
-            get: formatWorkflowArgs,
-            extended: true,
-          },
-          install: {
-            header: `Installed on`,
-            get: row => row.install.join(`\n`),
-            extended: true
-          }
-        }, {
-          printLine: this.log,
-          ...flags,
-        })
+        printWorkflows(workflows, flags)
       } else {
         this.log(`No Workflows have been created yet`)
       }
-
 
     } catch (err) {
       debug(err)

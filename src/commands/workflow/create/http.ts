@@ -1,10 +1,10 @@
-import { Command } from '../../../lib/command'
+import { CreateCommand } from '../../../lib/command'
 import { enum as enumFlag, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow, printWorkflows } from '../../../lib/workflow'
+import { createWorkflow } from '../../../lib/workflow'
 
 const debug = debugFn(`workflow:create:http`)
 
@@ -13,7 +13,7 @@ type HttpWorkflow = NewWorkflow & { config: { trigger: { on_http: HttpMethod }}}
 
 const mapTap = (method: string): HttpMethod => `${method}` as HttpMethod
 
-export class HttpWorkflowCommand extends Command {
+export class HttpWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered by an HTTP request`
 
@@ -43,11 +43,7 @@ export class HttpWorkflowCommand extends Command {
         throw new Error(`Trigger type http requires specifying an HTTP method. For instance '--trigger POST'`)
       }
 
-      debug(workflow)
-
-      const workflows = await this.relay.saveWorkflow(workflow)
-
-      printWorkflows(workflows)
+      await this.saveWorkflow(workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

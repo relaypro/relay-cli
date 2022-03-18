@@ -9,6 +9,7 @@ import { formatWorkflowArgs, formatWorkflowType, parseArg } from './utils'
 import { NewWorkflow, Workflow } from './api'
 import { cli } from 'cli-ux'
 import { getTimestampFarFuture, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
+import { ALL } from './constants'
 
 export const parseArgs = (tokens: ParsingToken[]): Record<string, never> => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -40,7 +41,7 @@ export const createWorkflow = (flags: WorkflowFlags, tokens: ParsingToken[]): Ne
 
   const args = parseArgs(tokens)
 
-  const workflow = {
+  const workflow: NewWorkflow = {
     name: flags.name,
     options: {
       transient: flags.transient,
@@ -56,8 +57,13 @@ export const createWorkflow = (flags: WorkflowFlags, tokens: ParsingToken[]): Ne
           }
         }
       }
-    },
-    install: flags.install || []
+    }
+  }
+
+  if (flags[`install-all`]) {
+    workflow.install_rule = ALL
+  } else {
+    workflow.install = flags.install || []
   }
 
   return workflow
@@ -118,28 +124,4 @@ export const createTimerWorkflow = (flags: TimerFlags, tokens: ParsingToken[]): 
     workflow.config.trigger.on_timer = options
   }
   return workflow
-}
-
-export const printWorkflows = (workflows: Workflow[]): void => {
-  cli.styledHeader(`Installed Workflow`)
-  cli.table(workflows, {
-    workflow_id: {
-      header: `ID`,
-      get: row => row.workflow_id //last(row.workflow_id.split(`_`))
-    },
-    name: {},
-    type: {
-      get: formatWorkflowType,
-    },
-    uri: {
-      get: row => row.config.trigger.start.workflow.uri,
-    },
-    args: {
-      get: formatWorkflowArgs,
-    },
-    install: {
-      header: `Installed on`,
-      get: row => row.install.join(`\n`),
-    }
-  })
 }

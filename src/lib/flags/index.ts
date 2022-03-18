@@ -12,6 +12,7 @@ const subscriber = {
 }
 
 export type WorkflowFlags = {
+  [`install-all`]?: boolean,
   install?: string[],
   absorb?: string[],
   name: string,
@@ -32,11 +33,24 @@ export type TimerFlags = WorkflowFlags & {
 }
 
 const workflowFlags = {
+  [`dry-run`]: flags.boolean({
+    char: `N`,
+    default: false,
+    allowNo: false,
+  }),
   install: flags.string({
     char: `i`,
     multiple: true,
     required: false,
-    description: `device / user ID to install workflow on`
+    description: `device / user ID to install workflow on`,
+    exclusive: [`install-all`],
+  }),
+  [`install-all`]: flags.boolean({
+    char: `A`,
+    default: false,
+    allowNo: false,
+    description: `Enable rule to install workflow on all device and users on the account`,
+    exclusive: [`install`],
   }),
   name: flags.string({
     char: `n`,

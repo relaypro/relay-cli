@@ -1,16 +1,16 @@
-import { Command } from '../../../lib/command'
+import { CreateCommand } from '../../../lib/command'
 import { string, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow, printWorkflows } from '../../../lib/workflow'
+import { createWorkflow } from '../../../lib/workflow'
 
 const debug = debugFn(`workflow:create:phrase`)
 
 type PhraseWorkflow = NewWorkflow & { config: { trigger: { on_phrases: string[] }}}
 
-export class PhraseWorkflowCommand extends Command {
+export class PhraseWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered by a spoken phrase`
 
@@ -39,11 +39,7 @@ export class PhraseWorkflowCommand extends Command {
         throw new Error(`Trigger type phrase requires specifying a phrase. For instance '--phrase hello'`)
       }
 
-      debug(workflow)
-
-      const workflows = await this.relay.saveWorkflow(workflow)
-
-      printWorkflows(workflows)
+      await this.saveWorkflow(workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

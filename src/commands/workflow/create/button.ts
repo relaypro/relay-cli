@@ -1,10 +1,10 @@
-import { Command } from '../../../lib/command'
+import { CreateCommand } from '../../../lib/command'
 import { enum as enumFlag, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow, printWorkflows } from '../../../lib/workflow'
+import { createWorkflow } from '../../../lib/workflow'
 
 const debug = debugFn(`workflow:create:button`)
 
@@ -13,7 +13,7 @@ type ButtonWorkflow = NewWorkflow & { config: { trigger: { on_button: TapType }}
 
 const mapTap = (tap: string): TapType => `action_button_${tap}_tap` as TapType
 
-export class ButtonWorkflowCommand extends Command {
+export class ButtonWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered by button taps`
 
@@ -43,11 +43,7 @@ export class ButtonWorkflowCommand extends Command {
         throw new Error(`Trigger type button requires specifying number of taps. For instance '--trigger single'`)
       }
 
-      debug(workflow)
-
-      const workflows = await this.relay.saveWorkflow(workflow)
-
-      printWorkflows(workflows)
+      await this.saveWorkflow(workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

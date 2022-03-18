@@ -5,6 +5,9 @@ import deps from './deps'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
+import { NewWorkflow } from './api'
+import { printWorkflows } from './utils'
+import { cli } from 'cli-ux'
 const debug = debugFn(`error`)
 
 export abstract class Command extends Base {
@@ -26,4 +29,17 @@ export abstract class Command extends Base {
     return super.finally(possibleError)
   }
 
+}
+
+export abstract class CreateCommand extends Command {
+
+  async saveWorkflow(workflow: NewWorkflow, dryRun: boolean): Promise<void> {
+    if (!dryRun) {
+      debug(workflow)
+      const workflows = await this.relay.saveWorkflow(workflow)
+      printWorkflows(workflows, { extended: true })
+    } else {
+      cli.info(`Workflow dry-run:\n${JSON.stringify(workflow, null, 2)}`)
+    }
+  }
 }

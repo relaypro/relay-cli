@@ -51,14 +51,16 @@ type StartWorkflow = {
 export type Workflow = {
   workflow_id: string
   name: string,
-  install: string[],
+  install_rule?: string,
+  install?: string[],
   options: {
-    hidden: boolean
-    transient: boolean
+    hidden: boolean,
+    transient: boolean,
+    absorb_triggers?: string[],
   }
   config: {
     trigger: {
-      start: StartWorkflow
+      start: StartWorkflow,
     }
   }
 }

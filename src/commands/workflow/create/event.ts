@@ -1,10 +1,10 @@
-import { Command } from '../../../lib/command'
+import { CreateCommand } from '../../../lib/command'
 import { enum as enumFlag, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow, printWorkflows } from '../../../lib/workflow'
+import { createWorkflow } from '../../../lib/workflow'
 
 const debug = debugFn(`workflow:create:event`)
 
@@ -13,7 +13,7 @@ type EventWorkflow = NewWorkflow & { config: { trigger: { on_device_event: Event
 
 const mapTap = (event: string): EventType => `${event}` as EventType
 
-export class EventWorkflowCommand extends Command {
+export class EventWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered by event emitted by Relay device`
 
@@ -43,11 +43,7 @@ export class EventWorkflowCommand extends Command {
         throw new Error(`Trigger type event requires specifying a device event. For instance '--trigger emergency'`)
       }
 
-      debug(workflow)
-
-      const workflows = await this.relay.saveWorkflow(workflow)
-
-      printWorkflows(workflows)
+      await this.saveWorkflow(workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

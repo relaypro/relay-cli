@@ -1,14 +1,14 @@
-import { Command } from '../../../lib/command'
+import { CreateCommand } from '../../../lib/command'
 import { workflowFlags, timerFlags } from '../../../lib/flags'
 
-import { createTimerWorkflow, printWorkflows } from '../../../lib/workflow'
+import { createTimerWorkflow } from '../../../lib/workflow'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
 const debug = debugFn(`workflow:create:timer`)
 
-export class TimerWorkflowCommand extends Command {
+export class TimerWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered immediately or with a repeating rule`
 
@@ -26,11 +26,7 @@ export class TimerWorkflowCommand extends Command {
 
       const workflow = createTimerWorkflow(flags, raw)
 
-      debug(workflow)
-
-      const workflows = await this.relay.saveWorkflow(workflow)
-
-      printWorkflows(workflows)
+      await this.saveWorkflow(workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

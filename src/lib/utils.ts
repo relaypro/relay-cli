@@ -1,4 +1,7 @@
+import { cli } from 'cli-ux'
 import { get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
+import { Workflow } from './api'
+import { ALL } from './constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const formatWorkflowArgs = (workflow: any, json=false): string => { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -81,4 +84,46 @@ export function uuid(): string {
 
 export function base64url(str: string): string {
   return str.replace(/\+/g, `-`).replace(/\//g, `_`).replace(/=+$/, ``)
+}
+
+const displayInstall = (workflow: Workflow) => {
+  if (workflow.install_rule) {
+    if (workflow.install_rule === ALL) {
+      return `all devices`
+    } else {
+      return `unknown rule`
+    }
+  } else if (workflow.install) {
+    return workflow.install.join(`\n`)
+  } else {
+    return ``
+  }
+}
+
+export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  cli.styledHeader(`Installed Workflow${workflows.length > 1 ? `s` : ``}`)
+  cli.table(workflows, {
+    workflow_id: {
+      header: `ID`,
+      get: row => row.workflow_id //last(row.workflow_id.split(`_`))
+    },
+    name: {},
+    type: {
+      get: formatWorkflowType,
+    },
+    uri: {
+      get: row => row.config.trigger.start.workflow.uri,
+      extended: true,
+    },
+    args: {
+      get: formatWorkflowArgs,
+      extended: true,
+    },
+    install: {
+      header: `Installed on`,
+      get: row => displayInstall(row),
+      extended: true,
+    }
+  }, options)
 }

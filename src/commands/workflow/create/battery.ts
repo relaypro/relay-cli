@@ -1,10 +1,10 @@
-import { Command } from '../../../lib/command'
+import { CreateCommand } from '../../../lib/command'
 import { enum as enumFlag, integer, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow, printWorkflows } from '../../../lib/workflow'
+import { createWorkflow } from '../../../lib/workflow'
 
 const debug = debugFn(`workflow:create:battery`)
 
@@ -13,7 +13,7 @@ type BatteryWorkflow = NewWorkflow & { config: { trigger: { [K in BatteryType]: 
 
 const mapTap = (tap: string): BatteryType => `on_battery_${tap}` as BatteryType
 
-export class BatteryWorkflowCommand extends Command {
+export class BatteryWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered by crossing a charging or discharging threshold of any device on the account`
 
@@ -51,11 +51,7 @@ export class BatteryWorkflowCommand extends Command {
         workflow.config.trigger[mapTap(flags.trigger)] = flags.threshold
       }
 
-      debug(workflow)
-
-      const workflows = await this.relay.saveWorkflow(workflow)
-
-      printWorkflows(workflows)
+      await this.saveWorkflow(workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)
