@@ -8,7 +8,7 @@ import { createWorkflow, printWorkflows } from '../../../lib/workflow'
 
 const debug = debugFn(`workflow:create:phrase`)
 
-type PhraseWorkflow = NewWorkflow & { config: { trigger: { on_phrase: string|string[] }}}
+type PhraseWorkflow = NewWorkflow & { config: { trigger: { on_phrases: string[] }}}
 
 export class PhraseWorkflowCommand extends Command {
 
@@ -34,7 +34,7 @@ export class PhraseWorkflowCommand extends Command {
       const workflow: PhraseWorkflow = createWorkflow(flags, raw) as PhraseWorkflow
 
       if (flags.trigger) {
-        workflow.config.trigger.on_phrase = flags.trigger
+        workflow.config.trigger.on_phrases = flags.trigger
       } else {
         throw new Error(`Trigger type phrase requires specifying a phrase. For instance '--phrase hello'`)
       }

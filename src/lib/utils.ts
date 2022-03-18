@@ -31,8 +31,9 @@ export const formatWorkflowType = (workflow: any): string => { // eslint-disable
       case `on_device_event`: {
         return `device:${trigger}`
       }
-      case `on_phrase`: {
-        return `phrase:${isArray(trigger) ? join(trigger,`,`) : trigger}`
+      case `on_phrases`:
+      case `on_phrase`: { // `on_phrase` is deprecated, but leave in for backwards compatibilty
+        return `phrases:${isArray(trigger) ? join(trigger,`,`) : trigger}`
       }
       case `on_button`: {
         return `button:${replace(trigger, /action_button_|_tap/g, ``)}`
