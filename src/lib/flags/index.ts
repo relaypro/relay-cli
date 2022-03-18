@@ -32,12 +32,16 @@ export type TimerFlags = WorkflowFlags & {
   day?: string[],
 }
 
-const workflowFlags = {
+const dryRunFlags = {
   [`dry-run`]: flags.boolean({
     char: `N`,
     default: false,
     allowNo: false,
   }),
+}
+
+const installFlags = {
+  ...dryRunFlags,
   install: flags.string({
     char: `i`,
     multiple: true,
@@ -52,6 +56,11 @@ const workflowFlags = {
     description: `Enable rule to install workflow on all device and users on the account`,
     exclusive: [`install`],
   }),
+}
+
+const workflowFlags = {
+  ...dryRunFlags,
+  ...installFlags,
   name: flags.string({
     char: `n`,
     multiple: false,
@@ -99,4 +108,5 @@ export {
   numberValue,
   subscriber,
   workflowFlags,
+  installFlags,
 }
