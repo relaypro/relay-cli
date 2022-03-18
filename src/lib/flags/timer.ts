@@ -2,7 +2,7 @@
 import { flags } from '@oclif/command'
 
 import { NewWorkflow } from '../api'
-import { getTimestampFarFuture, getTimestampNextHour } from '../datetime'
+import { getTimestampNextHour } from '../datetime'
 
 export type TimerOptions = {
   timezone?: string,
