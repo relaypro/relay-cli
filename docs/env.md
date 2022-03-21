@@ -25,4 +25,4 @@ EXAMPLE
   RELAY_HOST=all-main-pro-ibot.nocell.io
 ```
 
-_See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v0.2.3/dist/commands/env.ts)_
+_See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v0.2.4/dist/commands/env.ts)_

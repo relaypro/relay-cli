@@ -5,9 +5,8 @@ import reduce from 'lodash/reduce'
 import type { ParsingToken } from '@oclif/parser/lib/parse'
 
 import { booleanValue, numberValue, TimerFlags, TimerOptions, TimerWorkflow, WorkflowFlags } from './flags'
-import { formatWorkflowArgs, formatWorkflowType, parseArg } from './utils'
-import { NewWorkflow, Workflow } from './api'
-import { cli } from 'cli-ux'
+import { parseArg } from './utils'
+import { NewWorkflow } from './api'
 import { getTimestampFarFuture, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
 import { ALL } from './constants'
 

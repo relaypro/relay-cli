@@ -1,5 +1,5 @@
 import { cli } from 'cli-ux'
-import { filter, includes, join, uniq } from 'lodash'
+import { filter, includes, uniq } from 'lodash'
 import { CreateCommand } from '../../lib/command'
 import * as flags from '../../lib/flags'
 

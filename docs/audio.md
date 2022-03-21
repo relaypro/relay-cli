@@ -24,7 +24,7 @@ OPTIONS
   -s, --subscriber-id=subscriber-id  (required) [default: 7b28d9b0-4b46-41f8-910c-bcf8dac3a03b] subscriber id
 ```
 
-_See code: [dist/commands/audio/create.ts](https://github.com/relaypro/relay-cli/blob/v0.2.3/dist/commands/audio/create.ts)_
+_See code: [dist/commands/audio/create.ts](https://github.com/relaypro/relay-cli/blob/v0.2.4/dist/commands/audio/create.ts)_
 
 ## `relay audio:delete`
 
@@ -39,7 +39,7 @@ OPTIONS
   -s, --subscriber-id=subscriber-id  (required) [default: 7b28d9b0-4b46-41f8-910c-bcf8dac3a03b] subscriber id
 ```
 
-_See code: [dist/commands/audio/delete.ts](https://github.com/relaypro/relay-cli/blob/v0.2.3/dist/commands/audio/delete.ts)_
+_See code: [dist/commands/audio/delete.ts](https://github.com/relaypro/relay-cli/blob/v0.2.4/dist/commands/audio/delete.ts)_
 
 ## `relay audio:list`
 
@@ -61,4 +61,4 @@ OPTIONS
   --sort=sort                        property to sort by (prepend '-' for descending)
 ```
 
-_See code: [dist/commands/audio/list.ts](https://github.com/relaypro/relay-cli/blob/v0.2.3/dist/commands/audio/list.ts)_
+_See code: [dist/commands/audio/list.ts](https://github.com/relaypro/relay-cli/blob/v0.2.4/dist/commands/audio/list.ts)_
