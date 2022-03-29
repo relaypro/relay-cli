@@ -31,7 +31,7 @@ export class EventWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = this.parse(EventWorkflowCommand)
+    const { flags, raw } = await this.parse(EventWorkflowCommand)
 
     try {
 
@@ -47,7 +47,7 @@ export class EventWorkflowCommand extends CreateCommand {
 
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

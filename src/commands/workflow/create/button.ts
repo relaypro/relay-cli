@@ -31,7 +31,7 @@ export class ButtonWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = this.parse(ButtonWorkflowCommand)
+    const { flags, raw } = await this.parse(ButtonWorkflowCommand)
 
     try {
 
@@ -47,7 +47,7 @@ export class ButtonWorkflowCommand extends CreateCommand {
 
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

@@ -1,4 +1,4 @@
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
 import { Command } from '../../lib/command'
 import { vars } from '../../lib/vars'
 
@@ -7,9 +7,9 @@ export default class Login extends Command {
 
   async run(): Promise<void> {
     const token = await this.relay.generateToken()
-    cli.styledHeader(`SDK TOKEN`)
-    cli.log(`The following token can be used in the configured environment`)
-    cli.styledObject({
+    CliUx.ux.styledHeader(`SDK TOKEN`)
+    CliUx.ux.log(`The following token can be used in the configured environment`)
+    CliUx.ux.styledObject({
       env: vars.env,
       api: vars.host,
       token,

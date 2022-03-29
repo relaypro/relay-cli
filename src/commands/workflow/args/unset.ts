@@ -1,4 +1,4 @@
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
 import { join, omit } from 'lodash'
 import { Command } from '../../../lib/command'
 import * as flags from '../../../lib/flags'
@@ -19,7 +19,7 @@ export class UnsetArgsCommand extends Command {
   }
 
   async run(): Promise<void> {
-    const { argv, flags } = this.parse(UnsetArgsCommand)
+    const { argv, flags } = await this.parse(UnsetArgsCommand)
     const workflowId = flags[`workflow-id`]
     const subscriberId = flags[`subscriber-id`]
 
@@ -29,7 +29,7 @@ export class UnsetArgsCommand extends Command {
 
     debug(argv)
 
-    cli.action.start(`Unsetting args ${join(argv, `, `)} on Workflow ID: ${workflowId}`)
+    CliUx.ux.action.start(`Unsetting args ${join(argv, `, `)} on Workflow ID: ${workflowId}`)
 
     const workflow = await this.relay.workflow(subscriberId, workflowId)
     if (workflow) {
@@ -39,12 +39,12 @@ export class UnsetArgsCommand extends Command {
         argv,
       )
       await this.relay.saveWorkflow(workflow)
-      cli.action.stop(`success`)
-      cli.styledHeader(`New Workflow arguments`)
-      cli.styledJSON(workflow.config.trigger.start.workflow.args)
+      CliUx.ux.action.stop(`success`)
+      CliUx.ux.styledHeader(`New Workflow arguments`)
+      CliUx.ux.styledJSON(workflow.config.trigger.start.workflow.args)
     } else {
-      cli.action.stop(`failed`)
-      cli.log(`Workflow ID does not exist: ${workflowId}`)
+      CliUx.ux.action.stop(`failed`)
+      this.log(`Workflow ID does not exist: ${workflowId}`)
     }
   }
 }

@@ -1,6 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
 import { filter, join, keys, reduce } from 'lodash'
 import { Command } from '../../../lib/command'
 import * as flags from '../../../lib/flags'
@@ -25,7 +25,7 @@ export class SetArgsCommand extends Command {
   }
 
   async run(): Promise<void> {
-    const parsed = this.parse(SetArgsCommand)
+    const parsed = await this.parse(SetArgsCommand)
     const { flags, argv, raw } = parsed
     const workflowId = flags[`workflow-id`]
     const subscriberId = flags[`subscriber-id`]
@@ -34,8 +34,7 @@ export class SetArgsCommand extends Command {
       const normalArgs = reduce(argv, (args: Record<string, any>, input) => {
         const [success, name, value] = parseArg(input)
         if (!success) {
-          cli.error(`${input} is invalid. Must be in the format of 'foo=bar'`)
-          cli.exit(1)
+          this.error(`${input} is invalid. Must be in the format of 'foo=bar'`)
         }
         args[name] = value
         return args
@@ -55,7 +54,7 @@ export class SetArgsCommand extends Command {
 
       const args = { ...normalArgs, ...booleanArgs, ...numberArgs }
 
-      cli.action.start(`Setting args ${join(keys(args), `, `)} on Workflow ID: ${workflowId}`)
+      CliUx.ux.action.start(`Setting args ${join(keys(args), `, `)} on Workflow ID: ${workflowId}`)
 
       const workflow = await this.relay.workflow(subscriberId, workflowId)
 
@@ -66,17 +65,17 @@ export class SetArgsCommand extends Command {
           ...args,
         }
         await this.relay.saveWorkflow(workflow)
-        cli.action.stop(`success`)
-        cli.styledHeader(`New Workflow arguments`)
-        cli.styledJSON(workflow.config.trigger.start.workflow.args)
+        CliUx.ux.action.stop(`success`)
+        CliUx.ux.styledHeader(`New Workflow arguments`)
+        CliUx.ux.styledJSON(workflow.config.trigger.start.workflow.args)
       } else {
-        cli.action.stop(`failed`)
-        cli.log(`Workflow ID does not exist: ${workflowId}`)
+        CliUx.ux.action.stop(`failed`)
+        this.log(`Workflow ID does not exist: ${workflowId}`)
       }
 
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

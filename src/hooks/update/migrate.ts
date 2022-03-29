@@ -1,4 +1,4 @@
-import { Hook } from '@oclif/config'
+import { Hook } from '@oclif/core'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')

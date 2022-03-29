@@ -1,6 +1,4 @@
-import * as Config from '@oclif/config'
-import { CLIError, warn } from '@oclif/errors'
-import { cli } from 'cli-ux'
+import { Interfaces, Errors, CliUx } from '@oclif/core'
 import { HTTP, HTTPError, HTTPRequestOptions } from 'http-call'
 import { find, includes, isString, map, filter } from 'lodash'
 import * as url from 'url'
@@ -42,7 +40,7 @@ export interface APIErrorOptions {
   url?: string
 }
 
-export class APIError extends CLIError {
+export class APIError extends Errors.CLIError {
   http: HTTPError
   body: APIErrorOptions
 
@@ -66,7 +64,7 @@ export class APIClient {
   private readonly _login = new Login(this.config, this)
   private _auth?: string
 
-  constructor(protected config: Config.IConfig, public options: IOptions = {}) {
+  constructor(protected config: Interfaces.Config, public options: IOptions = {}) {
     this.config = config
     if (options.required === undefined) options.required = true
     options.preauth = options.preauth !== false
@@ -123,7 +121,7 @@ export class APIClient {
                 debug(`re-requesting original`)
                 return this.request<T>(url, opts, retries)
               } else {
-                cli.log(`Not logged in`)
+                CliUx.ux.log(`Not logged in`)
                 debug(`attempting login`)
                 if (!self.authPromise) self.authPromise = self.login()
                 await self.authPromise
@@ -141,7 +139,9 @@ export class APIClient {
 
   get auth(): string | undefined {
     if (!this._auth) {
-      if (process.env.RELAY_API_TOKEN && !process.env.RELAY_API_KEY) deps.cli.warn(`RELAY_API_TOKEN is set but you probably meant RELAY_API_KEY`)
+      if (process.env.RELAY_API_TOKEN && !process.env.RELAY_API_KEY) {
+        CliUx.ux.warn(`RELAY_API_TOKEN is set but you probably meant RELAY_API_KEY`)
+      }
       this._auth = process.env.RELAY_API_KEY
       if (!this._auth) {
         const tokens = getToken()
@@ -187,7 +187,7 @@ export class APIClient {
       await this._login.logout()
     } catch (err) {
       if (err instanceof Error || typeof err === `string`) {
-        warn(err)
+        Errors.warn(err)
       }
     }
   }

@@ -20,7 +20,7 @@ export default class Dev extends Command {
   ]
 
   async run(): Promise<void> {
-    const { args } = this.parse(Dev)
+    const { args } = await this.parse(Dev)
 
     debug(args)
 

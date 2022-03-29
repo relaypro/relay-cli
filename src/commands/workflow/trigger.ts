@@ -25,7 +25,7 @@ export default class Trigger extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = this.parse(Trigger)
+    const { flags, raw } = await this.parse(Trigger)
     const args = parseArgs(raw)
     debug(`triggering with`, { flags, args })
     await this.relay.triggerWorkflow(flags[`subscriber-id`], flags[`workflow-id`], args)

@@ -8,16 +8,15 @@
   },
   "bugs": "https://github.com/relaypro/relay-cli/issues",
   "dependencies": {
-    "@oclif/command": "1.8.0",
-    "@oclif/config": "1.17.0",
-    "@oclif/errors": "1.3.4",
-    "@oclif/plugin-help": "3.2.2",
-    "@oclif/plugin-not-found": "1.2.4",
-    "@oclif/plugin-update": "1.3.10",
+    "@oclif/core": "1.6.3",
+    "@oclif/plugin-help": "5.1.12",
+    "@oclif/plugin-not-found": "2.3.1",
+    "@oclif/plugin-plugins": "2.1.0",
+    "@oclif/plugin-update": "3.0.0",
+    "@oclif/plugin-version": "1.0.4",
     "@types/luxon": "2.3.1",
     "base62str": "1.0.9",
     "chalk": "5.0.1",
-    "cli-ux": "6.0.9",
     "conf": "10.1.1",
     "crypto-js": "4.1.1",
     "debug": "4.3.4",
@@ -32,8 +31,7 @@
     "tslib": "2.3.1"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "1.26.0",
-    "@oclif/test": "1.2.8",
+    "@oclif/test": "2.1.0",
     "@types/chai": "4.3.0",
     "@types/crypto-js": "4.1.1",
     "@types/debug": "4.1.7",
@@ -45,8 +43,8 @@
     "@typescript-eslint/parser": "5.17.0",
     "chai": "4.3.6",
     "eslint": "8.12.0",
-    "eslint-config-oclif": "3.1.0",
-    "eslint-config-oclif-typescript": "0.2.0",
+    "eslint-config-oclif": "4.0.0",
+    "eslint-config-oclif-typescript": "1.0.2",
     "eslint-plugin-eslint-comments": "3.2.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-mocha": "10.0.3",
@@ -55,6 +53,7 @@
     "mocha": "9.2.2",
     "nock": "13.2.4",
     "nyc": "15.1.0",
+    "oclif": "2.6.1",
     "ts-node": "10.7.0",
     "typescript": "4.6.3"
   },
@@ -80,7 +79,15 @@
     "scope": "relaypro",
     "commands": "./dist/commands",
     "bin": "relay",
+    "dirname": "relay",
+    "additionalHelpFlags": [
+      "-h"
+    ],
+    "additionalVersionFlags": [
+      "-v"
+    ],
     "plugins": [
+      "@oclif/plugin-version",
       "@oclif/plugin-help",
       "@oclif/plugin-not-found",
       "@oclif/plugin-update"
@@ -91,6 +98,7 @@
         "./dist/hooks/prerun/analytics"
       ]
     },
+    "topicSeparator": " ",
     "topics": {
       "workflow": {
         "description": "Manage workflow configurations"
@@ -102,7 +110,7 @@
     },
     "update": {
       "node": {
-        "version": "14.15.4",
+        "version": "14.19.1",
         "targets": [
           "darwin-x64",
           "linux-x64",

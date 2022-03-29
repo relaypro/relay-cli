@@ -1,4 +1,4 @@
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
 import { map } from 'lodash'
 import { Command } from '../lib/command'
 import * as flags from '../lib/flags'
@@ -17,13 +17,13 @@ export class DevicesCommand extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags } = this.parse(DevicesCommand)
+    const { flags } = await  this.parse(DevicesCommand)
 
     debug(`run`)
     const devices = await this.relay.devices(flags[`subscriber-id`])
     const mappedDevices = map(devices, d => ({ id: d }))
 
-    cli.table(mappedDevices, {
+    CliUx.ux.table(mappedDevices, {
       id: {
         header: `ID`
       },

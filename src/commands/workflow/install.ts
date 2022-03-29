@@ -1,4 +1,3 @@
-import { cli } from 'cli-ux'
 import { uniq } from 'lodash'
 import { CreateCommand } from '../../lib/command'
 import * as flags from '../../lib/flags'
@@ -7,6 +6,7 @@ import * as flags from '../../lib/flags'
 import debugFn = require('debug')
 import { ALL } from '../../lib/constants'
 import { Workflow } from '../../lib/api'
+import { HTTPError } from 'http-call'
 
 const debug = debugFn(`workflow`)
 
@@ -30,7 +30,7 @@ export class InstallWorkflowCommand extends CreateCommand {
   ]
 
   async run(): Promise<void> {
-    const { flags, argv } = this.parse(InstallWorkflowCommand)
+    const { flags, argv } = await this.parse(InstallWorkflowCommand)
     const workflowId = flags[`workflow-id`]
     const subscriberId = flags[`subscriber-id`]
 
@@ -58,16 +58,15 @@ export class InstallWorkflowCommand extends CreateCommand {
         await this.saveWorkflow(workflow, dryRun)
 
       } else {
-        cli.action.stop(`failed`)
-        cli.log(`Workflow ID does not exist: ${workflowId}`)
+        this.log(`Workflow ID does not exist: ${workflowId}`)
       }
 
     } catch (err) {
       debug(err)
-      if (err.statusCode === 400 && err.body.error === `invalid_install_user_id`) {
+      if (err instanceof HTTPError && err.statusCode === 400 && err.body.error === `invalid_install_user_id`) {
         this.error(`One or more of IDs is not valid`)
       } else {
-        this.error(err)
+        this.safeError(err)
       }
     }
   }

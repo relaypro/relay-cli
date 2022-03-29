@@ -1,14 +1,14 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { isNaN, toNumber } from 'lodash'
 import { parseArg } from '../utils'
 
-export const numberValue = flags.build({
+export const numberValue = Flags.build({
   char: `r`,
   description: `Number name/value pair workflow arg`,
   multiple: true,
   required: false,
   helpValue: `arg1=100.0`,
-  parse: input => {
+  parse: async input => {
     const [success, name, value] = parseArg(input)
     if (success) {
       const numberValue = toNumber(value)

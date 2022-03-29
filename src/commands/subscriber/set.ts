@@ -1,6 +1,5 @@
 import { Command } from '../../lib/command'
 import { find } from 'lodash'
-import { cli } from 'cli-ux'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
@@ -37,7 +36,7 @@ export default class SubscriberSet extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags } = this.parse(SubscriberSet)
+    const { flags } = await (SubscriberSet)
 
     if (flags.name) {
       throw new Error(`name not yet implemented`)
@@ -51,7 +50,7 @@ export default class SubscriberSet extends Command {
       const newSubscriber = find(subscribers, [`id`, subscriberId])
       if (newSubscriber) {
         debug(`new default subscriber`, newSubscriber)
-        cli.log(`Changing default subscriber to ${newSubscriber.name} (${newSubscriber.id})`)
+        this.log(`Changing default subscriber to ${newSubscriber.name} (${newSubscriber.id})`)
         const prompt = new Confirm({
           name: `change`,
           message: `Are you sure?`
@@ -62,7 +61,7 @@ export default class SubscriberSet extends Command {
         }
       } else {
         debug(`find resulted in no valid subscriber`)
-        cli.error(`Subscriber ID not found: ${subscriberId}`)
+        this.error(`Subscriber ID not found: ${subscriberId}`)
       }
     } else {
       await resolveSubscriber()

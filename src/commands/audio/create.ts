@@ -27,7 +27,7 @@ export default class AudioCreate extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags } = this.parse(AudioCreate)
+    const { flags } = await this.parse(AudioCreate)
 
     try {
       const subscriberId = flags[`subscriber-id`]
@@ -51,7 +51,7 @@ export default class AudioCreate extends Command {
 
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

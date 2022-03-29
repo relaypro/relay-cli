@@ -1,4 +1,5 @@
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
+import { HTTPError } from 'http-call'
 import { Command } from '../lib/command'
 
 export default class AuthWhoami extends Command {
@@ -9,10 +10,12 @@ export default class AuthWhoami extends Command {
     if (!this.relay.auth) this.notloggedin()
     try {
       const iam = await this.relay.whoami()
-      cli.styledHeader(`You are`)
-      cli.styledObject(iam, [`Name`, `Email`, `Auth User ID`, `Relay User ID`, `Default Subscriber`])
+      CliUx.ux.styledHeader(`You are`)
+      CliUx.ux.styledObject(iam, [`Name`, `Email`, `Auth User ID`, `Relay User ID`, `Default Subscriber`])
     } catch (error) {
-      if (error.statusCode === 401) this.notloggedin()
+      if (error instanceof HTTPError) {
+        if (error.statusCode === 401) this.notloggedin()
+      }
       throw error
     }
   }

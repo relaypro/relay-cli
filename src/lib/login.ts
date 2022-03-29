@@ -1,11 +1,10 @@
-import * as Config from '@oclif/config'
-import cli from 'cli-ux'
+import { Interfaces, CliUx } from '@oclif/core'
 import HTTP from 'http-call'
 import encode from 'form-urlencoded'
 import querystring from 'querystring'
 import open from 'open'
 
-import { APIClient, APIError } from './api-client'
+import { APIClient } from './api-client'
 
 import { vars } from './vars'
 import http from 'http'
@@ -21,30 +20,29 @@ const debug = debugFn(`login`)
 
 export class Login {
 
-  constructor(private readonly config: Config.IConfig, private readonly relay: APIClient) {}
+  constructor(private readonly config: Interfaces.Config, private readonly relay: APIClient) {}
 
   async login(): Promise<TokenAccount> {
     debug(this.config)
     let loggedIn = false
     try {
       setTimeout(() => {
-        if (!loggedIn) cli.error(`timed out`)
+        if (!loggedIn) CliUx.ux.error(`timed out`)
       }, 1000 * 60 * 10).unref()
 
-      if (process.env.RELAY_API_KEY) cli.error(`Cannot log in with RELAY_API_KEY set`)
+      if (process.env.RELAY_API_KEY) {
+        CliUx.ux.error(`Cannot log in with RELAY_API_KEY set`)
+      }
 
       const tokens = getToken()
 
       const previousUsername = tokens?.username
 
-      try {
-        if (previousUsername) {
-          cli.warn(`Previously logged in as ${previousUsername}... logging out.`)
-          await this.relay.logout()
-        }
-      } catch(err) {
-        cli.warn(err)
+      if (previousUsername) {
+        CliUx.ux.warn(`Previously logged in as ${previousUsername}... logging out.`)
+        await this.relay.logout()
       }
+
       const auth = await this.generateCliTokenAccount()
       const subscribers = await this.fetchSubscribers(auth.access_token)
       debug(`subscribers`, subscribers)
@@ -54,10 +52,10 @@ export class Login {
         saveSubscribers(subscribers)
         const success = await resolveSubscriber(subscribers)
         if (success) {
-          cli.log(`Logged in`)
+          CliUx.ux.log(`Logged in`)
           loggedIn = true
         } else {
-          cli.warn(`Default Relay account not set... logging out.`)
+          CliUx.ux.warn(`Default Relay account not set... logging out.`)
           this.logout()
         }
 
@@ -67,7 +65,7 @@ export class Login {
       }
     } catch(err) {
       this.logout()
-      throw new APIError(err)
+      throw err
     }
   }
 
@@ -102,18 +100,18 @@ export class Login {
     let urlDisplayed = false
     const showUrl = () => {
       if (!urlDisplayed) {
-        cli.warn(`Cannot open browser.`)
-        cli.warn(`Copy and paste into a browser: ${cli.url(`Click here to login`, url)}`)
+        CliUx.ux.warn(`Cannot open browser.`)
+        CliUx.ux.warn(`Copy and paste into a browser: ${CliUx.ux.url(`Click here to login`, url)}`)
       }
       urlDisplayed = true
     }
     const { codePromise } = await this.startHttpCodeServer()
     debug(url)
-    cli.log(`Opening browser to login`)
-    await cli.wait(500)
+    CliUx.ux.log(`Opening browser to login`)
+    await CliUx.ux.wait(500)
     const cp = await open(url, { wait: false })
     cp.on(`error`, err => {
-      cli.warn(err)
+      CliUx.ux.warn(err)
       showUrl()
     })
     cp.on(`close`, code => {
@@ -121,10 +119,10 @@ export class Login {
         showUrl()
       }
     })
-    cli.action.start(`relay: Waiting for login`)
+    CliUx.ux.action.start(`relay: Waiting for login`)
     const code = await codePromise
     debug(`got code ${code}`)
-    cli.action.stop(`done`)
+    CliUx.ux.action.stop(`done`)
 
     const body = {
       grant_type: `authorization_code`,
@@ -152,7 +150,7 @@ export class Login {
 
       const expiresHours = (auth.expires_in||7200)/60/60
 
-      cli.log(`Your login session will expire in ${expiresHours} hours.`)
+      CliUx.ux.log(`Your login session will expire in ${expiresHours} hours.`)
       // cli.log(`If you sign in again and check "Remember me", your session will not expire`)
 
       // const prompt = new Toggle({
@@ -349,15 +347,15 @@ export class Login {
     }
 
     const timeout = setTimeout(() => {
-      cli.action.start(`Retrieving authorized subscribers`)
+      CliUx.ux.action.start(`Retrieving authorized subscribers`)
     }, 2000)
 
     const { body: accounts } = await HTTP.get<Record<string, AccountEnvelope>[]>(`${vars.stratusUrl}/v3/subscribers;view=dash_overview`, options)
 
     clearTimeout(timeout)
 
-    if (cli.action.running) {
-      cli.action.stop()
+    if (CliUx.ux.action.running) {
+      CliUx.ux.action.stop()
     }
 
     return map(accounts, account => ({

@@ -1,4 +1,3 @@
-import { cli } from 'cli-ux'
 import { filter, includes, uniq } from 'lodash'
 import { CreateCommand } from '../../lib/command'
 import * as flags from '../../lib/flags'
@@ -29,7 +28,7 @@ export class UninstallWorkflowCommand extends CreateCommand {
   ]
 
   async run(): Promise<void> {
-    const { flags, argv } = this.parse(UninstallWorkflowCommand)
+    const { flags, argv } = await this.parse(UninstallWorkflowCommand)
     const workflowId = flags[`workflow-id`]
     const subscriberId = flags[`subscriber-id`]
 
@@ -58,12 +57,11 @@ export class UninstallWorkflowCommand extends CreateCommand {
         await this.saveWorkflow(workflow, dryRun)
 
       } else {
-        cli.action.stop(`failed`)
-        cli.log(`Workflow ID does not exist: ${workflowId}`)
+        this.log(`Workflow ID does not exist: ${workflowId}`)
       }
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

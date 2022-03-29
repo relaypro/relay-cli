@@ -1,4 +1,4 @@
-import cli from 'cli-ux'
+import { CliUx } from '@oclif/core'
 
 import { Command } from '../../lib/command'
 import isEmpty from 'lodash/isEmpty'
@@ -15,11 +15,11 @@ export default class AudioList extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...cli.table.flags(),
+    ...CliUx.ux.table.flags(),
   }
 
   async run(): Promise<void> {
-    const { flags } = this.parse(AudioList)
+    const { flags } = await this.parse(AudioList)
 
     try {
       const audioFiles = await this.relay.listAudio(flags[`subscriber-id`])
@@ -27,8 +27,8 @@ export default class AudioList extends Command {
       debug(audioFiles)
 
       if (!isEmpty(audioFiles)) {
-        cli.styledHeader(`Uploaded Audio Files`)
-        cli.table(audioFiles, {
+        CliUx.ux.styledHeader(`Uploaded Audio Files`)
+        CliUx.ux.table(audioFiles, {
           id: {},
           short_name: {},
           audio_format: {},
@@ -42,7 +42,7 @@ export default class AudioList extends Command {
 
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

@@ -27,7 +27,7 @@ export class PhraseWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = this.parse(PhraseWorkflowCommand)
+    const { flags, raw } = await this.parse(PhraseWorkflowCommand)
 
     try {
 
@@ -43,7 +43,7 @@ export class PhraseWorkflowCommand extends CreateCommand {
 
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

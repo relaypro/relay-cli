@@ -1,5 +1,5 @@
 import { isEmpty, size, map } from 'lodash'
-import cli from 'cli-ux'
+import { CliUx } from '@oclif/core'
 
 import debugFn from 'debug'
 
@@ -129,10 +129,10 @@ export const resolveSubscriber = async (subscribers: Subscriber[]=getSubscribers
       debug(`choosen subscriber`, subscriber)
       saveDefaultSubscriber(subscriber)
       if (subscribersSize > 1) {
-        cli.log(`=====================`)
-        cli.log(`Default Relay Account`)
-        cli.log(`${subscriber.name} (${subscriber.id})`)
-        cli.log(`=====================`)
+        CliUx.ux.log(`=====================`)
+        CliUx.ux.log(`Default Relay Account`)
+        CliUx.ux.log(`${subscriber.name} (${subscriber.id})`)
+        CliUx.ux.log(`=====================`)
       }
       return true
     } else {

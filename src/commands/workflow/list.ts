@@ -1,4 +1,4 @@
-import cli from 'cli-ux'
+import { CliUx } from '@oclif/core'
 
 import { Command } from '../../lib/command'
 import isEmpty from 'lodash/isEmpty'
@@ -17,11 +17,11 @@ export default class Workflow extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...cli.table.flags(),
+    ...CliUx.ux.table.flags(),
   }
 
   async run(): Promise<void> {
-    const { flags } = this.parse(Workflow)
+    const { flags } = await this.parse(Workflow)
 
     try {
       const workflows = await this.relay.workflows(flags[`subscriber-id`])
@@ -36,7 +36,7 @@ export default class Workflow extends Command {
 
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

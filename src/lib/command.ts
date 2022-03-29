@@ -1,4 +1,4 @@
-import { Command as Base } from '@oclif/command'
+import { Command as Base } from '@oclif/core'
 
 import { APIClient } from './api-client'
 import deps from './deps'
@@ -7,7 +7,6 @@ import deps from './deps'
 import debugFn = require('debug')
 import { NewWorkflow } from './api'
 import { printWorkflows } from './utils'
-import { cli } from 'cli-ux'
 const debug = debugFn(`error`)
 
 export abstract class Command extends Base {
@@ -20,13 +19,21 @@ export abstract class Command extends Base {
     return this._relay
   }
 
-  async catch(error: unknown): Promise<unknown> {
+  async catch(error: never): Promise<unknown> {
     debug(error)
     return super.catch(error)
   }
 
   async finally(possibleError: Error | undefined): Promise<unknown> {
     return super.finally(possibleError)
+  }
+
+  safeError(err: unknown): void {
+    if (err instanceof Error) {
+      this.error(err.message)
+    } else if (typeof err === `string`) {
+      this.error(err)
+    }
   }
 
 }
@@ -39,7 +46,7 @@ export abstract class CreateCommand extends Command {
       const workflows = await this.relay.saveWorkflow(workflow)
       printWorkflows(workflows, { extended: true })
     } else {
-      cli.info(`Workflow dry-run:\n${JSON.stringify(workflow, null, 2)}`)
+      this.log(`Workflow dry-run:\n${JSON.stringify(workflow, null, 2)}`)
     }
   }
 }

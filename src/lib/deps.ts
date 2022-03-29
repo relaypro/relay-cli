@@ -1,5 +1,4 @@
 /* eslint-disable quotes */
-import CLI = require('cli-ux')
 import HTTP = require('http-call')
 
 import apiClient = require('./api-client')
@@ -15,7 +14,6 @@ const susbscriberConfig = new Conf({
 })
 
 export const deps = {
-  get cli(): typeof CLI.default { return fetch(`cli-ux`).default },
   get HTTP(): typeof HTTP { return fetch(`http-call`) },
   get APIClient(): typeof apiClient.APIClient { return fetch(`./api-client`).APIClient },
   get file(): typeof file { return fetch(`./file`) },

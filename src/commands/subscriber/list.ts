@@ -1,4 +1,4 @@
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
 import { Command } from '../../lib/command'
 
 // eslint-disable-next-line quotes
@@ -15,7 +15,7 @@ export default class SubscriberList extends Command {
 
     debug(subscribers)
 
-    cli.table(subscribers, {
+    CliUx.ux.table(subscribers, {
       name:{},
       id: {},
     }, {

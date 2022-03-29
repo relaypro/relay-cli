@@ -1,5 +1,5 @@
 
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 
 import { NewWorkflow } from '../api'
 import { getTimestampNextHour } from '../datetime'
@@ -17,45 +17,45 @@ export type TimerOptions = {
 export type TimerWorkflow = NewWorkflow & { config: { trigger: { on_timer: TimerOptions }}}
 
 export const timerFlags = {
-  trigger: flags.enum({
+  trigger: Flags.enum({
     required: true,
     multiple: false,
     default: `immediately`,
     options: [`immediately`, `schedule`, `repeat`],
     description: `Trigger immediately or based on a repeating rule`,
   }),
-  timezone: flags.enum({
+  timezone: Flags.enum({
     char: `z`,
     required: true,
     multiple: false,
     default: `local`,
     options: [`local`, `America/New_York`, `America/Chicago`, `America/Denver`, `America/Los_Angeles`, `America/Phoenix`, `Pacific/Honolulu`],
   }),
-  start: flags.string({
+  start: Flags.string({
     char: `s`,
     default: getTimestampNextHour(),
   }),
-  until: flags.string({
+  until: Flags.string({
     char: `l`,
     exclusive: [`count`],
   }),
-  count: flags.integer({
+  count: Flags.integer({
     char: `c`,
     exclusive: [`until`],
   }),
-  frequency: flags.enum({
+  frequency: Flags.enum({
     char: `f`,
     multiple: false,
     default: `daily`,
     options: [`daily`, `weekly`, `monthly`, `yearly`],
     hidden: true,
   }),
-  interval: flags.integer({
-    char: `v`,
+  interval: Flags.integer({
+    char: `I`,
     default: 1,
     hidden: true,
   }),
-  day: flags.string({
+  day: Flags.string({
     char: `d`,
     multiple: true,
     default: [`MO`,`TU`,`WE`,`TH`,`FR`,`SA`,`SU`],

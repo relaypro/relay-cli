@@ -1,4 +1,4 @@
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
 import { forEach, isEmpty, reduce, size } from 'lodash'
 import { Command } from '../../../lib/command'
 import * as flags from '../../../lib/flags'
@@ -34,7 +34,7 @@ export class UnsetArgsCommand extends Command {
   ]
 
   async run(): Promise<void> {
-    const { argv, flags } = this.parse(UnsetArgsCommand)
+    const { argv, flags } = await this.parse(UnsetArgsCommand)
     const workflowId = flags[`workflow-id`]
     const subscriberId = flags[`subscriber-id`]
 
@@ -65,8 +65,8 @@ export class UnsetArgsCommand extends Command {
       }, [])
 
       if (size(argv) !== size(unsets)) {
-        cli.styledHeader(`Workflow arguments for ID ${workflowId}`)
-        cli.table(mappedArgs, {
+        CliUx.ux.styledHeader(`Workflow arguments for ID ${workflowId}`)
+        CliUx.ux.table(mappedArgs, {
           arg: {},
           value: {},
           type: {}
@@ -76,13 +76,13 @@ export class UnsetArgsCommand extends Command {
       }
 
       if (!isEmpty(unsets)) {
-        cli.styledHeader(`Following arguments are not set on Workflow`)
+        CliUx.ux.styledHeader(`Following arguments are not set on Workflow`)
         forEach(unsets, arg => {
           this.error(`${arg}`)
         })
       }
     } else {
-      cli.log(`Workflow ID does not exist: ${workflowId}`)
+      this.log(`Workflow ID does not exist: ${workflowId}`)
     }
   }
 }

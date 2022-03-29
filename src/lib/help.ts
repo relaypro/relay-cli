@@ -1,6 +1,5 @@
-import * as Config from '@oclif/config'
-import Help from '@oclif/plugin-help'
-import CommandHelp from '@oclif/plugin-help/lib/command'
+import { Help, Interfaces, CommandHelp } from '@oclif/core'
+
 import { orderBy } from 'lodash'
 
 // eslint-disable-next-line quotes
@@ -12,22 +11,22 @@ export default class RelayHelp extends Help {
   // and based on the args it receives
   // calls one of showRootHelp, showTopicHelp,
   // or showCommandHelp
-  showHelp(args: string[]): void {
+  async showHelp(args: string[]): Promise<void> {
     super.showHelp(args)
   }
 
   // display the root help of a CLI
-  showRootHelp(): void {
+  async showRootHelp(): Promise<void> {
     super.showRootHelp()
   }
 
   // display help for a topic
-  showTopicHelp(topic: Config.Topic): void {
+  async showTopicHelp(topic: Interfaces.Topic): Promise<void> {
     super.showTopicHelp(topic)
   }
 
   // display help for a command
-  showCommandHelp(command: Config.Command): void {
+  async showCommandHelp(command: Interfaces.Command): Promise<void> {
     super.showCommandHelp(command)
   }
 
@@ -45,29 +44,29 @@ export default class RelayHelp extends Help {
   }
 
   // the formatting for an individual topic
-  formatTopic(topic: Config.Topic): string {
+  formatTopic(topic: Interfaces.Topic): string {
     return super.formatTopic(topic)
   }
 
   // the formatting for a list of topics
-  protected formatTopics(topics: Config.Topic[]): string {
+  protected formatTopics(topics: Interfaces.Topic[]): string {
     return super.formatTopics(topics)
   }
 
   // the formatting for a list of commands
-  formatCommands(commands: Config.Command[]): string {
+  formatCommands(commands: Interfaces.Command[]): string {
     return super.formatCommands(commands)
   }
 
   // the formatting for an individual command
-  formatCommand(command: Config.Command): string {
+  formatCommand(command: Interfaces.Command): string {
     const help = new RelayCommandHelp(command, this.config, this.opts)
     return help.generate()
   }
 }
 
 class RelayCommandHelp extends CommandHelp {
-  protected flags(flags: Config.Command.Flag[]): string | undefined {
+  protected flags(flags: Interfaces.Command.Flag[]): [string, string | undefined][] | undefined {
     const priorityFlagOrder = orderBy(flags, [f => f.required || false], [`desc`])
     return super.flags(priorityFlagOrder)
   }

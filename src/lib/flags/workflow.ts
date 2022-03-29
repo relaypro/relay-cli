@@ -1,6 +1,6 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 
-export const workflowId = flags.string({
+export const workflowId = Flags.string({
   char: `w`,
   description: `workflow id`,
   required: true,

@@ -21,7 +21,7 @@ export default class AudioDelete extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags } = this.parse(AudioDelete)
+    const { flags } = await this.parse(AudioDelete)
 
     try {
       const subscriberId = flags[`subscriber-id`]
@@ -34,7 +34,7 @@ export default class AudioDelete extends Command {
       this.log(`Successfully deleted audio with id ${id}`)
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

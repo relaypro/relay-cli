@@ -2,7 +2,7 @@ import filter from 'lodash/filter'
 import reduce from 'lodash/reduce'
 // import last from 'lodash/last'
 
-import type { ParsingToken } from '@oclif/parser/lib/parse'
+import type { Interfaces } from '@oclif/core'
 
 import { booleanValue, numberValue, TimerFlags, TimerOptions, TimerWorkflow, WorkflowFlags } from './flags'
 import { parseArg } from './utils'
@@ -10,7 +10,7 @@ import { NewWorkflow } from './api'
 import { getTimestampFarFuture, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
 import { ALL } from './constants'
 
-export const parseArgs = (tokens: ParsingToken[]): Record<string, never> => {
+export const parseArgs = (tokens: Interfaces.ParsingToken[]): Record<string, never> => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const normalArgFlags = filter(tokens, ({ flag }: any) => `arg` === flag)
   const normalArgs = reduce(normalArgFlags, (args, flag) => {
@@ -36,7 +36,7 @@ export const parseArgs = (tokens: ParsingToken[]): Record<string, never> => {
   return { ...normalArgs, ...booleanArgs, ...numberArgs }
 }
 
-export const createWorkflow = (flags: WorkflowFlags, tokens: ParsingToken[]): NewWorkflow => {
+export const createWorkflow = (flags: WorkflowFlags, tokens: Interfaces.ParsingToken[]): NewWorkflow => {
 
   const args = parseArgs(tokens)
 
@@ -68,7 +68,7 @@ export const createWorkflow = (flags: WorkflowFlags, tokens: ParsingToken[]): Ne
   return workflow
 }
 
-export const createTimerWorkflow = (flags: TimerFlags, tokens: ParsingToken[]): TimerWorkflow => {
+export const createTimerWorkflow = (flags: TimerFlags, tokens: Interfaces.ParsingToken[]): TimerWorkflow => {
   const workflow: TimerWorkflow = createWorkflow(flags, tokens) as TimerWorkflow
 
   if (flags.trigger === `immediately`) {

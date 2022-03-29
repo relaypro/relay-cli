@@ -1,0 +1,9 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+const path = require(`path`)
+process.env.TS_NODE_PROJECT = path.resolve(`test/tsconfig.json`)
+process.env.NODE_ENV = `development`
+
+global.oclif = global.oclif || {}
+global.oclif.columns = 80

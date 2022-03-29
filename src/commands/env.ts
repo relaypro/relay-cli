@@ -1,4 +1,4 @@
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
 import { Command } from '../lib/command'
 import { vars } from '../lib/vars'
 
@@ -17,16 +17,16 @@ RELAY_HOST=all-main-pro-ibot.nocell.io
 `.trim()]
 
   async run(): Promise<void> {
-    cli.styledHeader(`ENVIRONMENT`)
-    cli.styledObject({
+    CliUx.ux.styledHeader(`ENVIRONMENT`)
+    CliUx.ux.styledObject({
       env: vars.env,
       api: vars.host,
       auth: vars.authHost,
       auth_cli_id: vars.authCliId,
       auth_sdk_id: vars.authSdkId,
     })
-    cli.log(``)
-    cli.styledHeader(`USAGE`)
-    Env.examples.forEach(e => cli.log(e))
+    this.log(``)
+    CliUx.ux.styledHeader(`USAGE`)
+    Env.examples.forEach(e => this.log(e))
   }
 }

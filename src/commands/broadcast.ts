@@ -1,7 +1,8 @@
 import { Command } from '../lib/command'
 
 import { subscriber, string, timerFlags, boolean, TimerWorkflow, TimerFlags } from '../lib/flags'
-import { cli } from 'cli-ux'
+
+import { CliUx } from '@oclif/core'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
@@ -51,7 +52,7 @@ export default class Broadcast extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags, /*argv,*/ raw } = this.parse(Broadcast)
+    const { flags, /*argv,*/ raw } = await this.parse(Broadcast)
 
     const token = getToken()
 
@@ -112,7 +113,7 @@ export default class Broadcast extends Command {
 
     debug(workflow)
 
-    cli.styledObject({
+    CliUx.ux.styledObject({
       Who: _targets,
       When: flags.trigger === `immediately` ? `Immediately` : flags.start,
       How: flags.acknowledgement ? `Require Acknowledgement` : `Quick Announcement`,
@@ -126,9 +127,9 @@ export default class Broadcast extends Command {
 
     if (await prompt.run()) {
       await this.relay.saveWorkflow(workflow)
-      cli.log(`Broadcast saved!`)
+      this.log(`Broadcast saved!`)
     } else {
-      cli.log(`Broadcast cancelled!`)
+      this.log(`Broadcast cancelled!`)
     }
 
   }

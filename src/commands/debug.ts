@@ -3,7 +3,7 @@ import { Command } from '../lib/command'
 import debugFn = require('debug')
 
 import * as flags from '../lib/flags'
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
 import { get } from 'lodash'
 
 const debug = debugFn(`debug`)
@@ -32,13 +32,13 @@ export default class Debug extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags } = this.parse(Debug)
+    const { flags } = await this.parse(Debug)
 
     if (flags.dump) {
       debug(`dump`)
       const session = this.relay.session()
       debug(`session`)
-      cli.styledJSON(get(session, flags.path || ``, session))
+      CliUx.ux.styledJSON(get(session, flags.path || ``, session))
     }
 
     if (flags.clear) {
@@ -50,11 +50,11 @@ export default class Debug extends Command {
     if (flags[`refresh-auth`]) {
       try {
         const tokens = await this.relay.refresh()
-        cli.styledHeader(`Auth token refreshed`)
-        cli.styledJSON(tokens)
+        CliUx.ux.styledHeader(`Auth token refreshed`)
+        CliUx.ux.styledJSON(tokens)
       } catch(e) {
         debug(`failed to refresh token`, e)
-        cli.error(`Failed to refresh token`)
+        this.error(`Failed to refresh token`)
       }
     }
   }

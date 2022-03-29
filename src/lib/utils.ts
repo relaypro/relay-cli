@@ -1,4 +1,4 @@
-import { cli } from 'cli-ux'
+import { CliUx } from '@oclif/core'
 import { get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
 import { Workflow } from './api'
 import { ALL } from './constants'
@@ -102,8 +102,8 @@ const displayInstall = (workflow: Workflow) => {
 
 export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  cli.styledHeader(`Installed Workflow${workflows.length > 1 ? `s` : ``}`)
-  cli.table(workflows, {
+  CliUx.ux.styledHeader(`Installed Workflow${workflows.length > 1 ? `s` : ``}`)
+  CliUx.ux.table(workflows, {
     workflow_id: {
       header: `ID`,
       get: row => row.workflow_id //last(row.workflow_id.split(`_`))

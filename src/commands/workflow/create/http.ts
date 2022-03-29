@@ -31,7 +31,7 @@ export class HttpWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = this.parse(HttpWorkflowCommand)
+    const { flags, raw } = await this.parse(HttpWorkflowCommand)
 
     try {
 
@@ -47,7 +47,7 @@ export class HttpWorkflowCommand extends CreateCommand {
 
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }

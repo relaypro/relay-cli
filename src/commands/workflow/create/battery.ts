@@ -37,7 +37,7 @@ export class BatteryWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = this.parse(BatteryWorkflowCommand)
+    const { flags, raw } = await this.parse(BatteryWorkflowCommand)
 
     try {
 
@@ -55,7 +55,7 @@ export class BatteryWorkflowCommand extends CreateCommand {
 
     } catch (err) {
       debug(err)
-      this.error(err)
+      this.safeError(err)
     }
   }
 }
