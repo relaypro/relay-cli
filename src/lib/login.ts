@@ -317,10 +317,6 @@ export class Login {
       throw new Error(`no username`)
     }
 
-    if (!uuid) {
-      throw new Error(`no user uuid`)
-    }
-
     const body: Record<string, string> = {
       grant_type: `refresh_token`,
       refresh_token: refreshToken,

@@ -17,9 +17,11 @@ import { getOrThrow } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
 import { R_OK } from 'constants'
-
+import userId from './user-id'
 
 const debug = debugFn(`api-client`)
+
+type TokenInfoKeys = `userid`|`given_name`|`family_name`|`email`
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace APIClient {
@@ -195,11 +197,12 @@ export class APIClient {
   async whoami(): Promise<Record<string, string>> {
     // TODO use parameterized subscriberId
     const subscriber = getDefaultSubscriber()
-    const { body: user } = await this.get<Record<string, string>>(`${vars.authUrl}/oauth2/validate`)
+    const { body: user } = await this.get<Record<TokenInfoKeys, string>>(`${vars.authUrl}/oauth2/validate`)
     return {
       Name: `${user.given_name} ${user.family_name}`,
       Email: `${user.email}`,
-      [`User ID`]: `${user.userid}`,
+      [`Auth User ID`]: `${user.userid}`,
+      [`Relay User ID`]: `${userId(subscriber.id, user.userid)}`,
       [`Default Subscriber`]: subscriber.id,
     }
   }

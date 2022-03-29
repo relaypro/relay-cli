@@ -1,4 +1,4 @@
-import * as uuid from 'uuid'
+import { uuid } from './utils'
 
 export const requestIdHeader = `Request-Id`
 
@@ -14,8 +14,7 @@ export class RequestId {
 
   static create(): string[] {
     const tracked = RequestId.ids
-    const generatedId = uuid.v4()
-    RequestId.ids = [generatedId, ...tracked]
+    RequestId.ids = [uuid(), ...tracked]
     return RequestId.ids
   }
 
