@@ -1,10 +1,13 @@
-import { Help, Interfaces, CommandHelp } from '@oclif/core'
+import { Help, Interfaces, CommandHelp, CliUx } from '@oclif/core'
 
 import { orderBy } from 'lodash'
+import { RELAY } from './art'
 
 // eslint-disable-next-line quotes
 // import debugFn = require('debug')
 // const debug = debugFn(`cli`)
+
+
 
 export default class RelayHelp extends Help {
   // acts as a "router"
@@ -12,6 +15,7 @@ export default class RelayHelp extends Help {
   // calls one of showRootHelp, showTopicHelp,
   // or showCommandHelp
   async showHelp(args: string[]): Promise<void> {
+    CliUx.ux.log(RELAY)
     super.showHelp(args)
   }
 
