@@ -164,7 +164,9 @@ export class Login {
 
       CliUx.ux.url(`First, click here to fully logout`, `${vars.authUrl}/logout`)
       await CliUx.ux.anykey(`Then press any key to log in again`)
-      await this.doLogout()
+      if (!isSdkToken) {
+        await this.doLogout()
+      }
       return await this.generateToken(client_id, isSdkToken)
     }
 
