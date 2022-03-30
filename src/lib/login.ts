@@ -56,7 +56,7 @@ export class Login {
           loggedIn = true
         } else {
           CliUx.ux.warn(`Default Relay account not set... logging out.`)
-          this.logout()
+          this.doLogout()
         }
 
         return auth
@@ -64,12 +64,18 @@ export class Login {
         throw new Error(`Failed to discover subscriber id`)
       }
     } catch(err) {
-      this.logout()
+      this.doLogout()
       throw err
     }
   }
 
   async logout(): Promise<void> {
+    CliUx.ux.url(`Click here to fully logout`, `${vars.authUrl}/logout`)
+    await CliUx.ux.anykey(`Then press any key to continue`)
+    await this.doLogout()
+  }
+
+  async doLogout(): Promise<void> {
     deleteSession()
     clearSubscribers()
   }
@@ -81,7 +87,7 @@ export class Login {
   }
 
   async generateSdkTokenAccount(): Promise<string> {
-    const { refresh_token } = await this.generateToken(vars.authSdkId)
+    const { refresh_token } = await this.generateToken(vars.authSdkId, true)
     if (refresh_token) {
       return refresh_token
     } else {
@@ -90,10 +96,10 @@ export class Login {
   }
 
   private async generateCliTokenAccount(): Promise<TokenAccount> {
-    return this.generateToken(vars.authCliId)
+    return this.generateToken(vars.authCliId, false)
   }
 
-  private async generateToken(client_id: string): Promise<TokenAccount> {
+  private async generateToken(client_id: string, isSdkToken = false): Promise<TokenAccount> {
     // set up callback server
     const { url, codeVerifier } = this.createAuthorization(client_id)
 
@@ -119,7 +125,7 @@ export class Login {
         showUrl()
       }
     })
-    CliUx.ux.action.start(`relay: Waiting for login`)
+    CliUx.ux.action.start(`Waiting for login`)
     const code = await codePromise
     debug(`got code ${code}`)
     CliUx.ux.action.stop(`done`)
@@ -148,20 +154,18 @@ export class Login {
     if (!auth.refresh_token) {
       debug(`no refresh_token`)
 
-      const expiresHours = (auth.expires_in||7200)/60/60
+      // const expiresHours = Math.round(((auth.expires_in||7200)/60/60) * 10) / 10
 
-      CliUx.ux.log(`Your login session will expire in ${expiresHours} hours.`)
-      // cli.log(`If you sign in again and check "Remember me", your session will not expire`)
+      const msg = isSdkToken ?
+        `To generate an authorization token, you must check the 'remember me' box when logging in ` :
+        `You must check the 'remember me' box when logging in`
 
-      // const prompt = new Toggle({
-      //   message: `Sign in again?`,
-      //   enabled: `Yes`,
-      //   disabled: `No, expire in ${expiresHours} hours`,
-      // })
+      CliUx.ux.log(msg)
 
-      // if (await prompt.run()) {
-      //   return await this.browser()
-      // }
+      CliUx.ux.url(`First, click here to fully logout`, `${vars.authUrl}/logout`)
+      await CliUx.ux.anykey(`Then press any key to log in again`)
+      await this.doLogout()
+      return await this.generateToken(client_id, isSdkToken)
     }
 
 
