@@ -33,7 +33,6 @@ export default class AudioList extends Command {
           short_name: {},
           audio_format: {},
         }, {
-          printLine: this.log,
           ...flags,
         })
       } else {

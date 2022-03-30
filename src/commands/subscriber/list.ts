@@ -18,8 +18,6 @@ export default class SubscriberList extends Command {
     CliUx.ux.table(subscribers, {
       name:{},
       id: {},
-    }, {
-      printLine: this.log,
     })
   }
 }

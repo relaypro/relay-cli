@@ -27,8 +27,6 @@ export class DevicesCommand extends Command {
       id: {
         header: `ID`
       },
-    }, {
-      printLine: this.log,
     })
   }
 }
