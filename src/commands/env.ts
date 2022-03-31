@@ -1,6 +1,6 @@
 import { CliUx } from '@oclif/core'
 import { Command } from '../lib/command'
-import { vars } from '../lib/vars'
+import { ROOT_DOMAIN, vars } from '../lib/vars'
 
 export default class Env extends Command {
   static description = `displays the configured environment`
@@ -8,12 +8,12 @@ export default class Env extends Command {
 Define API and Auth Hosts using shell environment variables:
 
 # Auth
-RELAY_ENV=qa                              # default
+RELAY_ENV=qa                               # default
 RELAY_ENV=pro
 
 # API
-RELAY_HOST=all-api-qa-ibot.nocell.io      # default
-RELAY_HOST=all-main-pro-ibot.nocell.io
+RELAY_HOST=all-api-qa-ibot.${ROOT_DOMAIN}    # default
+RELAY_HOST=all-main-pro-ibot.${ROOT_DOMAIN}
 `.trim()]
 
   async run(): Promise<void> {

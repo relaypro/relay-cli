@@ -19,8 +19,8 @@ Relay Workflow developer CLI
 $ npm install -g @relaypro/cli
 $ relay COMMAND
 running command...
-$ relay (-v|--version|version)
-@relaypro/cli/0.2.4 darwin-arm64 node-v16.14.0
+$ relay (--version|-v)
+@relaypro/cli/0.2.4 darwin-arm64 node-v16.14.2
 $ relay --help [COMMAND]
 USAGE
   $ relay COMMAND
@@ -34,12 +34,13 @@ USAGE
 * [`relay audio`](docs/audio.md) - List custom audio
 * [`relay devices`](docs/devices.md) - list all device ids
 * [`relay env`](docs/env.md) - displays the configured environment
-* [`relay help`](docs/help.md) - display help for relay
+* [`relay help`](docs/help.md) - Display help for relay.
 * [`relay login`](docs/login.md) - login with your Relay credentials
 * [`relay logout`](docs/logout.md) - logout and forget any tokens
 * [`relay subscriber`](docs/subscriber.md) - show default subscriber
 * [`relay token`](docs/token.md) - generate a token that can be used with the Relay SDK
 * [`relay update`](docs/update.md) - update the relay CLI
+* [`relay version`](docs/version.md)
 * [`relay whoami`](docs/whoami.md) - display the current logged in user
 * [`relay workflow`](docs/workflow.md) - Manage workflow configurations
 

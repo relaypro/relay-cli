@@ -1,17 +1,19 @@
 import { URL } from 'url'
 
+export const ROOT_DOMAIN = `relaysvr.com`
+
 const config = {
   qa: {
-    host: `all-api-qa-ibot.nocell.io`,
+    host: `all-api-qa-ibot.${ROOT_DOMAIN}`,
     authHost: `auth.relaygo.info`,
-    stratusHost: `all-qa-api-proxy.nocell.io`,
+    stratusHost: `all-qa-api-proxy.${ROOT_DOMAIN}`,
     cli_id: `4EgeETYm`,
     sdk_id: `rGGK996c`,
   },
   pro: {
-    host: `all-main-pro-ibot.nocell.io`,
+    host: `all-main-pro-ibot.${ROOT_DOMAIN}`,
     authHost: `auth.relaygo.com`,
-    stratusHost: `all-pro-api-proxy.nocell.io`,
+    stratusHost: `all-pro-api-proxy.${ROOT_DOMAIN}`,
     cli_id: `83756T4P`,
     sdk_id: `RJZKRhh9`,
   }

@@ -21,4 +21,4 @@ jobs:
       - name: Build test and lint
         run: |
           npm ci
-          # npx oclif-dev pack
+          # npx oclif pack

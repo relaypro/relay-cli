@@ -1,23 +1,26 @@
 `relay help`
 ============
 
-display help for relay
+Display help for relay.
 
 * [`relay help [COMMAND]`](#relay-help-command)
 
 ## `relay help [COMMAND]`
 
-display help for relay
+Display help for relay.
 
 ```
 USAGE
-  $ relay help [COMMAND]
+  $ relay help [COMMAND] [-n]
 
 ARGUMENTS
-  COMMAND  command to show help for
+  COMMAND  Command to show help for.
 
-OPTIONS
-  --all  see all commands in CLI
+FLAGS
+  -n, --nested-commands  Include all nested commands in the output.
+
+DESCRIPTION
+  Display help for relay.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
