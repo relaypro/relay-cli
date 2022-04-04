@@ -11,7 +11,14 @@ export default class AuthWhoami extends Command {
     try {
       const iam = await this.relay.whoami()
       CliUx.ux.styledHeader(`You are`)
-      CliUx.ux.styledObject(iam, [`Name`, `Email`, `Auth User ID`, `Relay User ID`, `Default Subscriber`])
+      CliUx.ux.styledObject(iam, [
+        `Name`,
+        `Email`,
+        `Default Subscriber`,
+        `Auth User ID`,
+        `Relay User ID`,
+        `Capabilities`,
+      ])
     } catch (error) {
       if (error instanceof HTTPError) {
         if (error.statusCode === 401) this.notloggedin()

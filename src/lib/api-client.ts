@@ -1,6 +1,6 @@
 import { Interfaces, Errors, CliUx } from '@oclif/core'
 import { HTTP, HTTPError, HTTPRequestOptions } from 'http-call'
-import { find, includes, isString, map, filter } from 'lodash'
+import { find, includes, isString, map, filter, pick } from 'lodash'
 import * as url from 'url'
 
 import deps from './deps'
@@ -10,7 +10,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
-import { CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Group, NewWorkflow, Workflow, Workflows } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Group, NewWorkflow, SubscriberInfo, Workflow, Workflows } from './api'
 import { getOrThrow } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
@@ -194,17 +194,34 @@ export class APIClient {
   get defaults(): typeof HTTP.defaults {
     return this.http.defaults
   }
-  async whoami(): Promise<Record<string, string>> {
+  async whoami(): Promise<Record<string, string|Record<string, boolean>>> {
     // TODO use parameterized subscriberId
     const subscriber = getDefaultSubscriber()
     const { body: user } = await this.get<Record<TokenInfoKeys, string>>(`${vars.authUrl}/oauth2/validate`)
+    const capabilities = await this.capabilities(subscriber.id)
     return {
       Name: `${user.given_name} ${user.family_name}`,
       Email: `${user.email}`,
       [`Auth User ID`]: `${user.userid}`,
       [`Relay User ID`]: `${userId(subscriber.id, user.userid)}`,
       [`Default Subscriber`]: subscriber.id,
+      Capabilities: pick(capabilities, [
+        `workflow_sdk`,
+        `indoor_positioning`,
+        `ui_nfc`,
+        `calling`,
+        `calling_between_devices_support`
+      ])
     }
+  }
+  async capabilities(subscriberId: string): Promise<Capabilities> {
+    const subscriberInfo = await this.subscriberInfo(subscriberId)
+    return subscriberInfo.capabilities
+  }
+  async subscriberInfo(subscriberId: string): Promise<SubscriberInfo> {
+    const { body: subscriberInfo } = await this.get<SubscriberInfo>(`/ibot/subscriber/${subscriberId}?include_devices=false`)
+    debug(`subscriberInfo`, subscriberInfo)
+    return subscriberInfo
   }
   async devices(subscriberId: string): Promise<DeviceId[]> {
     const { body: { devices } } = await this.get<DeviceIds>(`/ibot/subscriber/${subscriberId}/device_ids`)

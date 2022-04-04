@@ -92,3 +92,44 @@ export type Day = {
   name: DayName,
   value: DayValue,
 }
+
+export type Capability =
+  `sip_register` |
+  `enable_audit_logs` |
+  `escalated_sos` |
+  `group_transcriptions` |
+  `group_translations` |
+  `remote_push_notifications` |
+  `sos` |
+  `ui_nfc` |
+  `ui_user_profiles` |
+  `devmon_event_support` |
+  `dnd` |
+  `eavesdrop_support` |
+  `enable_team_support` |
+  `intent_support` |
+  `calling_between_devices_support` |
+  `allow_sos_override` |
+  `group_persistence` |
+  `ui_translate` |
+  `audit_rich_logging` |
+  `calling` |
+  `geofencing` |
+  `indoor_positioning` |
+  `offnet_calling` |
+  `pstn_calling` |
+  `ui_work_tracking` |
+  `virtual_device_location_reporting` |
+  `location_history` |
+  `workflow_sdk` |
+  `location` |
+  `ui_allow_incident_resolution` |
+  `ui_summon` |
+  `background_audio` |
+  `low_latency_audio`
+
+export type Capabilities = Record<Capability, boolean>
+
+export type SubscriberInfo = {
+  capabilities: Capabilities
+}
