@@ -6,14 +6,16 @@ const config = {
   qa: {
     host: `all-api-qa-ibot.${ROOT_DOMAIN}`,
     authHost: `auth.relaygo.info`,
-    stratusHost: `all-qa-api-proxy.${ROOT_DOMAIN}`,
+    stratusHost: `all-qa-api-proxy.nocell.io`,
+    contentHost: `qa.relaygo.info`,
     cli_id: `4EgeETYm`,
     sdk_id: `rGGK996c`,
   },
   pro: {
     host: `all-main-pro-ibot.${ROOT_DOMAIN}`,
     authHost: `auth.relaygo.com`,
-    stratusHost: `all-pro-api-proxy.${ROOT_DOMAIN}`,
+    stratusHost: `all-pro-api-proxy.nocell.io`,
+    contentHost: `relaypro.com`,
     cli_id: `83756T4P`,
     sdk_id: `RJZKRhh9`,
   }
@@ -91,6 +93,14 @@ export class Vars {
 
   get stratusUrl(): string {
     return `https://${this.stratusHost}/stratus/rest`
+  }
+
+  get contentHost(): string {
+    return config[this.env].contentHost
+  }
+
+  get contentUrl(): string {
+    return `https://${this.contentHost}`
   }
 }
 
