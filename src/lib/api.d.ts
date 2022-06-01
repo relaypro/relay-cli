@@ -71,6 +71,52 @@ export type Workflows = {
   results: Workflow[]
 }
 
+export type MergedWorkflowInstance = HistoricalWorkflowInstance & {
+  workflow?: Workflow,
+}
+
+export type WorkflowInstance = {
+  instance_id: string,
+  subscriber_id: string,
+  triggering_user_id: string,
+  workflow_id: string,
+  workflow_uri: string,
+  status: string,
+}
+
+export type HistoricalWorkflowInstance = WorkflowInstance & {
+  terminate_reason?: string,
+  end_time?: string,
+}
+
+export type WorkflowEvent = {
+  category: string,
+  content: string,
+  jsonContent?: Record<string, string>,
+  content_type: string,
+  id: string,
+  sub_id: string,
+  timestamp: string,
+  workflow_id: string,
+  workflow_instance_id: string,
+  user_id?: string,
+}
+
+export type WorkflowEvents = WorkflowEvent[]
+export type WorkflowEventResults = {
+  data: WorkflowEvents,
+}
+
+export type WorkflowEventQuery = {
+  workflow_id?: string,
+  workflow_instance_id?: string,
+  category?: string,
+  latest?: number,
+  oldest?: number,
+  cursor?: string,
+  limit?: number
+}
+
 export type CustomAudio = {
   id?: string,
   subscriber_id: string,

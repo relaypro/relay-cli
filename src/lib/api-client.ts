@@ -10,7 +10,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Group, NewWorkflow, SubscriberInfo, Workflow, Workflows } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Group, HistoricalWorkflowInstance, NewWorkflow, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows } from './api'
 import { getOrThrow } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
@@ -232,6 +232,52 @@ export class APIClient {
     body = isString(body) ? JSON.parse(body) : body
     return filter(body, { owner: subscriberId })
   }
+
+  async workflowInstances(subscriberId: string): Promise<WorkflowInstance[]> {
+    const { body } = await this.get<WorkflowInstance[]>(`/ibot/workflow_instances?subscriber_id=${subscriberId}`)
+    return map(body, instance => ({ ...instance, status: `running` }))
+  }
+
+  async historicalWorkflowInstances(subscriberId: string, query: WorkflowEventQuery = {}): Promise<HistoricalWorkflowInstance[]> {
+    query.category = `workflow`
+    const events = await this.workflowEvents(subscriberId, query)
+    // debug(`history events`, events)
+    const terminateEvents = filter(events, event => event?.jsonContent?.command === `terminate`)
+    const instances = map(terminateEvents, event => ({
+      instance_id: event.workflow_instance_id,
+      subscriber_id: event.sub_id,
+      triggering_user_id: event.user_id,
+      workflow_id: event.workflow_id,
+      workflow_uri: event?.jsonContent?.workflow_uri,
+      end_time: event?.jsonContent?.end_time,
+      terminate_reason: event?.jsonContent?.terminate_reason,
+      status: `terminated`,
+    })) as HistoricalWorkflowInstance[]
+    return instances
+  }
+
+  async stopWorkflowInstance(subscriberId: string, instanceId: string): Promise<void> {
+    await this.delete(`/ibot/workflow_instances/${instanceId}?subscriber_id=${subscriberId}`)
+  }
+
+  async workflowEvents(subscriberId: string, query: WorkflowEventQuery = {}): Promise<WorkflowEvents> {
+    const params = new URLSearchParams({
+      subscriber_id: subscriberId,
+      ...query as Record<string, string|number>,
+    })
+
+    const url = `/ibot/workflow_analytics_events?${params.toString()}`
+
+    const response = await this.get<WorkflowEventResults>(url)
+
+    const events = map(response?.body?.data, event => ({
+      ...event,
+      jsonContent: event.content_type === `application/json` ? JSON.parse(event.content) : undefined
+    }))
+
+    return events
+  }
+
   async workflows(subscriberId: string): Promise<Workflow[]> {
     const { body: { results } } = await this.get<Workflows>(`/ibot/workflow?subscriber_id=${subscriberId}`)
     return map(results, row => {

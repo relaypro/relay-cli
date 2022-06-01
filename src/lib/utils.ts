@@ -1,6 +1,6 @@
 import { CliUx } from '@oclif/core'
 import { get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Workflow } from './api'
+import { MergedWorkflowInstance, Workflow } from './api'
 import { ALL } from './constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -125,5 +125,47 @@ export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
       get: row => displayInstall(row),
       extended: true,
     }
+  }, options)
+}
+
+const formatTerminateReason = (reason = ``): string => {
+  return reason.replace(/[{|}]/g, ``).replace(/,/g, `:`)
+}
+
+export const printWorkflowInstances = (instances: MergedWorkflowInstance[], flags: unknown): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Workflow Instance${instances.length > 1 ? `s` : ``}`)
+  CliUx.ux.table(instances, {
+    instance_id: {
+      header: `ID`,
+      minWidth: 25,
+      get: row => row.instance_id
+    },
+    workflow_id: {},
+    name: {
+      get: row => row.workflow?.name,
+    },
+    triggered_by: {
+      header: `Triggered By`,
+      get: row => row.triggering_user_id,
+    },
+    status: {},
+    terminate_reason: {
+      extended: true,
+      get: row => formatTerminateReason(row.terminate_reason)
+    },
+    end_time: {
+      extended: true,
+      get: row => row.end_time ?? ``
+    },
+    type: {
+      get: row => formatWorkflowType(row.workflow),
+      extended: true,
+    },
+    uri: {
+      get: row => row.workflow_uri,
+      extended: true,
+    },
+
   }, options)
 }

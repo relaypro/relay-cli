@@ -101,12 +101,46 @@ const workflowFlags = {
   number: numberValue(),
 }
 
+const waitFlags = {
+  [`wait`]: Flags.boolean({
+    char: `W`,
+    default: false,
+    required: false,
+    description: `Wait until workflow instance(s) are completely stopped`
+  }),
+}
+
+const workflowInstanceFlags = {
+  [`instance-id`]: Flags.string({
+    char: `i`,
+    description: `workflow instance id to stop`,
+    required: false,
+    hidden: false,
+    multiple: false,
+    env: `RELAY_WORKFLOW_INSTANCE_ID`,
+    exactlyOne: [`workflow-id`, `instance-id`],
+  }),
+  [`workflow-id`]: Flags.string({
+    char: `w`,
+    description: `workflow id to stop; will stop all instances`,
+    required: false,
+    hidden: false,
+    multiple: false,
+    env: `RELAY_WORKFLOW_ID`,
+    exclusive: [`instance-id`],
+    exactlyOne: [`workflow-id`, `instance-id`],
+  }),
+}
+
 export {
+  dryRunFlags,
   subscriberId,
   workflowId,
   booleanValue,
   numberValue,
   subscriber,
   workflowFlags,
+  workflowInstanceFlags,
+  waitFlags,
   installFlags,
 }
