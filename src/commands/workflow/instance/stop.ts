@@ -21,6 +21,15 @@ import debugFn = require('debug')
 
 const debug = debugFn(`workflow`)
 
+const runConfirm = async (message: string): Promise<boolean> => {
+  const prompt = new Confirm({
+    name: `confirm`,
+    message
+  })
+
+  return !!(await prompt.run())
+}
+
 export default class WorkflowInstancesStop extends Command {
   static description = `Stop a running workflow instance`
 
@@ -31,12 +40,14 @@ export default class WorkflowInstancesStop extends Command {
     ...cliflags.workflowInstanceFlags,
     ...cliflags.waitFlags,
     ...cliflags.dryRunFlags,
+    ...cliflags.confirmFlags,
   }
 
   async run(): Promise<void> {
     const { flags } = await this.parse(WorkflowInstancesStop)
 
     try {
+      const confirm = flags[`confirm`]
       const dryRun = flags[`dry-run`]
       const wait = flags[`wait`]
       const subscriberId = flags[`subscriber-id`]
@@ -60,14 +71,9 @@ export default class WorkflowInstancesStop extends Command {
 
       } else {
 
-        const prompt = new Confirm({
-          name: `question`,
-          message: `Stop workflow instances ${instances.join(`, `)}\nAre you sure?`
-        })
+        const didConfirm = confirm ? true : await runConfirm(`Stop workflow instances ${instances.join(`, `)}\nAre you sure?`)
 
-        const answer = await prompt.run()
-
-        if (answer) {
+        if (didConfirm) {
 
           const stopAttempts = await Promise.allSettled(map(instances, async (instanceId) => {
             await this.relay.stopWorkflowInstance(subscriberId, instanceId)

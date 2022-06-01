@@ -104,9 +104,20 @@ const workflowFlags = {
 const waitFlags = {
   [`wait`]: Flags.boolean({
     char: `W`,
+    default: true,
+    required: false,
+    allowNo: true,
+    description: `Wait until workflow instance(s) are completely stopped`
+  }),
+}
+
+const confirmFlags = {
+  [`confirm`]: Flags.boolean({
+    char: `C`,
     default: false,
     required: false,
-    description: `Wait until workflow instance(s) are completely stopped`
+    allowNo: true,
+    description: `Skip confirmation prompt`
   }),
 }
 
@@ -133,6 +144,7 @@ const workflowInstanceFlags = {
 }
 
 export {
+  confirmFlags,
   dryRunFlags,
   subscriberId,
   workflowId,
