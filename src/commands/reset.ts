@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Command } from '../lib/command'
 
 // const debug = require(`debug`)(`reset`)

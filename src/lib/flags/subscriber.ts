@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Flags } from '@oclif/core'
 import { getDefaultSubscriberId } from '../session'
 

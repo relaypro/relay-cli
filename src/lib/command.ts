@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Command as Base } from '@oclif/core'
 
 import { APIClient } from './api-client'

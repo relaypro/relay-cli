@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Command } from '../lib/command'
 
 export default class Logout extends Command {

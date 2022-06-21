@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { DateTime } from 'luxon'
 import { Day, DayValue } from './api'
 import { timerFlags } from './flags'

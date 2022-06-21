@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { CliUx } from '@oclif/core'
 import { get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
 import { MergedWorkflowInstance, Workflow } from './api'

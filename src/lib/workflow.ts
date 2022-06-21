@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import filter from 'lodash/filter'
 import reduce from 'lodash/reduce'
 // import last from 'lodash/last'

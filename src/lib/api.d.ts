@@ -1,3 +1,4 @@
+// Copyright © 2022 Relay Inc.
 
 export type DeviceId = string
 

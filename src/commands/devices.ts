@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { CliUx } from '@oclif/core'
 import { map } from 'lodash'
 import { Command } from '../lib/command'

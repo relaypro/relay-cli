@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { uuid } from './utils'
 
 export const requestIdHeader = `Request-Id`

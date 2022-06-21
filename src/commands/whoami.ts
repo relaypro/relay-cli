@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { CliUx } from '@oclif/core'
 import { HTTPError } from 'http-call'
 import { Command } from '../lib/command'

@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Interfaces, Errors, CliUx } from '@oclif/core'
 import { HTTP, HTTPError, HTTPRequestOptions } from 'http-call'
 import { find, includes, isString, map, filter, pick } from 'lodash'

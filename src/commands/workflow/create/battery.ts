@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { CreateCommand } from '../../../lib/command'
 import { enum as enumFlag, integer, workflowFlags } from '../../../lib/flags'
 

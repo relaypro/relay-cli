@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
 // eslint-disable-next-line quotes

@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Command } from '../lib/command'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')

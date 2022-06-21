@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { uniq } from 'lodash'
 import { CreateCommand } from '../../lib/command'
 import * as flags from '../../lib/flags'
