@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { URL } from 'url'
 
 export const ROOT_DOMAIN = `relaysvr.com`

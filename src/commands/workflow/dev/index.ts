@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Command } from '../../../lib/command'

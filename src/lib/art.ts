@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 export const RELAY = `
           _
          | |

@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Copyright © 2022 Relay Inc.
+
 {
     set -e
     SUDO=''

@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CliUx } from '@oclif/core'

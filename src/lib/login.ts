@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Interfaces, CliUx } from '@oclif/core'
 import HTTP from 'http-call'
 import encode from 'form-urlencoded'

@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import Base62Str from 'base62str'
 import CryptoJS from 'crypto-js'
 

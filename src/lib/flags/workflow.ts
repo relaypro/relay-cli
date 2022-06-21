@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Flags } from '@oclif/core'
 
 export const workflowId = Flags.string({

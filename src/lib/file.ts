@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import * as fs from 'fs'
 import { promisify } from 'util'
 

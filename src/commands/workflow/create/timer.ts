@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { CreateCommand } from '../../../lib/command'
 import { workflowFlags, timerFlags } from '../../../lib/flags'
 

@@ -1,3 +1,5 @@
+// Copyright © 2022 Relay Inc.
+
 import { Command } from '../lib/command'
 
 import { subscriber, string, timerFlags, boolean, TimerWorkflow, TimerFlags } from '../lib/flags'
