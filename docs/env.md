@@ -26,4 +26,4 @@ EXAMPLES
   RELAY_HOST=all-main-pro-ibot.relaysvr.com
 ```
 
-_See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v0.2.6/dist/commands/env.ts)_
+_See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v1.0.0/dist/commands/env.ts)_

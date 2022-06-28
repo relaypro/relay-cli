@@ -17,7 +17,6 @@
   },
   "plugins": [
     "@typescript-eslint",
-    "mocha",
     "promise"
   ],
   "rules": {
