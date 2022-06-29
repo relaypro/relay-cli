@@ -20,4 +20,4 @@ DESCRIPTION
   list all device ids
 ```
 
-_See code: [dist/commands/devices.ts](https://github.com/relaypro/relay-cli/blob/v1.0.0/dist/commands/devices.ts)_
+_See code: [dist/commands/devices.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/devices.ts)_
