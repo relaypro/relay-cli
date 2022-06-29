@@ -3,10 +3,9 @@
 import { Interfaces, CliUx } from '@oclif/core'
 import HTTP from 'http-call'
 import encode from 'form-urlencoded'
-import querystring from 'querystring'
 import open from 'open'
 import http from 'http'
-import { URL } from 'url'
+import { URL, URLSearchParams } from 'url'
 import { isEmpty, map } from 'lodash'
 import debugFn from 'debug'
 import crypto = require('crypto') // eslint-disable-line quotes
@@ -339,8 +338,9 @@ export class Login {
       code_challenge_method: `S256`,
       code_challenge: codeChallenge,
     }
+    const queryString = (new URLSearchParams(params)).toString()
     return {
-      url: `${vars.authUrl}/oauth2/authorization?${querystring.stringify(params)}`,
+      url: `${vars.authUrl}/oauth2/authorization?${queryString}`,
       codeVerifier
     }
   }
