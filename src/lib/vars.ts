@@ -4,7 +4,18 @@ import { URL } from 'url'
 
 export const ROOT_DOMAIN = `relaysvr.com`
 
-const config = {
+type EnvConfig = {
+  host: string,
+  authHost: string,
+  stratusHost: string,
+  contentHost: string,
+  cli_id: string,
+  sdk_id: string,
+}
+
+type Env = `qa`|`pro`
+
+const config: Record<Env, EnvConfig> = {
   qa: {
     host: `all-api-qa-ibot.${ROOT_DOMAIN}`,
     authHost: `auth.relaygo.info`,
@@ -24,7 +35,7 @@ const config = {
 }
 
 export class Vars {
-  get env(): `qa`|`pro` {
+  get env(): Env {
     if (process.env.RELAY_ENV) {
       if (process.env.RELAY_ENV !== `qa` && process.env.RELAY_ENV !== `pro`) {
         throw new Error(`RELAY_ENV must be set to either "qa" or "pro"`)
@@ -32,7 +43,7 @@ export class Vars {
         return process.env.RELAY_ENV
       }
     } else {
-      return `qa`
+      return `pro`
     }
   }
 
@@ -46,7 +57,6 @@ export class Vars {
     } else {
       return h
     }
-
   }
 
   get apiUrl(): string {

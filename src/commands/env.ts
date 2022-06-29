@@ -20,12 +20,12 @@ export default class Env extends Command {
 Define API and Auth Hosts using shell environment variables:
 
 # Auth
-RELAY_ENV=qa                               # default
-RELAY_ENV=pro
+RELAY_ENV=pro                                # default
+RELAY_ENV=qa
 
 # API
-RELAY_HOST=all-api-qa-ibot.${ROOT_DOMAIN}    # default
-RELAY_HOST=all-main-pro-ibot.${ROOT_DOMAIN}
+RELAY_HOST=all-main-pro-ibot.${ROOT_DOMAIN}  # default
+RELAY_HOST=all-api-qa-ibot.${ROOT_DOMAIN}
 `.trim()]
 
   async run(): Promise<EnvResult> {
@@ -35,7 +35,6 @@ RELAY_HOST=all-main-pro-ibot.${ROOT_DOMAIN}
       auth: vars.authHost,
       auth_cli_id: vars.authCliId,
       auth_sdk_id: vars.authSdkId,
-      message: `hello world`
     }
 
     if (!this.jsonEnabled()) {
