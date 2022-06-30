@@ -10,7 +10,7 @@ import debugFn = require('debug')
 const debug = debugFn(`audio`)
 
 export default class AudioCreate extends Command {
-  static description = `List custom audio`
+  static description = `Create custom audio`
 
   static flags = {
     ...flags.subscriber,

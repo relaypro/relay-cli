@@ -7,10 +7,12 @@ import * as flags from '../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-const debug = debugFn(`audio`)
+const debug = debugFn(`geofence`)
 
-export default class AudioDelete extends Command {
-  static description = `Delete custom audio`
+export default class GeofenceDelete extends Command {
+  static description = `Delete geofence`
+
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,
@@ -18,22 +20,22 @@ export default class AudioDelete extends Command {
       char: `i`,
       multiple: false,
       required: true,
-      description: `file id to delete`
+      description: `Geofence id to delete`
     }),
   }
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(AudioDelete)
+    const { flags } = await this.parse(GeofenceDelete)
 
     try {
       const subscriberId = flags[`subscriber-id`]
       const id = flags[`id`]
 
-      debug(`Deleting file`, { subscriberId, id })
+      debug(`Deleting geofence`, { subscriberId, id })
 
-      await this.relay.deleteAudio(subscriberId, id)
+      await this.relay.deleteGeofence(subscriberId, id)
 
-      this.log(`Successfully deleted audio with id ${id}`)
+      this.log(`Successfully deleted geofence with id ${id}`)
     } catch (err) {
       debug(err)
       this.safeError(err)

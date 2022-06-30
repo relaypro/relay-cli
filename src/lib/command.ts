@@ -30,11 +30,19 @@ export abstract class Command extends Base {
     return super.finally(possibleError)
   }
 
-  safeError(err: unknown): void {
+  safeError(err: unknown): Error {
     if (err instanceof Error) {
-      this.error(err.message)
+      if (!this.jsonEnabled()) {
+        this.error(err.message)
+      }
+      return err
     } else if (typeof err === `string`) {
-      this.error(err)
+      if (!this.jsonEnabled()) {
+        this.error(err)
+      }
+      return new Error(err)
+    } else {
+      return new Error(`failed to safely unwrap error`)
     }
   }
 

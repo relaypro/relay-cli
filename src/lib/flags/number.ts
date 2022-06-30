@@ -23,3 +23,18 @@ export const numberValue = Flags.build({
     }
   }
 })
+
+export const coordinate = Flags.build({
+  multiple: false,
+  required: false,
+  exclusive: [`address`],
+  async parse(input) {
+    const numberValue = toNumber(input)
+    if (isNaN(numberValue)) {
+      throw new Error(`${input} is invalid. Must contain a parsable number.`)
+    } else if (!(numberValue >= -90 && numberValue <= 90)) {
+      throw new Error(`${input} is invalid. Must be between -90 and 90.`)
+    }
+    return numberValue
+  },
+})

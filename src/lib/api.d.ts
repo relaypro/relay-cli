@@ -130,6 +130,19 @@ export type CustomAudioUpload = {
   s3_upload_url: string,
 }
 
+export type Geofence = {
+  geofence_id: string,
+  label: string,
+  address: string,
+  lat: string,
+  long: string,
+  radius: number,
+}
+
+export type GeofenceResults = {
+  results: Geofence[]
+}
+
 export type DayLabel = `MO`|`TU`|`WE`|`TH`|`TH`|`FR`|`SA`|`SU`
 export type DayName = `Monday`|`Tuesday`|`Wednesday`|`Thursday`|`Friday`|`Saturday`|`Sunday`
 export type DayValue = 1|2|3|4|5|6|7

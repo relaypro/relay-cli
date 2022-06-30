@@ -24,7 +24,8 @@
     "importHelpers": true,
     "outDir": "dist",
     "rootDir": "src",
-    "composite": true
+    "composite": true,
+    "strictNullChecks": true
   },
   "include": [
     "src/**/*"

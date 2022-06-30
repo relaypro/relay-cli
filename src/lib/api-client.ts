@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Group, HistoricalWorkflowInstance, NewWorkflow, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, NewWorkflow, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows } from './api'
 import { getOrThrow } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
@@ -324,6 +324,31 @@ export class APIClient {
     debug(`triggerWorkflow`, { uri, body })
 
     await this.post<void>(uri, { body })
+  }
+  async geofences(subscriberId: string): Promise<Geofence[]> {
+    const { body } = await this.get<GeofenceResults>(`/ibot/geofence?subscriber_id=${subscriberId}`)
+    return body.results
+  }
+  async createGeofenceFromAddress(subscriberId: string, label: string, address: string, radius: number): Promise<Geofence> {
+    const body = {
+      label,
+      address,
+      radius
+    }
+    const { body: response } = await this.post<Geofence>(`/ibot/geofence?subscriber_id=${subscriberId}`, { body })
+    return response
+  }
+  async createGeofenceFromLatLong(subscriberId: string, label: string, lat: number, long: number, radius: number): Promise<Geofence> {
+    const body = {
+      label,
+      lat, long,
+      radius
+    }
+    const { body: response } = await this.post<Geofence>(`/ibot/geofence?subscriber_id=${subscriberId}`, { body })
+    return response
+  }
+  async deleteGeofence(subscriberId: string, geofenceId: string): Promise<void> {
+    await this.delete(`/ibot/geofence/${geofenceId}?subscriber_id=${subscriberId}`)
   }
   clear(): void {
     clearConfig()

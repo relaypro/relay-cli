@@ -31,7 +31,7 @@ USAGE
 <!-- commands -->
 # Command Topics
 
-* [`relay audio`](docs/audio.md) - List custom audio
+* [`relay audio`](docs/audio.md) - Create custom audio
 * [`relay devices`](docs/devices.md) - list all device ids
 * [`relay env`](docs/env.md) - displays the configured environment
 * [`relay help`](docs/help.md) - Display help for relay.

@@ -6,7 +6,7 @@ export * from '@oclif/core/lib/flags'
 import { subscriberId } from './subscriber'
 import { workflowId } from './workflow'
 import { booleanValue } from './boolean'
-import { numberValue } from './number'
+import { numberValue, coordinate } from './number'
 export { timerFlags, TimerOptions, TimerWorkflow } from './timer'
 
 const subscriber = {
@@ -157,4 +157,5 @@ export {
   workflowInstanceFlags,
   waitFlags,
   installFlags,
+  coordinate,
 }

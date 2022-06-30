@@ -1,7 +1,7 @@
 `relay audio`
 =============
 
-List custom audio
+Create custom audio
 
 * [`relay audio create`](#relay-audio-create)
 * [`relay audio delete`](#relay-audio-delete)
@@ -9,7 +9,7 @@ List custom audio
 
 ## `relay audio create`
 
-List custom audio
+Create custom audio
 
 ```
 USAGE
@@ -22,14 +22,14 @@ FLAGS
   -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
 
 DESCRIPTION
-  List custom audio
+  Create custom audio
 ```
 
 _See code: [dist/commands/audio/create.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/audio/create.ts)_
 
 ## `relay audio delete`
 
-List custom audio
+Delete custom audio
 
 ```
 USAGE
@@ -40,7 +40,7 @@ FLAGS
   -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
 
 DESCRIPTION
-  List custom audio
+  Delete custom audio
 ```
 
 _See code: [dist/commands/audio/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/audio/delete.ts)_

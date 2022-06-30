@@ -2,7 +2,7 @@
 
 import { CliUx } from '@oclif/core'
 import { get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { MergedWorkflowInstance, Workflow } from './api'
+import { Geofence, MergedWorkflowInstance, Workflow } from './api'
 import { ALL } from './constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -60,6 +60,9 @@ export const formatWorkflowType = (workflow: any): string => { // eslint-disable
       }
       case `on_http`: {
         return `http:${trigger}`
+      }
+      case `on_geofence`: {
+        return `geofence:${trigger}`
       }
     }
   }
@@ -127,6 +130,25 @@ export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
       get: row => displayInstall(row),
       extended: true,
     }
+  }, options)
+}
+
+export const printGeofences = (geofences: Geofence[], flags: unknown): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Configured geofence${geofences.length > 1 ? `s` : ``}`)
+  CliUx.ux.table(geofences, {
+    geofence_id: {
+      header: `ID`,
+    },
+    label: {
+      header: `Name`,
+    },
+    radius: {},
+    address: {},
+    coordinates: {
+      header: `Coordinates`,
+      get: row => `${row.lat},${row.long}`,
+    },
   }, options)
 }
 
