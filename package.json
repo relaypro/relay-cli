@@ -102,6 +102,9 @@
     "topics": {
       "workflow": {
         "description": "Manage workflow configurations"
+      },
+      "workflow:create": {
+        "description": "Create or update a workflow by trigger type"
       }
     },
     "macos": {
