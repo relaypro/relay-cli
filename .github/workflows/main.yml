@@ -10,15 +10,33 @@ on:
 
 jobs:
   build:
+    name: Build and analyze
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript' ]
+
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.15.4'
+          node-version: '16.16.0'
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
 
       - name: Build test and lint
         run: |
           npm ci
-          # npx oclif pack
+          npx eslint .
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
