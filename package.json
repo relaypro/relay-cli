@@ -31,6 +31,7 @@
     "tslib": "2.4.0"
   },
   "devDependencies": {
+    "@microsoft/eslint-formatter-sarif": "2.1.7",
     "@oclif/test": "2.1.0",
     "@types/chai": "4.3.1",
     "@types/crypto-js": "4.1.1",
