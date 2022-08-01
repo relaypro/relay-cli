@@ -43,7 +43,7 @@
     "@typescript-eslint/eslint-plugin": "5.31.0",
     "@typescript-eslint/parser": "5.31.0",
     "chai": "4.3.6",
-    "eslint": "8.20.0",
+    "eslint": "8.21.0",
     "eslint-config-oclif": "4.0.0",
     "eslint-config-oclif-typescript": "1.0.2",
     "eslint-plugin-eslint-comments": "3.2.0",
