@@ -1,5 +1,7 @@
 // Copyright © 2022 Relay Inc.
 
+export type HttpMethod = `get`|`post`|`put`|`delete`
+
 export type DeviceId = string
 
 export type DeviceIds = {
@@ -141,6 +143,22 @@ export type Geofence = {
 
 export type GeofenceResults = {
   results: Geofence[]
+}
+
+type ContentKey = `type`|`type_id`|`content_type`|`category`|`analytics_content`
+
+export type NfcTag = {
+  content: Record<ContentKey|string, string>,
+  counter: number,
+  subscriber_id: string,
+  tag_id: string,
+  uid: string,
+}
+
+export type NfcTagForCreate = Pick<NfcTag, [`content`]>
+
+export type NfcTagResults = {
+  results: NfcTag[],
 }
 
 export type DayLabel = `MO`|`TU`|`WE`|`TH`|`TH`|`FR`|`SA`|`SU`

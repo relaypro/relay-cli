@@ -38,7 +38,7 @@ export class DeleteWorkflowCommand extends Command {
         const answer = await prompt.run()
 
         if (answer) {
-          const success = await this.relay.removeWorkflow(workflow.workflow_id)
+          const success = await this.relay.removeWorkflow(subscriberId, workflow.workflow_id)
           if (success) {
             this.log(`Workflow deleted`)
           } else {

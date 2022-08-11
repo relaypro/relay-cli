@@ -306,9 +306,7 @@ export class APIClient {
       return row
     })
   }
-  async removeWorkflow(id: string): Promise<boolean> {
-    // TODO use parameterized subscriberId
-    const subscriberId = getDefaultSubscriberId()
+  async removeWorkflow(subscriberId: string, id: string): Promise<boolean> {
     await this.delete(`/ibot/workflow/${id}?subscriber_id=${subscriberId}`)
     return true
   }
@@ -405,4 +403,43 @@ export class APIClient {
       throw new Error(`Failed to upload custom audio`)
     }
   }
+
+  async fetchNfcTags(subscriberId: string): Promise<NfcTag[]> {
+    const url = `/ibot/relay_nfc_tag?subscriber_id=${subscriberId}`
+    const response =  await this.get<NfcTagResults>(url)
+    return response.body.results
+  }
+
+  async fetchNfcTag(subscriberId: string, tagId: string): Promise<NfcTag> {
+    const { body: response } = await this.get<NfcTag>(`/ibot/relay_nfc_tag/${tagId}?subscriber_id=${subscriberId}`)
+    return response
+  }
+
+  async createNfcTag(subscriberId: string, content: NfcTagForCreate) {
+    const { body: response } = await this.post(`/ibot/relay_nfc_tag?subscriber_id=${subscriberId}`, {
+      body: { content }
+    })
+    return response
+  }
+
+  async updateNfcTag(subscriberId: string, tagId: string, content: Record<string, string>) {
+    await this.put(`/ibot/relay_nfc_tag/${tagId}?subscriber_id=${subscriberId}`, { body: { content } })
+  }
+
+  async deleteNfcTag(subscriberId: string, tagId: string) {
+    await this.delete(`/ibot/relay_nfc_tag/${tagId}?subscriber_id=${subscriberId}`)
+    return true
+  }
+
+  // async assignNfcTag(subscriberId: string, tagId: string, tagUri: string) {
+  //   await this.put(`/ibot/relay_nfc_tag/${tagId}?subscriber_id=${subscriberId}`, { body: { tag_uri: tagUri } })
+  // }
+
+  // async unassignNfcTag(subscriberId: string, tagId: string) {
+  //   // unassign is currently fetch content, delete, create a new tag with same content
+  //   // this will result in a new tag_id
+  //   const nfcTag = await this.fetchNfcTag(subscriberId, tagId)
+  //   await this.deleteNfcTag(subscriberId, tagId)
+  //   await this.createNfcTag(subscriberId, nfcTag.content)
+  // }
 }
