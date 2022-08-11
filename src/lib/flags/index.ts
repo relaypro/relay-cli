@@ -151,6 +151,43 @@ const workflowInstanceFlags = {
   }),
 }
 
+const apiFlags = {
+  cache: Flags.string({
+    description: `Cache the response, e.g. "3600s", "60m", "1h"`,
+    required: false,
+    multiple: false,
+  }),
+  header: Flags.string({
+    char: `H`,
+    description: `Add a HTTP request header in key=value format`,
+    required: false,
+    multiple: true,
+  }),
+  include: Flags.boolean({
+    char: `i`,
+    description: `Include HTTP response status line and headers in the output`,
+    default: false,
+    allowNo: true,
+  }),
+  input: Flags.string({
+    description: `The file to use as body for the HTTP request`,
+    required: false,
+    multiple: false,
+  }),
+  // jq: Flags.string({
+  //   char: `q`,
+  //   description: `Query to select values from the response using jq syntax`
+  // }),
+  method: Flags.enum({
+    char: `X`,
+    description: `The HTTP method for the request`,
+    default: `GET`,
+    options: [`GET`,`POST`,`PUT`,`DELETE`],
+    required: false,
+    multiple: false,
+  }),
+}
+
 const tagFlags = {
   type: Flags.enum({
     char: `t`,
@@ -184,6 +221,7 @@ const tagFlags = {
 }
 
 export {
+  apiFlags,
   tagFlags,
   confirmFlags,
   dryRunFlags,

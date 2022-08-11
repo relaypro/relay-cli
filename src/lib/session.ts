@@ -11,7 +11,7 @@ import { vars } from './vars'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { AutoComplete, Select } = require('enquirer') // eslint-disable-line quotes
 
-const debug = debugFn(`login`)
+const debug = debugFn(`session`)
 
 export type Subscriber = {
   id: string,

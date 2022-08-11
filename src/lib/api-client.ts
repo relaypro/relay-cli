@@ -12,8 +12,8 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows } from './api'
-import { getOrThrow } from './utils'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults } from './api'
+import { getOrThrow, normalize } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
 import { R_OK } from 'constants'
@@ -175,8 +175,29 @@ export class APIClient {
   delete<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
     return this.http.delete<T>(url, options)
   }
+  GET<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
+    return this.http.get<T>(url, options)
+  }
+  POST<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
+    return this.http.post<T>(url, options)
+  }
+  PUT<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
+    return this.http.put<T>(url, options)
+  }
+  DELETE<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
+    return this.http.delete<T>(url, options)
+  }
   request<T>(url: string, options: APIClient.Options = {}): Promise<HTTP<T>> {
     return this.http.request<T>(url, options)
+  }
+  api(endpoint: string, method: HttpMethod, subscriberId: string, ): Promise<HTTP<string>> {
+    const tokenAccount = getToken()
+    const userId = tokenAccount?.uuid
+    if (!userId) {
+      throw new Error(`Could not resolve userId`)
+    }
+    const _endpoint = normalize(endpoint, { subscriberId, userId })
+    return this[`${method}`]?.(`/ibot/${_endpoint}`)
   }
   generateToken(): Promise<string> {
     return this._login.generateSdkTokenAccount()
@@ -233,6 +254,16 @@ export class APIClient {
     let { body } = await this.get<Group[]>(`/ibot/groups?subscriber_id=${subscriberId}`)
     body = isString(body) ? JSON.parse(body) : body
     return filter(body, { owner: subscriberId })
+  }
+
+  async venues(subscriberId: string): Promise<Venues> {
+    const { body } = await this.get<VenueResults>(`/ibot/indoor_venue?subscriber_id=${subscriberId}`)
+    return body.results
+  }
+
+  async venuePositions(subscriberId: string, venueId: string): Promise<Positions> {
+    const { body } = await this.get<PositionResults>(`/ibot/indoor_position/${venueId}?subscriber_id=${subscriberId}`)
+    return body.results
   }
 
   async workflowInstances(subscriberId: string): Promise<WorkflowInstance[]> {

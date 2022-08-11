@@ -214,3 +214,26 @@ export type Capabilities = Record<Capability, boolean>
 export type SubscriberInfo = {
   capabilities: Capabilities
 }
+
+export type Venue = {
+  venue_id: string,
+  venue_name: string,
+}
+
+export type Venues = Venue[]
+
+export type VenueResults = {
+  results: Venues,
+}
+
+export type Position = {
+  position_id: string,
+  tags: string[],
+  venue_id: string,
+}
+
+export type Positions = Position[]
+
+export type PositionResults = {
+  results: Positions,
+}

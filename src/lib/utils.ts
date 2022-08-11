@@ -1,7 +1,7 @@
 // Copyright © 2022 Relay Inc.
 
 import { CliUx } from '@oclif/core'
-import { get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith, reduce } from 'lodash'
+import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
 import { Geofence, MergedWorkflowInstance, Workflow } from './api'
 import { ALL } from './constants'
 
@@ -71,6 +71,9 @@ export const formatWorkflowType = (workflow: any): string => { // eslint-disable
           return str
         }, ``)
         return `nfc:${type}${_matchers}`
+      }
+      case `on_position`: {
+        return `position:${trigger.transition}:${trigger.position_id}`
       }
     }
   }
@@ -200,4 +203,25 @@ export const printWorkflowInstances = (instances: MergedWorkflowInstance[], flag
     },
 
   }, options)
+}
+
+const mappings = {
+  subscriberId: [`subId`, `sub_id`, `subscriber_id`, `subscriber`, `subscriberId`],
+  userId: [`userId`, `uid`, `user_id`, `u_id`, `user`, `device`, `device_id`, `deviceId`, `userId`],
+}
+
+export const normalize = (endpoint: string, args: Record<string, string>) => {
+  const _mappings = reduce(mappings, (result, alts, key) => {
+    forEach(alts, alt => { result[alt] = key })
+    return result
+  }, {} as Record<string, string>)
+
+  forEach(_mappings, (trueKey, key) => {
+    const value = args[trueKey]
+    if (value) {
+      endpoint = replace(endpoint, `{${key}}`, value)
+    }
+  })
+
+  return endpoint
 }
