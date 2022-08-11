@@ -1,7 +1,7 @@
 // Copyright © 2022 Relay Inc.
 
 import { CliUx } from '@oclif/core'
-import { get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
+import { get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith, reduce } from 'lodash'
 import { Geofence, MergedWorkflowInstance, Workflow } from './api'
 import { ALL } from './constants'
 
@@ -63,6 +63,14 @@ export const formatWorkflowType = (workflow: any): string => { // eslint-disable
       }
       case `on_geofence`: {
         return `geofence:${trigger}`
+      }
+      case `on_nfc`: {
+        const { type, ...matchers } = workflow.config.trigger.on_nfc
+        const _matchers = reduce(matchers, (str, value, key) => {
+          str = `${str}\n${key}=${value}`
+          return str
+        }, ``)
+        return `nfc:${type}${_matchers}`
       }
     }
   }
