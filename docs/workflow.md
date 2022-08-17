@@ -12,6 +12,7 @@ Manage workflow configurations
 * [`relay workflow create call`](#relay-workflow-create-call)
 * [`relay workflow create event`](#relay-workflow-create-event)
 * [`relay workflow create http`](#relay-workflow-create-http)
+* [`relay workflow create nfc`](#relay-workflow-create-nfc)
 * [`relay workflow create phrase`](#relay-workflow-create-phrase)
 * [`relay workflow create timer`](#relay-workflow-create-timer)
 * [`relay workflow delete`](#relay-workflow-delete)
@@ -35,7 +36,7 @@ DESCRIPTION
   List a workflow's args
 ```
 
-_See code: [dist/commands/workflow/args/index.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/args/index.ts)_
+_See code: [dist/commands/workflow/args/index.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/args/index.ts)_
 
 ## `relay workflow args get ARG`
 
@@ -53,7 +54,7 @@ DESCRIPTION
   display a single workflow arguments
 ```
 
-_See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/args/get.ts)_
+_See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/args/get.ts)_
 
 ## `relay workflow args set`
 
@@ -64,16 +65,16 @@ USAGE
   $ relay workflow:args:set -w <value> -s <value> [-b <value>] [-r <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>      (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
-  -w, --workflow-id=<value>        (required) workflow id
-  -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
-  -r, --number=arg1=100.0          Number name/value pair workflow arg
+  -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -w, --workflow-id=<value>           (required) workflow id
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
 
 DESCRIPTION
   set one or more workflow arguments
 ```
 
-_See code: [dist/commands/workflow/args/set.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/args/set.ts)_
+_See code: [dist/commands/workflow/args/set.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/args/set.ts)_
 
 ## `relay workflow args unset`
 
@@ -91,7 +92,7 @@ DESCRIPTION
   unset one or more workflow arguments
 ```
 
-_See code: [dist/commands/workflow/args/unset.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/args/unset.ts)_
+_See code: [dist/commands/workflow/args/unset.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/args/unset.ts)_
 
 ## `relay workflow create battery`
 
@@ -103,25 +104,25 @@ USAGE
     [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
-  -n, --name=<value>               (required) Name of the workflow
-  -u, --uri=<value>                (required) WebSocket URI workflow can be accessed
-  --threshold=<value>              (required) [default: 25] Threshold percentage as an integer to trigger workflow
-  --trigger=(charge|discharge)     (required) [default: discharge] Trigger whether threshold value is reached when
-                                   charging or discharging
-  -A, --install-all                Enable rule to install workflow on all device and users on the account
+  -n, --name=<value>                  (required) Name of the workflow
+  -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
+  --threshold=<value>                 (required) [default: 25] Threshold percentage as an integer to trigger workflow
+  --trigger=(charge|discharge)        (required) [default: discharge] Trigger whether threshold value is reached when
+                                      charging or discharging
+  -A, --install-all                   Enable rule to install workflow on all device and users on the account
   -N, --dry-run
-  -a, --arg=<value>...             String name/value pair workflow arg
-  -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
-  -e, --hidden                     Hide channel from originating device
-  -i, --install=<value>...         device / user ID to install workflow on
-  -r, --number=arg1=100.0          Number name/value pair workflow arg
-  -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -e, --hidden                        Hide channel from originating device
+  -i, --install=<value>...            device / user ID to install workflow on
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+  -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
 
 DESCRIPTION
   Create or update a workflow triggered by crossing a charging or discharging threshold of any device on the account
 ```
 
-_See code: [dist/commands/workflow/create/battery.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/create/battery.ts)_
+_See code: [dist/commands/workflow/create/battery.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/create/battery.ts)_
 
 ## `relay workflow create button`
 
@@ -133,23 +134,23 @@ USAGE
     [-b <value>] [-r <value>]
 
 FLAGS
-  -n, --name=<value>               (required) Name of the workflow
-  -u, --uri=<value>                (required) WebSocket URI workflow can be accessed
-  --trigger=(single|double)        (required) [default: single] Number of button taps to trigger this workflow
-  -A, --install-all                Enable rule to install workflow on all device and users on the account
+  -n, --name=<value>                  (required) Name of the workflow
+  -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
+  --trigger=(single|double)           (required) [default: single] Number of button taps to trigger this workflow
+  -A, --install-all                   Enable rule to install workflow on all device and users on the account
   -N, --dry-run
-  -a, --arg=<value>...             String name/value pair workflow arg
-  -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
-  -e, --hidden                     Hide channel from originating device
-  -i, --install=<value>...         device / user ID to install workflow on
-  -r, --number=arg1=100.0          Number name/value pair workflow arg
-  -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -e, --hidden                        Hide channel from originating device
+  -i, --install=<value>...            device / user ID to install workflow on
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+  -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
 
 DESCRIPTION
   Create or update a workflow triggered by button taps
 ```
 
-_See code: [dist/commands/workflow/create/button.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/create/button.ts)_
+_See code: [dist/commands/workflow/create/button.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/create/button.ts)_
 
 ## `relay workflow create call`
 
@@ -161,23 +162,24 @@ USAGE
     <value>] [-b <value>] [-r <value>]
 
 FLAGS
-  -n, --name=<value>               (required) Name of the workflow
-  -u, --uri=<value>                (required) WebSocket URI workflow can be accessed
-  --trigger=(inbound|outbound)     (required) [default: outbound] Trigger whether an inbound or outbound call is placed
-  -A, --install-all                Enable rule to install workflow on all device and users on the account
+  -n, --name=<value>                  (required) Name of the workflow
+  -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
+  --trigger=(inbound|outbound)        (required) [default: outbound] Trigger whether an inbound or outbound call is
+                                      placed
+  -A, --install-all                   Enable rule to install workflow on all device and users on the account
   -N, --dry-run
-  -a, --arg=<value>...             String name/value pair workflow arg
-  -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
-  -e, --hidden                     Hide channel from originating device
-  -i, --install=<value>...         device / user ID to install workflow on
-  -r, --number=arg1=100.0          Number name/value pair workflow arg
-  -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -e, --hidden                        Hide channel from originating device
+  -i, --install=<value>...            device / user ID to install workflow on
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+  -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
 
 DESCRIPTION
   Create or update a workflow triggered by inbound or outbound calling
 ```
 
-_See code: [dist/commands/workflow/create/call.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/create/call.ts)_
+_See code: [dist/commands/workflow/create/call.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/create/call.ts)_
 
 ## `relay workflow create event`
 
@@ -189,23 +191,23 @@ USAGE
     <value>] [-r <value>]
 
 FLAGS
-  -n, --name=<value>               (required) Name of the workflow
-  -u, --uri=<value>                (required) WebSocket URI workflow can be accessed
-  --trigger=(emergency)            (required) [default: emergency] Relay device event to trigger this workflow
-  -A, --install-all                Enable rule to install workflow on all device and users on the account
+  -n, --name=<value>                  (required) Name of the workflow
+  -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
+  --trigger=(emergency)               (required) [default: emergency] Relay device event to trigger this workflow
+  -A, --install-all                   Enable rule to install workflow on all device and users on the account
   -N, --dry-run
-  -a, --arg=<value>...             String name/value pair workflow arg
-  -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
-  -e, --hidden                     Hide channel from originating device
-  -i, --install=<value>...         device / user ID to install workflow on
-  -r, --number=arg1=100.0          Number name/value pair workflow arg
-  -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -e, --hidden                        Hide channel from originating device
+  -i, --install=<value>...            device / user ID to install workflow on
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+  -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
 
 DESCRIPTION
   Create or update a workflow triggered by event emitted by Relay device
 ```
 
-_See code: [dist/commands/workflow/create/event.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/create/event.ts)_
+_See code: [dist/commands/workflow/create/event.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/create/event.ts)_
 
 ## `relay workflow create http`
 
@@ -217,23 +219,52 @@ USAGE
     <value>] [-r <value>]
 
 FLAGS
-  -n, --name=<value>               (required) Name of the workflow
-  -u, --uri=<value>                (required) WebSocket URI workflow can be accessed
-  --trigger=(POST)                 (required) [default: POST] HTTP method to trigger this workflow
-  -A, --install-all                Enable rule to install workflow on all device and users on the account
+  -n, --name=<value>                  (required) Name of the workflow
+  -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
+  --trigger=(POST)                    (required) [default: POST] HTTP method to trigger this workflow
+  -A, --install-all                   Enable rule to install workflow on all device and users on the account
   -N, --dry-run
-  -a, --arg=<value>...             String name/value pair workflow arg
-  -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
-  -e, --hidden                     Hide channel from originating device
-  -i, --install=<value>...         device / user ID to install workflow on
-  -r, --number=arg1=100.0          Number name/value pair workflow arg
-  -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -e, --hidden                        Hide channel from originating device
+  -i, --install=<value>...            device / user ID to install workflow on
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+  -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
 
 DESCRIPTION
   Create or update a workflow triggered by an HTTP request
 ```
 
-_See code: [dist/commands/workflow/create/http.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/create/http.ts)_
+_See code: [dist/commands/workflow/create/http.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/create/http.ts)_
+
+## `relay workflow create nfc`
+
+Create or update a workflow triggered by a spoken phrase
+
+```
+USAGE
+  $ relay workflow:create:nfc -n <value> -u <value> [-N] [-i <value> | -A] [-t] [-e] [-a <value>] [-b <value>] [-r
+    <value>] [-c <value>] [-l <value>]
+
+FLAGS
+  -n, --name=<value>                  (required) Name of the workflow
+  -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
+  -A, --install-all                   Enable rule to install workflow on all device and users on the account
+  -N, --dry-run
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -c, --category=<value>              Tag category to match against when tapped
+  -e, --hidden                        Hide channel from originating device
+  -i, --install=<value>...            device / user ID to install workflow on
+  -l, --label=<value>                 Tag label to match against when tapped
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+  -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
+
+DESCRIPTION
+  Create or update a workflow triggered by a spoken phrase
+```
+
+_See code: [dist/commands/workflow/create/nfc.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/create/nfc.ts)_
 
 ## `relay workflow create phrase`
 
@@ -245,23 +276,23 @@ USAGE
     <value>] [-r <value>]
 
 FLAGS
-  -n, --name=<value>               (required) Name of the workflow
-  -u, --uri=<value>                (required) WebSocket URI workflow can be accessed
-  --trigger="hello world"...       (required) Phrase spoken to Relay Assistant to trigger this workflow
-  -A, --install-all                Enable rule to install workflow on all device and users on the account
+  -n, --name=<value>                  (required) Name of the workflow
+  -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
+  --trigger="hello world"...          (required) Phrase spoken to Relay Assistant to trigger this workflow
+  -A, --install-all                   Enable rule to install workflow on all device and users on the account
   -N, --dry-run
-  -a, --arg=<value>...             String name/value pair workflow arg
-  -b, --boolean=arg1=[true|false]  Boolean name/value pair workflow arg
-  -e, --hidden                     Hide channel from originating device
-  -i, --install=<value>...         device / user ID to install workflow on
-  -r, --number=arg1=100.0          Number name/value pair workflow arg
-  -t, --[no-]transient             Allow workflow to run in the background; otherwise terminate workflow
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -e, --hidden                        Hide channel from originating device
+  -i, --install=<value>...            device / user ID to install workflow on
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+  -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
 
 DESCRIPTION
   Create or update a workflow triggered by a spoken phrase
 ```
 
-_See code: [dist/commands/workflow/create/phrase.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/create/phrase.ts)_
+_See code: [dist/commands/workflow/create/phrase.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/create/phrase.ts)_
 
 ## `relay workflow create timer`
 
@@ -295,7 +326,7 @@ FLAGS
   -a, --arg=<value>...
       String name/value pair workflow arg
 
-  -b, --boolean=arg1=[true|false]
+  -b, --boolean=arg1=[true|false]...
       Boolean name/value pair workflow arg
 
   -c, --count=<value>
@@ -311,11 +342,11 @@ FLAGS
 
   -l, --until=<value>
 
-  -r, --number=arg1=100.0
+  -r, --number=arg1=100.0...
       Number name/value pair workflow arg
 
   -s, --start=<value>
-      [default: 2022-06-30T17:00:00]
+      [default: 2022-08-17T14:00:00]
 
   -t, --[no-]transient
       Allow workflow to run in the background; otherwise terminate workflow
@@ -324,7 +355,7 @@ DESCRIPTION
   Create or update a workflow triggered immediately or with a repeating rule
 ```
 
-_See code: [dist/commands/workflow/create/timer.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/create/timer.ts)_
+_See code: [dist/commands/workflow/create/timer.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/create/timer.ts)_
 
 ## `relay workflow delete`
 
@@ -342,7 +373,7 @@ DESCRIPTION
   Destructively delete and remove a workflow
 ```
 
-_See code: [dist/commands/workflow/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/delete.ts)_
+_See code: [dist/commands/workflow/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/delete.ts)_
 
 ## `relay workflow install`
 
@@ -363,7 +394,7 @@ DESCRIPTION
   Install an existing workflow into one or more devices
 ```
 
-_See code: [dist/commands/workflow/install.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/install.ts)_
+_See code: [dist/commands/workflow/install.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/install.ts)_
 
 ## `relay workflow list`
 
@@ -390,7 +421,7 @@ DESCRIPTION
   List workflow configurations
 ```
 
-_See code: [dist/commands/workflow/list.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/list.ts)_
+_See code: [dist/commands/workflow/list.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/list.ts)_
 
 ## `relay workflow uninstall`
 
@@ -411,4 +442,4 @@ DESCRIPTION
   Uninstall an existing workflow from one or more devices
 ```
 
-_See code: [dist/commands/workflow/uninstall.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/workflow/uninstall.ts)_
+_See code: [dist/commands/workflow/uninstall.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/workflow/uninstall.ts)_

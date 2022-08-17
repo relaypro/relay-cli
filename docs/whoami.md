@@ -11,10 +11,13 @@ display the current logged in user
 
 ```
 USAGE
-  $ relay whoami
+  $ relay whoami [--json]
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   display the current logged in user
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/whoami.ts)_

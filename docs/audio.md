@@ -25,7 +25,7 @@ DESCRIPTION
   Create custom audio
 ```
 
-_See code: [dist/commands/audio/create.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/audio/create.ts)_
+_See code: [dist/commands/audio/create.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/audio/create.ts)_
 
 ## `relay audio delete`
 
@@ -43,7 +43,7 @@ DESCRIPTION
   Delete custom audio
 ```
 
-_See code: [dist/commands/audio/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/audio/delete.ts)_
+_See code: [dist/commands/audio/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/audio/delete.ts)_
 
 ## `relay audio list`
 
@@ -70,4 +70,4 @@ DESCRIPTION
   List custom audio
 ```
 
-_See code: [dist/commands/audio/list.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/audio/list.ts)_
+_See code: [dist/commands/audio/list.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/audio/list.ts)_

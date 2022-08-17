@@ -20,7 +20,7 @@ $ npm install -g @relaypro/cli
 $ relay COMMAND
 running command...
 $ relay (--version|-v)
-@relaypro/cli/1.1.0 darwin-arm64 node-v16.14.2
+@relaypro/cli/1.2.0 darwin-arm64 node-v16.14.2
 $ relay --help [COMMAND]
 USAGE
   $ relay COMMAND
@@ -38,6 +38,7 @@ USAGE
 * [`relay login`](docs/login.md) - login with your Relay credentials
 * [`relay logout`](docs/logout.md) - logout and forget any tokens
 * [`relay subscriber`](docs/subscriber.md) - show default subscriber
+* [`relay tag`](docs/tag.md) - Manages configurations that can be associated with an NFC tag
 * [`relay token`](docs/token.md) - generate a token that can be used with the Relay SDK
 * [`relay update`](docs/update.md) - update the relay CLI
 * [`relay version`](docs/version.md)

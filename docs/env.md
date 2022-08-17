@@ -11,7 +11,10 @@ displays the configured environment
 
 ```
 USAGE
-  $ relay env
+  $ relay env [--json]
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   displays the configured environment
@@ -26,4 +29,4 @@ EXAMPLES
   RELAY_HOST=all-api-qa-ibot.relaysvr.com
 ```
 
-_See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v1.1.0/dist/commands/env.ts)_
+_See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v1.2.0/dist/commands/env.ts)_
