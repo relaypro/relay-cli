@@ -101,6 +101,9 @@
     },
     "topicSeparator": " ",
     "topics": {
+      "tag": {
+        "description": "Manages configurations that can be associated with an NFC tag"
+      },
       "workflow": {
         "description": "Manage workflow configurations"
       },

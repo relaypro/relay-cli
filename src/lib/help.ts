@@ -17,12 +17,12 @@ export default class RelayHelp extends Help {
   // calls one of showRootHelp, showTopicHelp,
   // or showCommandHelp
   async showHelp(args: string[]): Promise<void> {
-    CliUx.ux.log(RELAY)
     super.showHelp(args)
   }
 
   // display the root help of a CLI
   async showRootHelp(): Promise<void> {
+    CliUx.ux.log(RELAY)
     super.showRootHelp()
   }
 

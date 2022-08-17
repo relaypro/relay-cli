@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, NewWorkflow, NfcTag, NfcTagForCreate, NfcTagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows } from './api'
 import { getOrThrow } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
@@ -404,18 +404,18 @@ export class APIClient {
     }
   }
 
-  async fetchNfcTags(subscriberId: string): Promise<NfcTag[]> {
+  async fetchNfcTags(subscriberId: string): Promise<Tag[]> {
     const url = `/ibot/relay_nfc_tag?subscriber_id=${subscriberId}`
-    const response =  await this.get<NfcTagResults>(url)
+    const response =  await this.get<TagResults>(url)
     return response.body.results
   }
 
-  async fetchNfcTag(subscriberId: string, tagId: string): Promise<NfcTag> {
-    const { body: response } = await this.get<NfcTag>(`/ibot/relay_nfc_tag/${tagId}?subscriber_id=${subscriberId}`)
+  async fetchNfcTag(subscriberId: string, tagId: string): Promise<Tag> {
+    const { body: response } = await this.get<Tag>(`/ibot/relay_nfc_tag/${tagId}?subscriber_id=${subscriberId}`)
     return response
   }
 
-  async createNfcTag(subscriberId: string, content: NfcTagForCreate) {
+  async createNfcTag(subscriberId: string, content: TagForCreate) {
     const { body: response } = await this.post(`/ibot/relay_nfc_tag?subscriber_id=${subscriberId}`, {
       body: { content }
     })

@@ -8,11 +8,11 @@ import debugFn = require('debug')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
-const debug = debugFn(`nfc`)
+const debug = debugFn(`tag`)
 
-export class NfcDeleteCommand extends Command {
+export class TagDeleteCommand extends Command {
 
-  static description = `Deletes an NFC tag configuration.`
+  static description = `Deletes a tag configuration.`
 
   static flags = {
     ...flags.subscriber,
@@ -21,12 +21,12 @@ export class NfcDeleteCommand extends Command {
       char: `t`,
       required: true,
       multiple: false,
-      description: `NFC tag identifier to delete`,
+      description: `Tag identifier to delete`,
     })
   }
 
   async run(): Promise<void> {
-    const { flags } = await  this.parse(NfcDeleteCommand)
+    const { flags } = await  this.parse(TagDeleteCommand)
     const tagId = flags[`tag-id`]
     const subscriberId = flags[`subscriber-id`]
 
@@ -46,15 +46,15 @@ export class NfcDeleteCommand extends Command {
         if (answer) {
           const success = await this.relay.deleteNfcTag(subscriberId, tagId)
           if (success) {
-            this.log(`NFC tag deleted`)
+            this.log(`Tag deleted`)
           } else {
-            this.log(`NFC tag NOT deleted`)
+            this.log(`Tag NOT deleted`)
           }
         } else {
-          this.log(`NFC tag NOT deleted`)
+          this.log(`Tag NOT deleted`)
         }
       } else {
-        this.log(`NFC tag ID does not exist: ${tagId}`)
+        this.log(`Tag ID does not exist: ${tagId}`)
       }
     } catch (err) {
       debug(err)

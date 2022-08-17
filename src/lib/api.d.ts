@@ -147,7 +147,7 @@ export type GeofenceResults = {
 
 type ContentKey = `type`|`type_id`|`content_type`|`category`|`analytics_content`
 
-export type NfcTag = {
+export type Tag = {
   content: Record<ContentKey|string, string>,
   counter: number,
   subscriber_id: string,
@@ -155,10 +155,10 @@ export type NfcTag = {
   uid: string,
 }
 
-export type NfcTagForCreate = Pick<NfcTag, [`content`]>
+export type TagForCreate = Pick<Tag, [`content`]>
 
-export type NfcTagResults = {
-  results: NfcTag[],
+export type TagResults = {
+  results: Tag[],
 }
 
 export type DayLabel = `MO`|`TU`|`WE`|`TH`|`TH`|`FR`|`SA`|`SU`

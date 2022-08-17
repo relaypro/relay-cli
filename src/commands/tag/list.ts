@@ -7,13 +7,13 @@ import * as flags from '../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
-import { capitalize, fill, filter, keys, map, mapValues, size, union, zipObject } from 'lodash'
-import { NfcTag } from '../../lib/api'
+import { capitalize, fill, filter, isEmpty, keys, map, mapValues, replace, size, union, zipObject } from 'lodash'
+import { Tag } from '../../lib/api'
 import { Ok, Result } from 'ts-results'
 
-const debug = debugFn(`nfc`)
+const debug = debugFn(`tag`)
 
-const customTableFields = (tags: NfcTag[]) => {
+const customTableFields = (tags: Tag[]): Record<`type`|string, unknown> => {
   const _keys = union(...map(tags, tag => keys(tag.content)))
   const _size = size(_keys)
   const filler = fill(Array(_size), {}, 0, _size)
@@ -21,15 +21,15 @@ const customTableFields = (tags: NfcTag[]) => {
     return {
       ...definition,
       header: `${key}`,
-      get: (row: NfcTag) => (row.content[key] ?? ``)
+      get: (row: Tag) => (row.content[key] ?? ``)
     }
   })
   return fields
 }
-filter
-export class NfcTagListCommand extends Command {
 
-  static description = `Lists all NFC tag configurations.`
+export class TagListCommand extends Command {
+
+  static description = `Lists all tag configurations.`
 
   static enableJsonFlag = true
 
@@ -38,26 +38,27 @@ export class NfcTagListCommand extends Command {
     ...CliUx.ux.table.flags(),
     type: flags.enum({
       char: `t`,
-      description: `Show only profile or custom NFC tags`,
+      description: `Show only profile or custom tags`,
       options: [`user_profile`, `custom`],
       default: `custom`,
+      hidden: true,
       multiple: false,
       required: true,
     }),
     category: flags.string({
       char: `c`,
-      description: `Show only NFC tags of this category`,
+      description: `Show only tags of this category`,
       multiple: false,
       required: false,
     })
   }
 
-  async run(): Promise<Result<NfcTag[], Error>> {
-    const { flags } = await this.parse(NfcTagListCommand)
+  async run(): Promise<Result<Tag[], Error>> {
+    const { flags } = await this.parse(TagListCommand)
 
     const tags = await this.relay.fetchNfcTags(flags[`subscriber-id`])
 
-    debug(`NFC tags`, tags)
+    debug(`tags`, tags)
 
     const contentMatcher: Partial<Record<`type`|`category`, string>> = {  }
     if (flags.type) {
@@ -76,7 +77,7 @@ export class NfcTagListCommand extends Command {
           tableFields = {
             analytics: {
               extended: true,
-              get: (row: NfcTag) => {
+              get: (row: Tag) => {
                 const analyticsContent = row?.content?.analytics_content
                 if (analyticsContent) {
                   const _analytics = JSON.parse(analyticsContent)
@@ -93,7 +94,7 @@ export class NfcTagListCommand extends Command {
       } else if (flags.type === `user_profile`) {
         tableFields = {
           profile: {
-            get: (row: NfcTag) => row.content.type_id
+            get: (row: Tag) => row.content.type_id
           }
         }
       } else {
@@ -103,24 +104,30 @@ export class NfcTagListCommand extends Command {
       debug(`flags`, flags)
       debug(`tableFields`, tableFields)
 
-      CliUx.ux.styledHeader(`${capitalize(flags.category || flags.type)} NFC Tag Configuration${filteredTags.length > 1 ? `s` : ``}`)
-      CliUx.ux.table(filteredTags, {
-        tag_id: {
-          header: `Tag ID`,
-          minWidth: 20,
-        },
-        uid: {
-          header: `UID`,
-          extended: true,
-        },
-        is_assigned: {
-          header: `Is Assigned?`,
-          get: row => !!row.uid
-        },
-        ...tableFields,
-      }, {
-        ...flags
-      })
+      CliUx.ux.styledHeader(`${replace(capitalize(flags.category || flags.type), `_`, ` `)} Tag Configuration${filteredTags.length > 1 ? `s` : ``}`)
+
+      if (!isEmpty(filteredTags)) {
+        CliUx.ux.table(filteredTags, {
+          tag_id: {
+            header: `Tag ID`,
+            minWidth: 25,
+          },
+          uid: {
+            header: `UID`,
+            extended: true,
+          },
+          is_assigned: {
+            header: `Is Assigned?`,
+            get: row => !!row.uid
+          },
+          ...tableFields,
+        }, {
+          ...flags
+        })
+      } else {
+        this.log(`No tags configured`)
+      }
+
     }
 
     return Ok(filteredTags)

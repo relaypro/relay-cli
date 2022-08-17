@@ -34,6 +34,12 @@ export type TimerFlags = WorkflowFlags & {
   day?: string[],
 }
 
+export type TagFlags = {
+  type: `custom`|`user_profile`,
+  category: string,
+   label: string,
+}
+
 const dryRunFlags = {
   [`dry-run`]: Flags.boolean({
     char: `N`,
@@ -145,7 +151,40 @@ const workflowInstanceFlags = {
   }),
 }
 
+const tagFlags = {
+  type: Flags.enum({
+    char: `t`,
+    hidden: true,
+    description: `Sets the tag to profile or custom type`,
+    options: [`user_profile`, `custom`],
+    default: `custom`,
+    multiple: false,
+    required: true,
+  }),
+  category: Flags.string({
+    char: `c`,
+    description: `Sets the custom category; useful to group like tags in the same category`,
+    multiple: false,
+    required: true,
+  }),
+  label: Flags.string({
+    char: `l`,
+    description: `Sets the tag label; useful to differentiate individual tags`,
+    multiple: false,
+    required: true,
+  }),
+  arg: Flags.string({
+    char: `a`,
+    hidden: true,
+    multiple: true,
+    required: false,
+    description: `A content string name/value pair that can be used in the workflow trigger match and in the workflow START event`,
+    helpValue: `"category=task"`,
+  })
+}
+
 export {
+  tagFlags,
   confirmFlags,
   dryRunFlags,
   subscriberId,
