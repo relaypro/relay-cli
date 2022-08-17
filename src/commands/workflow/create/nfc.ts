@@ -2,7 +2,7 @@ import filter from 'lodash/filter'
 import reduce from 'lodash/reduce'
 
 import { CreateCommand } from '../../../lib/command'
-import { string, workflowFlags } from '../../../lib/flags'
+import * as Flags from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -12,9 +12,13 @@ import { parseArg } from '../../../lib/utils'
 
 const debug = debugFn(`workflow:create:nfc`)
 
+type NfcType = `custom`|`user_profile`
+
 type OnNfc = {
-  type: `custom`,
-  [k: string]: string,
+  type: NfcType,
+  category?: string,
+  label?: string,
+  // [k: string]: string,
 }
 
 type NfcWorkflow = NewWorkflow & { config: { trigger: { on_nfc: OnNfc }}}
@@ -26,38 +30,70 @@ export class NfcWorkflowCommand extends CreateCommand {
   static strict = false
 
   static flags = {
-    ...workflowFlags,
-    matcher: string({
-      required: true,
+    ...Flags.workflowFlags,
+    matcher: Flags.string({
+      char: `m`,
+      hidden: true,
+      required: false,
       multiple: true,
-      description: `String name/value pair to match against the triggering NFC Tag's content (see "relay nfc create --help")`,
+      description: `Arbitrary name/value pair to match against the triggering NFC Tag's content`,
       helpValue: `"category=task"`
+    }),
+    type: Flags.enum({
+      char: `t`,
+      hidden: true,
+      description: `Tag type to match against when tapped`,
+      options: [`user_profile`, `custom`],
+      default: `custom`,
+      multiple: false,
+      required: true,
+    }),
+    category: Flags.string({
+      char: `c`,
+      description: `Tag category to match against when tapped`,
+      multiple: false,
+      required: false,
+    }),
+    label: Flags.string({
+      char: `l`,
+      description: `Tag label to match against when tapped`,
+      multiple: false,
+      required: false,
     }),
   }
 
   async run(): Promise<void> {
     const { flags, raw } = await this.parse(NfcWorkflowCommand)
-
+    const type = flags[`type`] as NfcType
     try {
 
       const workflow: NfcWorkflow = createWorkflow(flags, raw) as NfcWorkflow
 
-      // eslint-disable-next-line no-constant-condition
-      if (true || flags.trigger) {
+      const onNfc: OnNfc = { type }
+
+      if (flags.category) {
+        onNfc.category = flags.category
+      }
+
+      if (flags.label) {
+        onNfc.label = flags.label
+      }
+
+      let matcher = {}
+
+      if (flags.matcher) {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const nfcArgFlags = filter(raw, ({ flag }: any) => `matcher` === flag)
-        const nfcArgs = reduce(nfcArgFlags, (args, flag) => {
+        matcher = reduce(nfcArgFlags, (args, flag) => {
           const [, name, value] = parseArg(flag.input)
           return { ...args, [name]: value }
         }, {})
+      }
 
-        workflow.config.trigger.on_nfc = {
-          type: `custom`,
-          ...nfcArgs,
-        }
-      } else {
-        throw new Error(`Trigger type nfc requires specifying at least one name value pair. For instance '--trigger category=task'`)
+      workflow.config.trigger.on_nfc = {
+        ...matcher,
+        ...onNfc,
       }
 
       debug(`nfc workflow => ${JSON.stringify(workflow, null, 2)}`)
