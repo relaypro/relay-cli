@@ -35,8 +35,10 @@ export class InstallWorkflowCommand extends CreateCommand {
     const { flags, argv } = await this.parse(InstallWorkflowCommand)
     const workflowId = flags[`workflow-id`]
     const subscriberId = flags[`subscriber-id`]
+    const _install = flags[`install`]
+    const hasInstall = (_install && _install.length > 0)
 
-    if (argv.length > 0 && (flags.install?.length > 0 || flags[`install-all`])) {
+    if (argv.length > 0 && (hasInstall || flags[`install-all`])) {
       throw new Error(`command arguments and --install[-all] flags are mutually exclusive`)
     }
 
@@ -51,8 +53,8 @@ export class InstallWorkflowCommand extends CreateCommand {
 
         if (argv.length > 0) {
           workflow.install = uniq([...(install ?? []), ...argv])
-        } else if (flags.install?.length > 0) {
-          workflow.install = uniq([...(install ?? []), ...flags.install])
+        } else if (hasInstall) {
+          workflow.install = uniq([...(install ?? []), ..._install])
         } else if (flags[`install-all`]) {
           workflow.install_rule = ALL
         }

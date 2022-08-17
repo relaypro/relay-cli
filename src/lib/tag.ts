@@ -1,10 +1,9 @@
 import { ParsingToken } from '@oclif/core/lib/interfaces'
 import { filter, reduce } from 'lodash'
 import { TagForCreate } from './api'
-import { TagFlags } from './flags'
 import { parseArg } from './utils'
 
-export const createTagContent = (flags: TagFlags, raw: ParsingToken[]): TagForCreate => {
+export const createTagContent = (type: string, category: string, label: string, raw: ParsingToken[]): TagForCreate => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nfcArgsFlags = filter(raw, ({ flag }: any) => `arg` === flag)
 
@@ -26,9 +25,9 @@ export const createTagContent = (flags: TagFlags, raw: ParsingToken[]): TagForCr
   }
 
   const tagContent = {
-    type: flags.type,
-    category: flags.category,
-    label: flags.label,
+    type,
+    category,
+    label,
     ...nfcArgs
   }
 

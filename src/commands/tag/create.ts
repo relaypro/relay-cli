@@ -22,7 +22,7 @@ export class TagCreateCommand extends Command {
     const { flags, raw } = await this.parse(TagCreateCommand)
     const subscriberId = flags[`subscriber-id`]
 
-    const tagContent = createTagContent(flags, raw)
+    const tagContent = createTagContent(flags.type, flags.category, flags.label, raw)
 
     debug(`tagContent`, tagContent)
 

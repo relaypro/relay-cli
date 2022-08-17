@@ -29,7 +29,7 @@ export class NfcUpdateCommand extends Command {
     const subscriberId = flags[`subscriber-id`]
     const tagId = flags[`tag-id`]
 
-    const tagContent = createTagContent(flags, raw)
+    const tagContent = createTagContent(flags.type, flags.category, flags.label, raw)
 
     debug(`tagContent`, tagContent)
 
