@@ -7,6 +7,7 @@ import { string, workflowFlags } from '../../../lib/flags'
 import debugFn = require('debug')
 import { NewWorkflow } from '../../../lib/api'
 import { createWorkflow } from '../../../lib/workflow'
+import { lowerCase, map } from 'lodash'
 
 const debug = debugFn(`workflow:create:phrase`)
 
@@ -36,7 +37,7 @@ export class PhraseWorkflowCommand extends CreateCommand {
       const workflow: PhraseWorkflow = createWorkflow(flags, raw) as PhraseWorkflow
 
       if (flags.trigger) {
-        workflow.config.trigger.on_phrases = flags.trigger
+        workflow.config.trigger.on_phrases = map(flags.trigger, lowerCase)
       } else {
         throw new Error(`Trigger type phrase requires specifying a phrase. For instance '--phrase hello'`)
       }
