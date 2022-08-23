@@ -108,16 +108,19 @@ export type WorkflowEvent = {
 export type WorkflowEvents = WorkflowEvent[]
 export type WorkflowEventResults = {
   data: WorkflowEvents,
+  cursor: string,
 }
 
 export type WorkflowEventQuery = {
   workflow_id?: string,
   workflow_instance_id?: string,
   category?: string,
+  source_type?: string,
+  user_id?: string,
   latest?: number,
   oldest?: number,
   cursor?: string,
-  limit?: number
+  limit?: number,
 }
 
 export type CustomAudio = {
