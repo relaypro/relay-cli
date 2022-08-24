@@ -109,6 +109,9 @@
       },
       "workflow:create": {
         "description": "Create or update a workflow by trigger type"
+      },
+      "workflow:args": {
+        "description": "Manage arguments for a workflow"
       }
     },
     "macos": {
