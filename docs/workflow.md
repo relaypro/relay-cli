@@ -4,8 +4,8 @@
 Manage workflow configurations
 
 * [`relay workflow analytics`](#relay-workflow-analytics)
-* [`relay workflow args`](#relay-workflow-args)
 * [`relay workflow args get ARG`](#relay-workflow-args-get-arg)
+* [`relay workflow args list`](#relay-workflow-args-list)
 * [`relay workflow args set`](#relay-workflow-args-set)
 * [`relay workflow args unset`](#relay-workflow-args-unset)
 * [`relay workflow create battery`](#relay-workflow-create-battery)
@@ -58,27 +58,9 @@ DESCRIPTION
 
 _See code: [dist/commands/workflow/analytics.ts](https://github.com/relaypro/relay-cli/blob/v1.2.2/dist/commands/workflow/analytics.ts)_
 
-## `relay workflow args`
-
-List a workflow's args
-
-```
-USAGE
-  $ relay workflow:args -w <value> -s <value>
-
-FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 7b28d9b0-4b46-41f8-910c-bcf8dac3a03b] subscriber id
-  -w, --workflow-id=<value>    (required) workflow id
-
-DESCRIPTION
-  List a workflow's args
-```
-
-_See code: [dist/commands/workflow/args/index.ts](https://github.com/relaypro/relay-cli/blob/v1.2.2/dist/commands/workflow/args/index.ts)_
-
 ## `relay workflow args get ARG`
 
-display a single workflow arguments
+display arguments for a workflow
 
 ```
 USAGE
@@ -89,10 +71,28 @@ FLAGS
   -w, --workflow-id=<value>    (required) workflow id
 
 DESCRIPTION
-  display a single workflow arguments
+  display arguments for a workflow
 ```
 
 _See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v1.2.2/dist/commands/workflow/args/get.ts)_
+
+## `relay workflow args list`
+
+List a workflow's args
+
+```
+USAGE
+  $ relay workflow:args:list -w <value> -s <value>
+
+FLAGS
+  -s, --subscriber-id=<value>  (required) [default: 7b28d9b0-4b46-41f8-910c-bcf8dac3a03b] subscriber id
+  -w, --workflow-id=<value>    (required) workflow id
+
+DESCRIPTION
+  List a workflow's args
+```
+
+_See code: [dist/commands/workflow/args/list.ts](https://github.com/relaypro/relay-cli/blob/v1.2.2/dist/commands/workflow/args/list.ts)_
 
 ## `relay workflow args set`
 
@@ -384,7 +384,7 @@ FLAGS
       Number name/value pair workflow arg
 
   -s, --start=<value>
-      [default: 2022-08-23T16:00:00]
+      [default: 2022-08-24T00:00:00]
 
   -t, --[no-]transient
       Allow workflow to run in the background; otherwise terminate workflow
