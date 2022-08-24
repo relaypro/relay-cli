@@ -25,7 +25,7 @@ DESCRIPTION
   Creates a tag configuration.
 ```
 
-_See code: [dist/commands/tag/create.ts](https://github.com/relaypro/relay-cli/blob/v1.2.2/dist/commands/tag/create.ts)_
+_See code: [dist/commands/tag/create.ts](https://github.com/relaypro/relay-cli/blob/v1.2.3/dist/commands/tag/create.ts)_
 
 ## `relay tag delete`
 
@@ -43,7 +43,7 @@ DESCRIPTION
   Deletes a tag configuration.
 ```
 
-_See code: [dist/commands/tag/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.2.2/dist/commands/tag/delete.ts)_
+_See code: [dist/commands/tag/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.2.3/dist/commands/tag/delete.ts)_
 
 ## `relay tag list`
 
@@ -74,7 +74,7 @@ DESCRIPTION
   Lists all tag configurations.
 ```
 
-_See code: [dist/commands/tag/list.ts](https://github.com/relaypro/relay-cli/blob/v1.2.2/dist/commands/tag/list.ts)_
+_See code: [dist/commands/tag/list.ts](https://github.com/relaypro/relay-cli/blob/v1.2.3/dist/commands/tag/list.ts)_
 
 ## `relay tag update`
 
@@ -94,4 +94,4 @@ DESCRIPTION
   Updates a tag configuration.
 ```
 
-_See code: [dist/commands/tag/update.ts](https://github.com/relaypro/relay-cli/blob/v1.2.2/dist/commands/tag/update.ts)_
+_See code: [dist/commands/tag/update.ts](https://github.com/relaypro/relay-cli/blob/v1.2.3/dist/commands/tag/update.ts)_

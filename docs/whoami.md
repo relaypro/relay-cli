@@ -20,4 +20,4 @@ DESCRIPTION
   display the current logged in user
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/relaypro/relay-cli/blob/v1.2.2/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/relaypro/relay-cli/blob/v1.2.3/dist/commands/whoami.ts)_
