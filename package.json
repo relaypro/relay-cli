@@ -1,7 +1,7 @@
 {
   "name": "@relaypro/cli",
   "description": "Relay developer CLI",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "author": "Brandon Smith @BrandonSmith",
   "bin": {
     "relay": "./bin/run"
