@@ -100,11 +100,12 @@ set one or more workflow arguments
 
 ```
 USAGE
-  $ relay workflow:args:set -w <value> -s <value> [-b <value>] [-r <value>]
+  $ relay workflow:args:set -w <value> -s <value> [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
   -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -w, --workflow-id=<value>           (required) workflow id
+  -a, --arg=<value>...                String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
   -r, --number=arg1=100.0...          Number name/value pair workflow arg
 
@@ -384,7 +385,7 @@ FLAGS
       Number name/value pair workflow arg
 
   -s, --start=<value>
-      [default: 2022-08-25T15:00:00]
+      [default: 2022-08-26T15:00:00]
 
   -t, --[no-]transient
       Allow workflow to run in the background; otherwise terminate workflow

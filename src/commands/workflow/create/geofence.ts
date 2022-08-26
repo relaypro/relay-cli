@@ -45,7 +45,7 @@ export class GeofenceWorkflowCommand extends CreateCommand {
 
     try {
 
-      const workflow: GeofenceWorkflow = createWorkflow(flags, raw) as GeofenceWorkflow
+      const workflow: GeofenceWorkflow = await createWorkflow(flags, raw) as GeofenceWorkflow
 
       if (flags.trigger && flags.id) {
         workflow.config.trigger.on_geofence = {

@@ -12,7 +12,7 @@ import { NewWorkflow } from './api'
 import { getTimestampFarFuture, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
 import { ALL } from './constants'
 
-export const parseArgs = (tokens: Interfaces.ParsingToken[]): Record<string, never> => {
+export const parseArgs = async (tokens: Interfaces.ParsingToken[]): Promise<Record<string, never>> => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const normalArgFlags = filter(tokens, ({ flag }: any) => `arg` === flag)
   const normalArgs = reduce(normalArgFlags, (args, flag) => {
@@ -22,25 +22,27 @@ export const parseArgs = (tokens: Interfaces.ParsingToken[]): Record<string, nev
 
   const booleanParser = booleanValue().parse
   const booleanFlags = filter(tokens, ({ flag }: any) => `boolean` === flag)
-  const booleanArgs = reduce(booleanFlags, (args: Record<string, any>, flag) => {
-    const nameValue = booleanParser(flag.input, null)
-    return { ...args, ...nameValue }
-  }, {})
+  let booleanArgs = {}
+  for (const flag of booleanFlags)  {
+    const nameValue = await booleanParser(flag.input, null, flag)
+    booleanArgs = { ...booleanArgs, ...nameValue }
+  }
 
   const numberParser = numberValue().parse
   const numberFlags = filter(tokens, ({ flag }: any) => `number` === flag)
-  const numberArgs = reduce(numberFlags, (args: Record<string, any>, flag) => {
-    const nameValue = numberParser(flag.input, null)
-    return { ...args, ...nameValue }
-  }, {})
+  let numberArgs = {}
+  for (const flag of numberFlags)  {
+    const nameValue = await numberParser(flag.input, null, flag)
+    numberArgs = { ...numberArgs, ...nameValue }
+  }
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   return { ...normalArgs, ...booleanArgs, ...numberArgs }
 }
 
-export const createWorkflow = (flags: WorkflowFlags, tokens: Interfaces.ParsingToken[]): NewWorkflow => {
+export const createWorkflow = async (flags: WorkflowFlags, tokens: Interfaces.ParsingToken[]): Promise<NewWorkflow> => {
 
-  const args = parseArgs(tokens)
+  const args = await parseArgs(tokens)
 
   const workflow: NewWorkflow = {
     name: flags.name,
@@ -70,8 +72,8 @@ export const createWorkflow = (flags: WorkflowFlags, tokens: Interfaces.ParsingT
   return workflow
 }
 
-export const createTimerWorkflow = (flags: TimerFlags, tokens: Interfaces.ParsingToken[]): TimerWorkflow => {
-  const workflow: TimerWorkflow = createWorkflow(flags, tokens) as TimerWorkflow
+export const createTimerWorkflow = async (flags: TimerFlags, tokens: Interfaces.ParsingToken[]): Promise<TimerWorkflow> => {
+  const workflow: TimerWorkflow = await createWorkflow(flags, tokens) as TimerWorkflow
 
   if (flags.trigger === `immediately`) {
     workflow.config.trigger.on_timer = { start_time: `immediately` }

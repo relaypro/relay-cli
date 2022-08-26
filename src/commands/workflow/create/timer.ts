@@ -26,7 +26,7 @@ export class TimerWorkflowCommand extends CreateCommand {
 
     try {
 
-      const workflow = createTimerWorkflow(flags, raw)
+      const workflow = await createTimerWorkflow(flags, raw)
 
       await this.saveWorkflow(workflow, flags[`dry-run`])
 

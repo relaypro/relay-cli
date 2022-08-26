@@ -45,7 +45,7 @@ export class PositionWorkflowCommand extends CreateCommand {
 
     try {
 
-      const workflow: PositionWorkflow = createWorkflow(flags, raw) as PositionWorkflow
+      const workflow: PositionWorkflow = await createWorkflow(flags, raw) as PositionWorkflow
 
       if (flags.trigger && flags.id) {
         workflow.config.trigger.on_position = {

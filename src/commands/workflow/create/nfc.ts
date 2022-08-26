@@ -67,7 +67,7 @@ export class NfcWorkflowCommand extends CreateCommand {
     const type = flags[`type`] as NfcType
     try {
 
-      const workflow: NfcWorkflow = createWorkflow(flags, raw) as NfcWorkflow
+      const workflow: NfcWorkflow = await createWorkflow(flags, raw) as NfcWorkflow
 
       const onNfc: OnNfc = { type }
 

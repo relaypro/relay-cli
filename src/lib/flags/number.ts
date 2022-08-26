@@ -4,7 +4,8 @@ import { Flags } from '@oclif/core'
 import { isNaN, toNumber } from 'lodash'
 import { parseArg } from '../utils'
 
-export const numberValue = Flags.build({
+
+export const numberValue = Flags.custom({
   char: `r`,
   description: `Number name/value pair workflow arg`,
   multiple: true,
@@ -24,7 +25,7 @@ export const numberValue = Flags.build({
   }
 })
 
-export const coordinate = Flags.build({
+export const coordinate = Flags.custom({
   multiple: false,
   required: false,
   exclusive: [`address`],

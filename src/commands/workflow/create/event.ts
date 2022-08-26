@@ -37,7 +37,7 @@ export class EventWorkflowCommand extends CreateCommand {
 
     try {
 
-      const workflow: EventWorkflow = createWorkflow(flags, raw) as EventWorkflow
+      const workflow: EventWorkflow = await createWorkflow(flags, raw) as EventWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_device_event = mapTap(flags.trigger)

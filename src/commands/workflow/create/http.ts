@@ -37,7 +37,7 @@ export class HttpWorkflowCommand extends CreateCommand {
 
     try {
 
-      const workflow: HttpWorkflow = createWorkflow(flags, raw) as HttpWorkflow
+      const workflow: HttpWorkflow = await createWorkflow(flags, raw) as HttpWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_http = mapTap(flags.trigger)

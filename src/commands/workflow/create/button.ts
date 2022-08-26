@@ -37,7 +37,7 @@ export class ButtonWorkflowCommand extends CreateCommand {
 
     try {
 
-      const workflow: ButtonWorkflow = createWorkflow(flags, raw) as ButtonWorkflow
+      const workflow: ButtonWorkflow = await createWorkflow(flags, raw) as ButtonWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_button = mapTap(flags.trigger)

@@ -73,7 +73,7 @@ export default class Broadcast extends Command {
       hidden: true,
     }
 
-    const workflow: TimerWorkflow = createTimerWorkflow(workflowFlags, raw)
+    const workflow: TimerWorkflow = await createTimerWorkflow(workflowFlags, raw)
 
     workflow.install = [selfId]
 

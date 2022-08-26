@@ -42,7 +42,7 @@ export class CallWorkflowCommand extends CreateCommand {
 
     try {
 
-      const workflow: CallWorkflow = createWorkflow(flags, raw) as CallWorkflow
+      const workflow: CallWorkflow = await createWorkflow(flags, raw) as CallWorkflow
 
       if (!flags.trigger) {
         throw new Error(`Trigger type call requires specifying a trigger of inbound or outbound. For instance '--trigger outbound'`)

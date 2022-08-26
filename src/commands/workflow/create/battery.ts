@@ -43,7 +43,7 @@ export class BatteryWorkflowCommand extends CreateCommand {
 
     try {
 
-      const workflow: BatteryWorkflow = createWorkflow(flags, raw) as BatteryWorkflow
+      const workflow: BatteryWorkflow = await createWorkflow(flags, raw) as BatteryWorkflow
 
       if (!flags.trigger) {
         throw new Error(`Trigger type battery requires specifying a trigger of charge or discharge. For instance '--trigger discharge'`)

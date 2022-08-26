@@ -21,6 +21,12 @@ export class SetArgsCommand extends Command {
 
   static flags = {
     [`workflow-id`]: flags.workflowId,
+    arg: flags.string({
+      char: `a`,
+      multiple: true,
+      required: false,
+      description: `String name/value pair workflow arg`,
+    }),
     boolean: flags.booleanValue(),
     number: flags.numberValue(),
     ...flags.subscriber,
@@ -28,33 +34,40 @@ export class SetArgsCommand extends Command {
 
   async run(): Promise<void> {
     const parsed = await this.parse(SetArgsCommand)
-    const { flags, argv, raw } = parsed
+    const { flags,  raw } = parsed
     const workflowId = flags[`workflow-id`]
     const subscriberId = flags[`subscriber-id`]
-    // debug(parsed)
+
     try {
-      const normalArgs = reduce(argv, (args: Record<string, any>, input) => {
-        const [success, name, value] = parseArg(input)
+      const normalArgFlags = filter(raw, ({ flag }: any) => `arg` === flag)
+      const normalArgs = reduce(normalArgFlags, (args: Record<string, any>, flag) => {
+        const [success, name, value] = parseArg(flag.input)
         if (!success) {
-          this.error(`${input} is invalid. Must be in the format of 'foo=bar'`)
+          this.error(`${flag.input} is invalid. Must be in the format of 'foo=bar'`)
         }
         args[name] = value
         return args
       }, {})
 
       const booleanFlags = filter(raw, ({ flag }: any) => `boolean` === flag)
-      const booleanArgs = reduce(booleanFlags, (args: Record<string, any>, flag) => {
-        const nameValue = SetArgsCommand.flags.boolean.parse(flag.input, null)
-        return { ...args, ...nameValue }
-      }, {})
+      debug(`booleanFlags`, booleanFlags)
+      let booleanArgs = {}
+      for (const flag of booleanFlags)  {
+        const nameValue = await SetArgsCommand.flags.boolean.parse(flag.input, null, flag)
+        booleanArgs = { ...booleanArgs, ...nameValue }
+      }
 
       const numberFlags = filter(raw, ({ flag }: any) => `number` === flag)
-      const numberArgs = reduce(numberFlags, (args: Record<string, any>, flag) => {
-        const nameValue = SetArgsCommand.flags.number.parse(flag.input, null)
-        return { ...args, ...nameValue }
-      }, {})
+      debug(`numberFlags`, numberFlags)
+      let numberArgs = {}
+      for (const flag of numberFlags)  {
+        const nameValue = await SetArgsCommand.flags.number.parse(flag.input, null, flag)
+        numberArgs = { ...numberArgs, ...nameValue }
+      }
 
       const args = { ...normalArgs, ...booleanArgs, ...numberArgs }
+
+      debug(`args`, args)
 
       CliUx.ux.action.start(`Setting args ${join(keys(args), `, `)} on Workflow ID: ${workflowId}`)
 

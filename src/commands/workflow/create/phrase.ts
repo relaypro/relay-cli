@@ -34,7 +34,7 @@ export class PhraseWorkflowCommand extends CreateCommand {
 
     try {
 
-      const workflow: PhraseWorkflow = createWorkflow(flags, raw) as PhraseWorkflow
+      const workflow: PhraseWorkflow = await createWorkflow(flags, raw) as PhraseWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_phrases = map(flags.trigger, lowerCase)
