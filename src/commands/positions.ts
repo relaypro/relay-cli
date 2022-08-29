@@ -8,7 +8,7 @@ import * as flags from '../lib/flags'
 import debugFn = require('debug')
 import { Positions } from '../lib/api'
 import { Ok, Result } from 'ts-results'
-import { isEmpty, join } from 'lodash'
+import { filter, isEmpty, join, last } from 'lodash'
 
 const debug = debugFn(`positions`)
 
@@ -27,28 +27,43 @@ export class PositionsCommand extends Command {
       hidden: false,
       multiple: false,
     }),
+    [`placeholders`]: flags.boolean({
+      char: `p`,
+      description: `Show floor placeholders`,
+      default: false,
+      allowNo: true,
+      hidden: true,
+    }),
     ...CliUx.ux.table.flags(),
   }
 
   async run(): Promise<Result<Positions, Error>> {
     const { flags } = await  this.parse(PositionsCommand)
+    const subscriberId = flags[`subscriber-id`]
+    const venueId = flags[`venue-id`]
+    const allowPlaceholders = flags[`placeholders`]
 
-    const venues = await this.relay.venuePositions(flags[`subscriber-id`], flags[`venue-id`])
+    let positions = await this.relay.venuePositions(subscriberId, venueId)
 
-    debug(venues)
+    debug(positions)
+    debug(`allowPlaceholders`, allowPlaceholders)
+
+    if (!allowPlaceholders) {
+      positions = filter(positions, positions => last(positions.tags) !== `placeholder12345`)
+    }
 
     if (!this.jsonEnabled()) {
-      CliUx.ux.table(venues, {
+      CliUx.ux.table(positions, {
         position_id: {
           header: `ID`
         },
         tags: {
           header: `Name`,
-          get: venue => {
-            if (isEmpty(venue.tags)) {
+          get: position => {
+            if (isEmpty(position.tags)) {
               return `Unknown`
             } else {
-              return join(venue.tags, ` > `)
+              return join(position.tags, ` > `)
             }
           }
         },
@@ -58,6 +73,6 @@ export class PositionsCommand extends Command {
       })
     }
 
-    return Ok(venues)
+    return Ok(positions)
   }
 }
