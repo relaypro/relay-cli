@@ -17,4 +17,4 @@ DESCRIPTION
   generate a token that can be used with the Relay SDK
 ```
 
-_See code: [dist/commands/token/generate.ts](https://github.com/relaypro/relay-cli/blob/v1.3.0/dist/commands/token/generate.ts)_
+_See code: [dist/commands/token/generate.ts](https://github.com/relaypro/relay-cli/blob/v1.3.1/dist/commands/token/generate.ts)_
