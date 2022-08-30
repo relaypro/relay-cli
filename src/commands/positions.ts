@@ -8,7 +8,7 @@ import * as flags from '../lib/flags'
 import debugFn = require('debug')
 import { Positions } from '../lib/api'
 import { Ok, Result } from 'ts-results'
-import { filter, isEmpty, join, last } from 'lodash'
+import { filter, isEmpty, join, last, toLower } from 'lodash'
 
 const debug = debugFn(`positions`)
 
@@ -49,7 +49,7 @@ export class PositionsCommand extends Command {
     debug(`allowPlaceholders`, allowPlaceholders)
 
     if (!allowPlaceholders) {
-      positions = filter(positions, positions => last(positions.tags) !== `placeholder12345`)
+      positions = filter(positions, positions => toLower(last(positions.tags)) !== `placeholder12345`)
     }
 
     if (!this.jsonEnabled()) {
