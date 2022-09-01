@@ -116,8 +116,8 @@ export class TagListCommand extends Command {
             header: `UID`,
             extended: true,
           },
-          is_assigned: {
-            header: `Is Assigned?`,
+          is_paired: {
+            header: `Is Paired?`,
             get: row => !!row.uid
           },
           ...tableFields,

@@ -122,7 +122,8 @@ export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
   CliUx.ux.table(workflows, {
     workflow_id: {
       header: `ID`,
-      get: row => row.workflow_id //last(row.workflow_id.split(`_`))
+      get: row => row.workflow_id,
+      minWidth: 25,
     },
     name: {},
     type: {
@@ -133,7 +134,7 @@ export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
     },
     install: {
       header: `Installed on`,
-      get: row => displayInstall(row),
+      get: displayInstall,
     },
     args: {
       get: formatWorkflowArgs,

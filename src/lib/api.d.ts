@@ -123,6 +123,22 @@ export type WorkflowEventQuery = {
   limit?: number,
 }
 
+export type WorkflowLog = {
+  level: string,
+  timestamp: string,
+  message: string,
+  context: {
+    subscriber_id: string,
+    user_id: string,
+    workflow_id: string,
+  }
+}
+
+export type WorkflowLogQuery = {
+  workflow_id?: string,
+  user_id?: string,
+}
+
 export type CustomAudio = {
   id?: string,
   subscriber_id: string,

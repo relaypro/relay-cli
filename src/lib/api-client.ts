@@ -12,12 +12,13 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, WorkflowLogQuery } from './api'
 import { getOrThrow, normalize } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
 import { R_OK } from 'constants'
 import userId from './user-id'
+import { IncomingMessage } from 'http'
 
 const debug = debugFn(`api-client`)
 
@@ -338,6 +339,19 @@ export class APIClient {
 
   async stopWorkflowInstance(subscriberId: string, instanceId: string): Promise<void> {
     await this.delete(`/ibot/workflow_instances/${instanceId}?subscriber_id=${subscriberId}`)
+  }
+
+  async workflowLogs(subscriberId: string, query: WorkflowLogQuery = {}): Promise<IncomingMessage> {
+    const params = new URLSearchParams({
+      subscriber_id: subscriberId,
+      ...query as Record<string, string|number>,
+    })
+
+    const url = `/ibot/workflowdebug?${params.toString()}`
+
+    const http = await this.http.request<Workflow>(url, { raw: true })
+
+    return http.response
   }
 
   async workflowEvents(subscriberId: string, query: WorkflowEventQuery = {}): Promise<WorkflowEvents> {
