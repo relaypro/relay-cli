@@ -19,13 +19,13 @@ FLAGS
   -f, --file=<value>           (required) file path to be uploaded
   -n, --name=<value>           (required) friendly name of the file to be used in workflows as
                                `relay-static://friendly-name-here`
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 5e70d451-7836-4196-b347-8f6278b671f0] subscriber id
 
 DESCRIPTION
   Create custom audio
 ```
 
-_See code: [dist/commands/audio/create.ts](https://github.com/relaypro/relay-cli/blob/v1.3.1/dist/commands/audio/create.ts)_
+_See code: [dist/commands/audio/create.ts](https://github.com/relaypro/relay-cli/blob/v1.3.2/dist/commands/audio/create.ts)_
 
 ## `relay audio delete`
 
@@ -37,13 +37,13 @@ USAGE
 
 FLAGS
   -i, --id=<value>             (required) file id to delete
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 5e70d451-7836-4196-b347-8f6278b671f0] subscriber id
 
 DESCRIPTION
   Delete custom audio
 ```
 
-_See code: [dist/commands/audio/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.3.1/dist/commands/audio/delete.ts)_
+_See code: [dist/commands/audio/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.3.2/dist/commands/audio/delete.ts)_
 
 ## `relay audio list`
 
@@ -55,7 +55,7 @@ USAGE
     csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 5e70d451-7836-4196-b347-8f6278b671f0] subscriber id
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
   --csv                        output is csv format [alias: --output=csv]
@@ -70,4 +70,4 @@ DESCRIPTION
   List custom audio
 ```
 
-_See code: [dist/commands/audio/list.ts](https://github.com/relaypro/relay-cli/blob/v1.3.1/dist/commands/audio/list.ts)_
+_See code: [dist/commands/audio/list.ts](https://github.com/relaypro/relay-cli/blob/v1.3.2/dist/commands/audio/list.ts)_
