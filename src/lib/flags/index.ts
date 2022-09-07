@@ -7,6 +7,7 @@ import { subscriberId } from './subscriber'
 import { workflowId } from './workflow'
 import { booleanValue } from './boolean'
 import { numberValue, coordinate } from './number'
+import { flags } from '@oclif/core/lib/parser'
 export { timerFlags, TimerOptions, TimerWorkflow } from './timer'
 
 const subscriber = {
@@ -220,7 +221,31 @@ const tagFlags = {
   })
 }
 
+const pagingFlags = {
+  oldest: flags.string({
+    required: false,
+    multiple: false,
+    description: `timestamp of the oldest event to return`
+  }),
+  latest: flags.string({
+    required: false,
+    multiple: false,
+    description: `timestamp of the latest event to return`
+  }),
+  cursor: flags.string({
+    required: false,
+    multiple: false,
+    description: `string returned from a previous query; useful to page through data`
+  }),
+  limit: flags.integer({
+    required: false,
+    multiple: false,
+    description: `maximum number of events to return; 100 if not specified`
+  }),
+}
+
 export {
+  pagingFlags,
   apiFlags,
   tagFlags,
   confirmFlags,

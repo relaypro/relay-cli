@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams } from './api'
 import { getOrThrow, normalize } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
@@ -233,7 +233,8 @@ export class APIClient {
         `indoor_positioning`,
         `ui_nfc`,
         `calling`,
-        `calling_between_devices_support`
+        `calling_between_devices_support`,
+        `enable_audit_logs`,
       ])
     }
   }
@@ -264,6 +265,52 @@ export class APIClient {
   async venuePositions(subscriberId: string, venueId: string): Promise<Positions> {
     const { body } = await this.get<PositionResults>(`/ibot/indoor_position/${venueId}?subscriber_id=${subscriberId}`)
     return body.results
+  }
+
+  async auditEvents(subscriberId: string, userId: string|undefined, type: AuditEventType, { latest, oldest, cursor, limit }: PagingParams): Promise<RawAuditEventResults> {
+    const params = new URLSearchParams({
+      subscriber_id: subscriberId,
+      event_type: type,
+      action: `assigned`,
+    })
+
+    if (userId !== undefined) {
+      params.set(`user_id`, userId)
+    }
+
+    if (latest) {
+      params.set(`latest`, latest)
+    }
+
+    if (oldest) {
+      params.set(`oldest`, oldest)
+    }
+
+    if (cursor) {
+      params.set(`cursor`, cursor)
+    }
+
+    if (limit) {
+      params.set(`limit`, `${limit}`)
+    }
+
+    const { body } = await this.get<RawAuditEventResults>(`/ibot/audit?${params}`)
+
+    return body
+  }
+
+  async profileAuditEvents(subscriberId: string, userId: string|undefined, params: PagingParams): Promise<ProfileAuditEventResults> {
+    const { cursor, data } = await this.auditEvents(subscriberId, userId, `ibot_user_profile`, params)
+    const results: ProfileAuditEvent[] = map(data, ({ data, ...event }) => {
+      if (isString(data)) {
+        const { id, device_id } = JSON.parse(data)
+        return { ...event, id, device_id }
+      } else {
+        return { ...event, id: `unknown`, device_id: `unknown` }
+      }
+    })
+
+    return { cursor, results }
   }
 
   async workflowInstances(subscriberId: string): Promise<WorkflowInstance[]> {

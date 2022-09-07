@@ -237,3 +237,34 @@ export type Positions = Position[]
 export type PositionResults = {
   results: Positions,
 }
+
+export type RawAuditEvent = {
+  audit_id: string,
+  action: string,
+  data?: string,
+  timestamp_action: string,
+}
+
+export type ProfileAuditEvent = Omit<RawAuditEvent, `data`> & {
+  id: string,
+  device_id: string,
+}
+
+export type RawAuditEventResults = {
+  data: RawAuditEvent[],
+  cursor: string,
+}
+
+export type ProfileAuditEventResults = {
+  results: ProfileAuditEvent[],
+  cursor: string,
+}
+
+export type AuditEventType = `ibot_user_profile`
+
+export type PagingParams = {
+  latest?: string,
+  oldest?: string,
+  cursor?: string,
+  limit?: number,
+}

@@ -4,6 +4,15 @@ import { DateTime } from 'luxon'
 import { Day, DayValue } from './api'
 import { timerFlags } from './flags'
 
+export const getFormattedTimestamp = (value: string, format: string): string => {
+  if (format === `relative`) {
+    const result =  DateTime.fromISO(value).toRelative()
+    return result ?? value
+  } else {
+    return value
+  }
+}
+
 export const getTimestampFromFlag = (value: string, zone: string): string => {
   const dateTime = DateTime.fromISO(value, { zone })
   const dateTimeUTC = dateTime.toUTC()
