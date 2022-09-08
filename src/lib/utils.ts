@@ -130,17 +130,15 @@ export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
     },
     uri: {
       get: row => row.config.trigger.start.workflow.uri,
-      extended: true,
+    },
+    install: {
+      header: `Installed on`,
+      get: row => displayInstall(row),
     },
     args: {
       get: formatWorkflowArgs,
       extended: true,
     },
-    install: {
-      header: `Installed on`,
-      get: row => displayInstall(row),
-      extended: true,
-    }
   }, options)
 }
 
