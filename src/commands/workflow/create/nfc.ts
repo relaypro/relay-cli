@@ -25,7 +25,7 @@ type NfcWorkflow = NewWorkflow & { config: { trigger: { on_nfc: OnNfc }}}
 
 export class NfcWorkflowCommand extends CreateCommand {
 
-  static description = `Create or update a workflow triggered by a spoken phrase`
+  static description = `Create or update a workflow triggered by an NFC tap`
 
   static strict = false
 
