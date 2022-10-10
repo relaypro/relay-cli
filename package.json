@@ -8,7 +8,7 @@
   },
   "bugs": "https://github.com/relaypro/relay-cli/issues",
   "dependencies": {
-    "@oclif/core": "1.16.0",
+    "@oclif/core": "1.16.5",
     "@oclif/plugin-help": "5.1.12",
     "@oclif/plugin-not-found": "2.3.1",
     "@oclif/plugin-plugins": "2.1.0",
