@@ -26,7 +26,7 @@ EXAMPLES
   RELAY_ENV=qa
   # API
   RELAY_HOST=all-main-pro-ibot.relaysvr.com  # default
-  RELAY_HOST=all-api-qa-ibot.relaysvr.com
+  RELAY_HOST=all-main-qa-ibot.relaysvr.com
 ```
 
 _See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v1.3.2/dist/commands/env.ts)_

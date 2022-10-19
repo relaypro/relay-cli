@@ -17,7 +17,7 @@ type Env = `qa`|`pro`
 
 const config: Record<Env, EnvConfig> = {
   qa: {
-    host: `all-api-qa-ibot.${ROOT_DOMAIN}`,
+    host: `all-main-qa-ibot.${ROOT_DOMAIN}`,
     authHost: `auth.relaygo.info`,
     stratusHost: `all-qa-api-proxy.nocell.io`,
     contentHost: `qa.relaygo.info`,

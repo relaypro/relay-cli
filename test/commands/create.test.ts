@@ -2,7 +2,7 @@ import { expect, test } from '@oclif/test'
 
 describe(`workflow:create`, () => {
   test
-    .nock(`https://all-api-qa-ibot.relaysvr.com`, api => api
+    .nock(`https://all-main-qa-ibot.relaysvr.com`, api => api
       .post(`/ibot/workflow`)
       .query({ subscriber_id: `423f93b9-439a-4ee7-814d-0c079fc27918` })
       .reply(401)
