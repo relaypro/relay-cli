@@ -22,7 +22,7 @@ const debug = debugFn(`workflow`)
 export default class WorkflowInstances extends Command {
   static description = `List workflow instances`
 
-  static hidden = true
+  static hidden = false
 
   static enableJsonFlag = true
 
