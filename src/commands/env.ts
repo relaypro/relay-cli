@@ -25,7 +25,7 @@ RELAY_ENV=qa
 
 # API
 RELAY_HOST=all-main-pro-ibot.${ROOT_DOMAIN}  # default
-RELAY_HOST=all-api-qa-ibot.${ROOT_DOMAIN}
+RELAY_HOST=all-main-qa-ibot.${ROOT_DOMAIN}
 `.trim()]
 
   async run(): Promise<EnvResult> {
