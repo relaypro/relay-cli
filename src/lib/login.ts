@@ -149,6 +149,7 @@ export class Login {
     }
     const { codePromise } = await this.startHttpCodeServer()
     debug(url)
+    CliUx.ux.log(`Please check the 'Remember me' box on the login screen.`)
     CliUx.ux.log(`Opening browser to login`)
     await CliUx.ux.wait(500)
     const cp = await open(url, { wait: false })
@@ -161,7 +162,7 @@ export class Login {
         showUrl()
       }
     })
-    CliUx.ux.action.start(`Waiting for login`)
+    CliUx.ux.action.start(`Waiting for you to login in your browser`)
     const code = await codePromise
     debug(`got code ${code}`)
     CliUx.ux.action.stop(`done`)
@@ -193,8 +194,8 @@ export class Login {
       // const expiresHours = Math.round(((auth.expires_in||7200)/60/60) * 10) / 10
 
       const msg = isSdkToken ?
-        `To generate an authorization token, you must check the 'remember me' box when logging in ` :
-        `You must check the 'remember me' box when logging in`
+        `To generate an authorization token, you must check the 'Remember me' box when logging in ` :
+        `You must check the 'Remember me' box when logging in`
 
       CliUx.ux.log(msg)
 
@@ -413,7 +414,7 @@ export class Login {
       const { body: { terms: { platform_api: { title, url } } } } = await HTTP.get<TermsPointers>(`${vars.contentUrl}/version.json`)
       CliUx.ux.log()
       CliUx.ux.styledHeader(`\n${title}`)
-      CliUx.ux.log(`In order to use the Relay CLI, API, and SDKs, you must accpet our terms and conditions>Your rights and responsibilities when accessing the Relay publicly available application programming interfaces (the "APIs")`)
+      CliUx.ux.log(`In order to use the Relay CLI, API, and SDKs, you must accept our terms and conditions>Your rights and responsibilities when accessing the Relay publicly available application programming interfaces (the "APIs")`)
       CliUx.ux.url(`Click here to read the legal agreement`, `${vars.contentUrl}${url}`)
       CliUx.ux.log()
       const prompt = new Confirm({
