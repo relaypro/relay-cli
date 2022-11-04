@@ -170,7 +170,7 @@ export const printWorkflowInstances = (instances: MergedWorkflowInstance[], flag
   CliUx.ux.styledHeader(`Workflow Instance${instances.length > 1 ? `s` : ``}`)
   CliUx.ux.table(instances, {
     instance_id: {
-      header: `ID`,
+      header: `Instance id`,
       minWidth: 25,
       get: row => row.instance_id
     },
