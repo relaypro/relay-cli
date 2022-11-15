@@ -15,7 +15,7 @@ USAGE
     csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 5e70d451-7836-4196-b347-8f6278b671f0] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
   --csv                        output is csv format [alias: --output=csv]
@@ -33,4 +33,4 @@ DESCRIPTION
   list all venues
 ```
 
-_See code: [dist/commands/venues.ts](https://github.com/relaypro/relay-cli/blob/v1.3.2/dist/commands/venues.ts)_
+_See code: [dist/commands/venues.ts](https://github.com/relaypro/relay-cli/blob/v1.4.0/dist/commands/venues.ts)_
