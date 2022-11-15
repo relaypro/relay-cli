@@ -18,6 +18,7 @@ Manage workflow configurations
 * [`relay workflow create timer`](#relay-workflow-create-timer)
 * [`relay workflow delete`](#relay-workflow-delete)
 * [`relay workflow install`](#relay-workflow-install)
+* [`relay workflow instance list`](#relay-workflow-instance-list)
 * [`relay workflow list`](#relay-workflow-list)
 * [`relay workflow uninstall`](#relay-workflow-uninstall)
 
@@ -278,7 +279,7 @@ _See code: [dist/commands/workflow/create/http.ts](https://github.com/relaypro/r
 
 ## `relay workflow create nfc`
 
-Create or update a workflow triggered by a spoken phrase
+Create or update a workflow triggered by an NFC tap
 
 ```
 USAGE
@@ -300,7 +301,7 @@ FLAGS
   -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
 
 DESCRIPTION
-  Create or update a workflow triggered by a spoken phrase
+  Create or update a workflow triggered by an NFC tap
 ```
 
 _See code: [dist/commands/workflow/create/nfc.ts](https://github.com/relaypro/relay-cli/blob/v1.4.0/dist/commands/workflow/create/nfc.ts)_
@@ -434,6 +435,37 @@ DESCRIPTION
 ```
 
 _See code: [dist/commands/workflow/install.ts](https://github.com/relaypro/relay-cli/blob/v1.4.0/dist/commands/workflow/install.ts)_
+
+## `relay workflow instance list`
+
+List workflow instances
+
+```
+USAGE
+  $ relay workflow:instance:list -s <value> [--json] [-H] [--columns <value> | -x] [--sort <value>] [--filter <value>]
+    [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
+
+FLAGS
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -H, --include-history
+  -x, --extended               show extra columns
+  --columns=<value>            only show provided columns (comma-separated)
+  --csv                        output is csv format [alias: --output=csv]
+  --filter=<value>             filter property by partial string matching, ex: name=foo
+  --no-header                  hide table header from output
+  --no-truncate                do not truncate output to fit screen
+  --output=<option>            output in a more machine friendly format
+                               <options: csv|json|yaml>
+  --sort=<value>               property to sort by (prepend '-' for descending)
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  List workflow instances
+```
+
+_See code: [dist/commands/workflow/instance/list.ts](https://github.com/relaypro/relay-cli/blob/v1.4.0/dist/commands/workflow/instance/list.ts)_
 
 ## `relay workflow list`
 
