@@ -79,7 +79,7 @@ export class APIClient {
       port: apiUrl.port,
       protocol: apiUrl.protocol,
       headers: {
-        accpet: `application/json`,
+        accept: `application/json`,
         'user-agent': this.config.userAgent,
         ...envHeaders,
       },
