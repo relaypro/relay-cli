@@ -447,25 +447,34 @@ export class Login {
     const options = {
       headers: {
         authorization: `Bearer ${token}`
-      }
+      },
+      timeout: 15000,
     }
 
     const timeout = setTimeout(() => {
       CliUx.ux.action.start(`Retrieving authorized subscribers`)
     }, 2000)
 
-    const { body: accounts } = await HTTP.get<Record<string, AccountEnvelope>[]>(`${vars.stratusUrl}/v3/subscribers;view=dash_overview`, options)
+    try {
+      const { body: accounts } = await HTTP.get<Record<string, AccountEnvelope>[]>(`${vars.stratusUrl}/v3/subscribers;view=dash_overview`, options)
 
-    clearTimeout(timeout)
+      debug(`accounts`, accounts)
 
-    if (CliUx.ux.action.running) {
-      CliUx.ux.action.stop()
+      if (CliUx.ux.action.running) {
+        CliUx.ux.action.stop()
+      }
+
+      return map(accounts, account => ({
+        id: getOrThrow(account, [`account`, `subscriber_id`]),
+        email: getOrThrow(account, [`account`, `owner_email`]),
+        name: getOrThrow(account, [`account`, `account_name`]),
+      }))
+    } catch (err) {
+      debug(`accounts error`, err)
+      return []
+    } finally {
+      clearTimeout(timeout)
     }
 
-    return map(accounts, account => ({
-      id: getOrThrow(account, [`account`, `subscriber_id`]),
-      email: getOrThrow(account, [`account`, `owner_email`]),
-      name: getOrThrow(account, [`account`, `account_name`]),
-    }))
   }
 }
