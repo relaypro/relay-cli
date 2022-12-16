@@ -65,6 +65,12 @@ export default class WorkflowLogs extends Command {
       hidden: false,
       multiple: false,
     }),
+    [`quiet`]: flags.boolean({
+      char: `q`,
+      description: `hide the "connected" message`,
+      required: false,
+      hidden: false,
+    }),
   }
 
   async run(): Promise<void> {
@@ -72,6 +78,7 @@ export default class WorkflowLogs extends Command {
     const subscriberId = flags[`subscriber-id`]
     const workflowId = flags[`workflow-id`]
     const userId = flags[`user-id`]
+    const quiet = flags[`quiet`]
 
     debug(`flags`, flags)
 
@@ -104,6 +111,10 @@ export default class WorkflowLogs extends Command {
 
       const parser = jsonStreamParser()
       parser.on(`error`, (err) => debug(`error`, err))
+
+      if (!quiet) {
+        process.stdout.write("Connected to server...\n")
+      }
 
       pipeline(
         response,
