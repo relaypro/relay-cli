@@ -39,7 +39,7 @@
     "@types/crypto-js": "4.1.1",
     "@types/debug": "4.1.7",
     "@types/mocha": "9.1.1",
-    "@types/node": "18.7.15",
+    "@types/node": "18.11.17",
     "@types/split2": "3.2.1",
     "@types/supports-color": "8.1.1",
     "@types/uuid": "8.3.4",
