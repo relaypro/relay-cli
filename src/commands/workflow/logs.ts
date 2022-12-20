@@ -67,7 +67,7 @@ export default class WorkflowLogs extends Command {
     }),
     [`quiet`]: flags.boolean({
       char: `q`,
-      description: `hide the "connected" message`,
+      description: `hide the "Connected" message in case you want to process the output`,
       required: false,
       hidden: false,
     }),
@@ -113,7 +113,7 @@ export default class WorkflowLogs extends Command {
       parser.on(`error`, (err) => debug(`error`, err))
 
       if (!quiet) {
-        process.stdout.write("Connected to server...\n")
+        process.stdout.write(`Connected to server...\n`)
       }
 
       pipeline(
