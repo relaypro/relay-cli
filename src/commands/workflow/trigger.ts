@@ -15,11 +15,11 @@ export default class Trigger extends Command {
 
   static flags = {
     [`workflow-id`]: flags.workflowId,
-    [`device-id`]:  flags.string({
-      char: `d`,
-      multiple: false,
+    [`user-id`]:  flags.string({
+      char: `u`,
+      multiple: true,
       required: true,
-      description: `Device id that the trigger is sent to`,
+      description: `Target user id on behalf of which to trigger a workflow`,
     }),
     ...flags.subscriber,
     arg: flags.string({
@@ -36,7 +36,7 @@ export default class Trigger extends Command {
     const { flags, raw } = await this.parse(Trigger)
     const args = await parseArgs(raw)
     debug(`triggering with`, { flags, args })
-    await this.relay.triggerWorkflow(flags[`subscriber-id`], flags[`workflow-id`], flags[`device-id`], args)
-    this.log(`Relay CLI trigger`)
+    await this.relay.triggerWorkflow(flags[`subscriber-id`], flags[`workflow-id`], flags[`user-id`], args)
+    this.log(`Relay CLI trigger submitted`)
   }
 }

@@ -402,11 +402,21 @@ export class APIClient {
     await this.delete(`/ibot/workflow/${id}?subscriber_id=${subscriberId}`)
     return true
   }
-  async triggerWorkflow(subscriberId: string, workflowId: string, deviceId: string, args: Record<string, string>): Promise<void> {
-    const uri = `/ibot/workflow/${workflowId}?subscriber_id=${subscriberId}&user_id=${deviceId}`
+  async triggerWorkflow(subscriberId: string, workflowId: string, targetUserIds: string[], args: Record<string, string>): Promise<void> {
+
+    const tokenAccount = getToken()
+
+    if (!tokenAccount?.uuid) {
+      throw new Error(`Failed to get signed in user's UUID`)
+    }
+
+    const _userId = userId(subscriberId, tokenAccount.uuid)
+
+    const uri = `/ibot/workflow/${workflowId}?subscriber_id=${subscriberId}&user_id=${_userId}`
+
     const body = {
       action: `invoke`,
-      target_device_ids: [ `${deviceId}` ],
+      target_device_ids: targetUserIds,
       action_args: args,
     }
 
