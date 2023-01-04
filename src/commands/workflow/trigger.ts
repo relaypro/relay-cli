@@ -17,7 +17,7 @@ export default class Trigger extends Command {
     [`workflow-id`]: flags.workflowId,
     [`user-id`]:  flags.string({
       char: `u`,
-      multiple: true,
+      multiple: false,
       required: true,
       description: `Target user id on behalf of which to trigger a workflow`,
     }),
