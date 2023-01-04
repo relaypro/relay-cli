@@ -3,7 +3,7 @@
 import { Flags } from '@oclif/core'
 import { parseArg } from '../utils'
 
-export const booleanValue = Flags.custom({
+export const booleanValue = Flags.custom<{ [x: string]: boolean; }, string>({
   char: `b`,
   description: `Boolean name/value pair workflow arg`,
   multiple: true,
