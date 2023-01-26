@@ -10,8 +10,9 @@ import flags = require('./flags')
 
 import Conf from 'conf'
 
-const config = new Conf()
+const config = new Conf({ projectName: `@relaypro/cli` })
 const susbscriberConfig = new Conf({
+  projectName: `@relaypro/cli`,
   configName: `subscriber`,
 })
 
