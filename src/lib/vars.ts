@@ -7,6 +7,9 @@ export const ROOT_DOMAIN = `relaysvr.com`
 type EnvConfig = {
   host: string,
   authHost: string,
+  authPath: string,
+  authRedirectHost: string,
+  authRedirectPort: number,
   stratusHost: string,
   contentHost: string,
   cli_id: string,
@@ -18,7 +21,10 @@ type Env = `qa`|`pro`
 const config: Record<Env, EnvConfig> = {
   qa: {
     host: `all-main-qa-ibot.${ROOT_DOMAIN}`,
-    authHost: `auth.relaygo.info`,
+    authHost: `auth2.relaygo.info`,
+    authPath: `/realms/Relay/protocol/openid-connect/`,
+    authRedirectHost: `auth2-localredirect.relaygo.info`,
+    authRedirectPort: 8079,
     stratusHost: `all-qa-api-proxy.nocell.io`,
     contentHost: `qa.relaygo.info`,
     cli_id: `4EgeETYm`,
@@ -26,7 +32,10 @@ const config: Record<Env, EnvConfig> = {
   },
   pro: {
     host: `all-main-pro-ibot.${ROOT_DOMAIN}`,
-    authHost: `auth.relaygo.com`,
+    authHost: `auth.relaypro.com`,
+    authPath: `/realms/Relay/protocol/openid-connect/`,
+    authRedirectHost: `auth-localredirect.relaypro.com`,
+    authRedirectPort: 8079,
     stratusHost: `all-pro-api-proxy.nocell.io`,
     contentHost: `relaypro.com`,
     cli_id: `83756T4P`,
@@ -75,8 +84,24 @@ export class Vars {
     return config[this.env].authHost
   }
 
-  get authUrl(): string {
-    return `https://${this.authHost}`
+  get authPath(): string {
+    return config[this.env].authPath
+  }
+
+  private get authUrl(): string {
+    return `https://${this.authHost}${this.authPath}`
+  }
+
+  get authorizationEndpoint(): string {
+    return `${this.authUrl}auth`
+  }
+
+  get tokenEndpoint(): string {
+    return `${this.authUrl}token`
+  }
+
+  get endSessionEndpoint(): string {
+    return `${this.authUrl}logout`
   }
 
   get authCliId(): string {
@@ -88,15 +113,23 @@ export class Vars {
   }
 
   get authRedirectPort(): number {
-    return 8079
+    return config[this.env].authRedirectPort
   }
 
-  get authRedirectHost(): string {
-    return `http://localhost:${this.authRedirectPort}`
+  private get authRedirectHost(): string {
+    return config[this.env].authRedirectHost
   }
 
-  get authRedirectUri(): string {
-    return `${this.authRedirectHost}/authorization-code/callback`
+  get authRedirectUrlBase(): string {
+    return `http://${this.authRedirectHost}:${this.authRedirectPort }`
+  }
+
+  get authRedirectUrl(): string {
+    return `${this.authRedirectUrlBase}/authorization-code/callback`
+  }
+
+  get postLogoutRedirectUrl(): string {
+    return `${this.authRedirectUrlBase}/end-session/callback`
   }
 
   get stratusHost(): string {
