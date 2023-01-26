@@ -19,10 +19,9 @@ import { access, stat } from 'fs/promises'
 import { R_OK } from 'constants'
 import userId from './user-id'
 import { IncomingMessage } from 'http'
+import jwtValues from './jwt'
 
 const debug = debugFn(`api-client`)
-
-type TokenInfoKeys = `userid`|`given_name`|`family_name`|`email`
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace APIClient {
@@ -64,7 +63,7 @@ export class APIError extends Errors.CLIError {
 export class APIClient {
   authPromise?: Promise<TokenAccount>
   http: typeof HTTP
-  private readonly _login = new Login(this.config, this)
+  private readonly _login = new Login(this.config)
   private _auth?: string
 
   constructor(protected config: Interfaces.Config, public options: IOptions = {}) {
@@ -148,6 +147,7 @@ export class APIClient {
       this._auth = process.env.RELAY_API_KEY
       if (!this._auth) {
         const tokens = getToken()
+        debug(`auth tokens`, tokens)
         this._auth = tokens?.access_token
       }
     }
@@ -221,23 +221,30 @@ export class APIClient {
   async whoami(): Promise<Record<string, string|Record<string, boolean>>> {
     // TODO use parameterized subscriberId
     const subscriber = getDefaultSubscriber()
-    const { body: user } = await this.get<Record<TokenInfoKeys, string>>(`${vars.authUrl}/oauth2/validate`)
-    const capabilities = await this.capabilities(subscriber.id)
-    return {
-      Name: `${user.given_name} ${user.family_name}`,
-      Email: `${user.email}`,
-      [`Auth User ID`]: `${user.userid}`,
-      [`Relay User ID`]: `${userId(subscriber.id, user.userid)}`,
-      [`Default Subscriber`]: subscriber.id,
-      Capabilities: pick(capabilities, [
-        `workflow_sdk`,
-        `indoor_positioning`,
-        `ui_nfc`,
-        `calling`,
-        `calling_between_devices_support`,
-        `enable_audit_logs`,
-      ])
+    if (this.auth) {
+      await this.refresh()
+      const user = jwtValues(this.auth)
+      const capabilities = await this.capabilities(subscriber.id)
+      return {
+        Name: `${user.given_name} ${user.family_name}`,
+        Email: `${user.email}`,
+        [`Auth User ID`]: `${user.preferred_username}`,
+        [`Relay User ID`]: `${userId(subscriber.id, user.preferred_username)}`,
+        [`Default Subscriber`]: subscriber.id,
+        Capabilities: pick(capabilities, [
+          `workflow_sdk`,
+          `indoor_positioning`,
+          `ui_nfc`,
+          `calling`,
+          `calling_between_devices_support`,
+          `enable_audit_logs`,
+        ])
+      }
+    } else {
+      throw new Error(`no_auth_token`)
     }
+
+
   }
   async capabilities(subscriberId: string): Promise<Capabilities> {
     const subscriberInfo = await this.subscriberInfo(subscriberId)

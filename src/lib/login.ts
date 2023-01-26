@@ -13,10 +13,10 @@ import crypto = require('crypto') // eslint-disable-line quotes
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
-import { APIClient } from './api-client'
 import { vars } from './vars'
-import { AccountEnvelope, clearSubscribers, deleteSession, getToken, resolveSubscriber, saveSubscribers, setToken, Subscriber, TokenAccount, Tokens, User } from './session'
+import { AccountEnvelope, clearSubscribers, deleteSession, getToken, resolveSubscriber, saveSubscribers, setToken, Subscriber, TokenAccount, Tokens } from './session'
 import { getOrThrow, uuid, base64url } from './utils'
+import jwtValues from './jwt'
 
 const debug = debugFn(`login`)
 
@@ -45,9 +45,12 @@ type TermsPointers = {
 //   content: string
 // }
 
+type ResponseHandler = (code: number, message: string, callback: () => void) => void
+type HttpHandler<T> = (url: string, responseHandler: ResponseHandler, resolve: (value: T) => void, reject: (reason: Error) => void) => void
+
 export class Login {
 
-  constructor(private readonly config: Interfaces.Config, private readonly relay: APIClient) {}
+  constructor(private readonly config: Interfaces.Config) {}
 
   async login(): Promise<TokenAccount> {
     debug(this.config)
@@ -67,10 +70,11 @@ export class Login {
 
       if (previousUsername) {
         CliUx.ux.warn(`Previously logged in as ${previousUsername}... logging out.`)
-        await this.relay.logout()
+        await this.logout()
       }
 
       const auth = await this.generateCliTokenAccount()
+      debug(`auth`, auth)
       const subscribers = await this.fetchSubscribers(auth.access_token)
       debug(`subscribers`, subscribers)
 
@@ -106,8 +110,53 @@ export class Login {
   }
 
   async logout(): Promise<void> {
-    CliUx.ux.url(`Click here to fully logout`, `${vars.authUrl}/logout`)
-    await CliUx.ux.anykey(`Then press any key to continue`)
+
+    let urlDisplayed = false
+    const showUrl = () => {
+      if (!urlDisplayed) {
+        CliUx.ux.warn(`Cannot open browser.`)
+        CliUx.ux.warn(`Copy and paste into a browser: ${CliUx.ux.url(`Click here to login`, url)}`)
+      }
+      urlDisplayed = true
+    }
+
+    const httpHandler: HttpHandler<boolean> = (requestUrl: string, respond: ResponseHandler, resolve: (value: boolean) => void, reject: (reason: Error) => void) => {
+      const url = new URL(requestUrl, vars.authRedirectUrlBase)
+      const { pathname } = new URL(vars.postLogoutRedirectUrl)
+
+      if (url.pathname === pathname) {
+        respond(200, `Relay CLI session ended. You can close this tab.`, () => {
+          resolve(true)
+        })
+      } else {
+        respond(404, `Relay CLI session end failed. Redirected to unknown path. Please try again.`, () => {
+          reject(new Error(`redirected to unknown path`))
+        })
+      }
+    }
+
+    const { response } = await this.startHttpCodeServer(httpHandler)
+
+    const { url } = this.createEndSession(vars.authCliId)
+    debug(`endSessionEndpoint`, url)
+    CliUx.ux.log(`Opening browser to end authenticated session`)
+    await CliUx.ux.wait(500)
+    const cp = await open(url, { wait: false })
+    cp.on(`error`, err => {
+      CliUx.ux.warn(err)
+      showUrl()
+    })
+    cp.on(`close`, code => {
+      if (code !== 0) {
+        showUrl()
+      }
+    })
+
+    CliUx.ux.action.start(`Waiting for your browser`)
+    const success = await response
+    debug(`end session success`, success)
+    CliUx.ux.action.stop(`done`)
+
     await this.doLogout()
   }
 
@@ -123,7 +172,7 @@ export class Login {
   }
 
   async generateSdkTokenAccount(): Promise<string> {
-    const { refresh_token } = await this.generateToken(vars.authSdkId, true)
+    const { refresh_token } = await this.generateToken(vars.authSdkId)
     if (refresh_token) {
       return refresh_token
     } else {
@@ -132,10 +181,10 @@ export class Login {
   }
 
   private async generateCliTokenAccount(): Promise<TokenAccount> {
-    return this.generateToken(vars.authCliId, false)
+    return this.generateToken(vars.authCliId)
   }
 
-  private async generateToken(client_id: string, isSdkToken = false): Promise<TokenAccount> {
+  private async generateToken(client_id: string): Promise<TokenAccount> {
     // set up callback server
     const { url, codeVerifier } = this.createAuthorization(client_id)
 
@@ -147,9 +196,50 @@ export class Login {
       }
       urlDisplayed = true
     }
-    const { codePromise } = await this.startHttpCodeServer()
-    debug(url)
-    CliUx.ux.log(`Please check the 'Remember me' box on the login screen.`)
+
+    const httpHandler: HttpHandler<string> = (requestUrl: string, respond: ResponseHandler, resolve: (value: string) => void, reject: (reason: Error) => void) => {
+      const success = (code: string) => {
+        respond(200, `Relay CLI authorization complete. You can close this tab.`, () => {
+          resolve(code)
+        })
+      }
+
+      const failure = (status: string) => {
+        switch(status) {
+          case `not-found`: {
+            respond(404, `Relay CLI authorization failed. Redirected to unknown path. Please try again.`, () => {
+              reject(new Error(`redirected to unknown path`))
+            })
+
+            return
+          }
+          case `no-code`: {
+            respond(400, `Relay CLI authorization failed. No code found. Please try again.`, () => {
+              reject(new Error(`authorization code not found on redirect`))
+            })
+            return
+          }
+        }
+
+      }
+
+      const url = new URL(requestUrl, vars.authRedirectUrlBase)
+      const { pathname } = new URL(vars.authRedirectUrl)
+
+      if (url.pathname === pathname) {
+        const code = url.searchParams.get(`code`)
+        if (code) {
+          success(code)
+        } else {
+          failure(`no-code`)
+        }
+      } else {
+        failure(`not-found`)
+      }
+    }
+
+    const { response } = await this.startHttpCodeServer(httpHandler)
+    debug(`authorization url`, url)
     CliUx.ux.log(`Opening browser to login`)
     await CliUx.ux.wait(500)
     const cp = await open(url, { wait: false })
@@ -163,13 +253,13 @@ export class Login {
       }
     })
     CliUx.ux.action.start(`Waiting for you to login in your browser`)
-    const code = await codePromise
+    const code = await response
     debug(`got code ${code}`)
     CliUx.ux.action.stop(`done`)
 
     const body = {
       grant_type: `authorization_code`,
-      redirect_uri: vars.authRedirectUri,
+      redirect_uri: vars.authRedirectUrl,
       client_id,
       code,
       code_verifier: codeVerifier,
@@ -181,46 +271,33 @@ export class Login {
     }
 
     const tokenOptions = { headers, body: encode(body) }
-    // debug(`token request`, tokenOptions)
-    const { body: auth } = await HTTP.post<Tokens>(`${vars.authUrl}/oauth2/token`, tokenOptions)
+    debug(`token request`, tokenOptions)
+    const { body: auth } = await HTTP.post<Tokens>(`${vars.tokenEndpoint}`, tokenOptions)
 
-    const validateOptions = { headers: { authorization: `Bearer ${auth.access_token}`}}
-    // debug(`validate request`, validateOptions)
-    const { body: user } = await HTTP.get<User>(`${vars.authUrl}/oauth2/validate`, validateOptions)
+    debug(`tokens`, auth)
 
-    if (!auth.refresh_token) {
-      debug(`no refresh_token`)
+    const info = jwtValues(auth.id_token)
 
-      // const expiresHours = Math.round(((auth.expires_in||7200)/60/60) * 10) / 10
+    debug(`info`, info)
 
-      const msg = isSdkToken ?
-        `To generate an authorization token, you must check the 'Remember me' box when logging in ` :
-        `You must check the 'Remember me' box when logging in`
-
-      CliUx.ux.log(msg)
-
-      CliUx.ux.url(`First, click here to fully logout`, `${vars.authUrl}/logout`)
-      await CliUx.ux.anykey(`Then press any key to log in again`)
-      if (!isSdkToken) {
-        await this.doLogout()
-      }
-      return await this.generateToken(client_id, isSdkToken)
-    }
+    const uuid = info.preferred_username
+    const username = info.email
 
     return {
       access_token: auth.access_token,
       refresh_token: auth.refresh_token,
-      uuid: user.userid,
-      username: user.email,
+      id_token: auth.id_token,
+      uuid,
+      username,
     }
   }
 
-  private startHttpCodeServer(): Promise<{ codePromise: Promise<string> }> {
+  private startHttpCodeServer<T>(httpHandler: HttpHandler<T>): Promise<{ response: Promise<T> }> {
     return new Promise((serverResolve, serverReject) => {
-      const codePromise: Promise<string> = new Promise((codeResolve, codeReject) => {
+      const response: Promise<T> = new Promise((responseResolve, responseReject) => {
 
         const timeout = setTimeout(() => {
-          codeReject(new Error(`timed out waiting for browser login`))
+          responseReject(new Error(`timed out waiting for browser login`))
         }, 3 * 60 * 1000) // three minutes
 
         const server = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
@@ -263,53 +340,12 @@ export class Login {
             })
           }
 
-          const success = (code: string) => {
-            respond(200, `Relay CLI authorization complete. You can close this tab.`, () => {
-              codeResolve(code)
-            })
-          }
-
-          const failure = (status: string) => {
-            switch(status) {
-              case `no-url`: {
-                respond(418, `Relay CLI authorization failed. Please try again.`, () => {
-                  codeReject(new Error(`redirect contined no url`))
-                })
-                return
-              }
-              case `not-found`: {
-                respond(404, `Relay CLI authorization failed. Redirected to unknown path. Please try again.`, () => {
-                  codeReject(new Error(`redirected to unknown path`))
-                })
-
-                return
-              }
-              case `no-code`: {
-                respond(400, `Relay CLI authorization failed. No code found. Please try again.`, () => {
-                  codeReject(new Error(`authorization code not found on redirect`))
-                })
-                return
-              }
-            }
-
-          }
-
-          if (req?.url) {
-            const url = new URL(req.url, vars.authRedirectHost)
-            const authUrl = new URL(vars.authRedirectUri)
-
-            if (url.pathname === authUrl.pathname) {
-              const code = url.searchParams.get(`code`)
-              if (code) {
-                success(code)
-              } else {
-                failure(`no-code`)
-              }
-            } else {
-              failure(`not-found`)
-            }
+          if (req.url) {
+            httpHandler(req.url, respond, responseResolve, responseReject)
           } else {
-            failure(`no-url`)
+            respond(418, `Relay CLI authorization failed. Please try again.`, () => {
+              responseReject(new Error(`redirect contined no url`))
+            })
           }
         })
         server.on(`connection`, socket => {
@@ -320,11 +356,23 @@ export class Login {
         })
         server.listen(vars.authRedirectPort, () => {
           debug(`listening on ${vars.authRedirectPort}`)
-          serverResolve({ codePromise })
+          serverResolve({ response })
         })
       })
 
     })
+  }
+
+  private createEndSession(client_id: string): { url: string } {
+    const params = {
+      client_id,
+      post_logout_redirect_uri: vars.postLogoutRedirectUrl,
+    }
+    const queryString = (new URLSearchParams(params)).toString()
+
+    return {
+      url: `${vars.endSessionEndpoint}?${queryString}`
+    }
   }
 
   private createAuthorization(client_id: string): { url: string, codeVerifier: string } {
@@ -333,15 +381,15 @@ export class Login {
     const params = {
       client_id,
       response_type: `code`,
-      scope: `openid profile`,
-      redirect_uri: vars.authRedirectUri,
+      scope: `openid profile offline_access`,
+      redirect_uri: vars.authRedirectUrl,
       state: uuid(),
       code_challenge_method: `S256`,
       code_challenge: codeChallenge,
     }
     const queryString = (new URLSearchParams(params)).toString()
     return {
-      url: `${vars.authUrl}/oauth2/authorization?${queryString}`,
+      url: `${vars.authorizationEndpoint}?${queryString}`,
       codeVerifier
     }
   }
@@ -373,10 +421,11 @@ export class Login {
 
     debug(`refreshOAuthToken`, options)
 
-    const { body: auth } = await HTTP.post<Tokens>(`${vars.authUrl}/oauth2/token`, options)
+    const { body: auth } = await HTTP.post<Tokens>(`${vars.tokenEndpoint}`, options)
 
     return {
       ...tokens,
+      id_token: auth.id_token,
       access_token: auth.access_token,
       refresh_token: auth.refresh_token,
     }

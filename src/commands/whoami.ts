@@ -4,13 +4,19 @@ import { CliUx } from '@oclif/core'
 import { HTTPError } from 'http-call'
 import { Command } from '../lib/command'
 
+import debugFn = require('debug') // eslint-disable-line quotes
+const debug = debugFn(`whoami`)
+
 export default class AuthWhoami extends Command {
   static description = `display the current logged in user`
   static enableJsonFlag = true
 
   async run(): Promise<Record<string, unknown>> {
     if (process.env.RELAY_API_KEY) this.warn(`RELAY_API_KEY is set`)
-    if (!this.relay.auth) this.notloggedin()
+    if (!this.relay.auth) {
+      debug(`cannot access auth`)
+      this.notloggedin()
+    }
     try {
       const iam = await this.relay.whoami()
       if (!this.jsonEnabled()) {
@@ -26,6 +32,7 @@ export default class AuthWhoami extends Command {
       }
       return iam
     } catch (error) {
+      debug(error)
       if (error instanceof HTTPError) {
         if (error.statusCode === 401) this.notloggedin()
       }
