@@ -101,6 +101,7 @@ export default class WorkflowLogs extends Command {
     try {
 
       const response = await this.relay.workflowLogs(subscriberId, query)
+      this.logToStderr(`Connected to server...`)
 
       const parser = jsonStreamParser()
       parser.on(`error`, (err) => debug(`error`, err))
