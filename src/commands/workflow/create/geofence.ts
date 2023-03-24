@@ -20,7 +20,7 @@ export class GeofenceWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered by geofence transition`
 
-  static hidden = true
+  static hidden = false
 
   static strict = false
 
