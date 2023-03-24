@@ -46,7 +46,7 @@ defaultFormat
 export default class WorkflowLogs extends Command {
   static description = `Display workflow realtime logs`
 
-  static hidden = true
+  static hidden = false
 
   static flags = {
     ...flags.subscriber,
