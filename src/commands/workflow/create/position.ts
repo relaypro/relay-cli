@@ -20,7 +20,7 @@ export class PositionWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered by a position transition`
 
-  static hidden = true
+  static hidden = false
 
   static strict = false
 
