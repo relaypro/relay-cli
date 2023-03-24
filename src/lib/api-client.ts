@@ -402,12 +402,13 @@ export class APIClient {
     await this.delete(`/ibot/workflow/${id}?subscriber_id=${subscriberId}`)
     return true
   }
-  async triggerWorkflow(subscriberId: string, workflowId: string, args: Record<string, string>): Promise<void> {
-    const tokenAccount = getToken()
+  async triggerWorkflow(subscriberId: string, workflowId: string, userId: string, args: Record<string, string>): Promise<void> {
 
-    const uri = `/ibot/workflow/${workflowId}?subscriber_id=${subscriberId}&user_id=${tokenAccount?.uuid}`
+    const uri = `/ibot/workflow/${workflowId}?subscriber_id=${subscriberId}&user_id=${userId}`
+
     const body = {
       action: `invoke`,
+      target_device_ids: [ `${userId}` ],
       action_args: args,
     }
 

@@ -10,11 +10,17 @@ import { parseArgs } from '../../lib/workflow'
 const debug = debugFn(`workflow:trigger`)
 
 export default class Trigger extends Command {
-  static hidden = true
+  static hidden = false
   static description = `Trigger a workflow over HTTP`
 
   static flags = {
     [`workflow-id`]: flags.workflowId,
+    [`user-id`]:  flags.string({
+      char: `u`,
+      multiple: false,
+      required: true,
+      description: `Target user id on behalf of which to trigger a workflow`,
+    }),
     ...flags.subscriber,
     arg: flags.string({
       char: `a`,
@@ -30,7 +36,7 @@ export default class Trigger extends Command {
     const { flags, raw } = await this.parse(Trigger)
     const args = await parseArgs(raw)
     debug(`triggering with`, { flags, args })
-    await this.relay.triggerWorkflow(flags[`subscriber-id`], flags[`workflow-id`], args)
-    this.log(`Relay CLI trigger`)
+    await this.relay.triggerWorkflow(flags[`subscriber-id`], flags[`workflow-id`], flags[`user-id`], args)
+    this.log(`Relay CLI trigger submitted`)
   }
 }

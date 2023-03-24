@@ -5,7 +5,7 @@ import { isNaN, toNumber } from 'lodash'
 import { parseArg } from '../utils'
 
 
-export const numberValue = Flags.custom({
+export const numberValue = Flags.custom<{ [x: string]: number; }, string>({
   char: `r`,
   description: `Number name/value pair workflow arg`,
   multiple: true,
