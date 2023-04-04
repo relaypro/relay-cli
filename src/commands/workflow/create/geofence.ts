@@ -10,7 +10,7 @@ import { createWorkflow } from '../../../lib/workflow'
 
 const debug = debugFn(`workflow:create:geofence`)
 
-type Transition = `enter` | `exit`
+type Transition = `entry` | `exit`
 
 type GeofenceWorkflow = NewWorkflow & { config: { trigger: { on_geofence: { geofence_id: string, transition: Transition } }}}
 
@@ -29,8 +29,8 @@ export class GeofenceWorkflowCommand extends CreateCommand {
     trigger: string({
       required: true,
       multiple: false,
-      default: `enter`,
-      options: [`enter`, `exit`],
+      default: `entry`,
+      options: [`entry`, `exit`],
       description: `Transition trigger for the specified geofence`,
     }),
     id: string({
