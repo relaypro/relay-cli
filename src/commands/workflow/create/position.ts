@@ -12,7 +12,7 @@ const debug = debugFn(`workflow:create:position`)
 
 type Transition = `entry` | `exit`
 
-type PositionWorkflow = NewWorkflow & { config: { trigger: { on_position: { position_id: string, transition: Transition } }}}
+type PositionWorkflow = NewWorkflow & { config: { trigger: { on_position: { venue_id: string, position_id: string, transition: Transition } }}}
 
 const mapTransition = (transition: string): Transition => `${transition}` as Transition
 
@@ -33,7 +33,14 @@ export class PositionWorkflowCommand extends CreateCommand {
       options: [`entry`, `exit`],
       description: `Transition trigger for the specified position`,
     }),
-    id: string({
+    venue_id: string({
+      char: `v`,
+      required: true,
+      multiple: false,
+      description: `Venue ID`
+    }),
+    position_id: string({
+      char: `p`,
       required: true,
       multiple: false,
       description: `Position ID`
@@ -46,11 +53,11 @@ export class PositionWorkflowCommand extends CreateCommand {
     try {
 
       const workflow: PositionWorkflow = await createWorkflow(flags, raw) as PositionWorkflow
-
-      if (flags.trigger && flags.id) {
+      if (flags.trigger && flags.venue_id && flags.position_id) {
         workflow.config.trigger.on_position = {
-          transition: mapTransition(flags.trigger),
-          position_id: flags.id,
+          venue_id: flags.venue_id,
+          position_id: flags.position_id,
+          transition: mapTransition(flags.trigger)
         }
       } else {
         throw new Error(`Trigger type position requires specifying a transition trigger and position ID.`)
