@@ -147,7 +147,6 @@ export class APIClient {
       this._auth = process.env.RELAY_API_KEY
       if (!this._auth) {
         const tokens = getToken()
-        debug(`auth tokens`, tokens)
         this._auth = tokens?.access_token
       }
     }

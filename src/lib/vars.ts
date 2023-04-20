@@ -7,44 +7,80 @@ export const ROOT_DOMAIN = `relaysvr.com`
 type EnvConfig = {
   host: string,
   authHost: string,
-  authPath: string,
   authRedirectHost: string,
   authRedirectPort: number,
+  authorizationEndpoint: string,
+  tokenEndpoint: string,
+  endSessionEndpoint: string,
   stratusHost: string,
   contentHost: string,
   cli_id: string,
   sdk_id: string,
 }
 
-type Env = `qa`|`pro`
+type Env = `qa`|`pro`|`qa-legacy`|`pro-legacy`
+
+const qa: EnvConfig = {
+  host: `all-main-qa-ibot.${ROOT_DOMAIN}`,
+  authHost: `auth2.relaygo.info`,
+  authRedirectHost: `auth2-localredirect.relaygo.info`,
+  authRedirectPort: 8079,
+  authorizationEndpoint: `/realms/Relay/protocol/openid-connect/auth`,
+  tokenEndpoint: `/realms/Relay/protocol/openid-connect/token`,
+  endSessionEndpoint: `/realms/Relay/protocol/openid-connect/logout`,
+  stratusHost: `all-qa-api-proxy.nocell.io`,
+  contentHost: `qa.relaygo.info`,
+  cli_id: `4EgeETYm`,
+  sdk_id: `rGGK996c`,
+}
+
+const pro: EnvConfig = {
+  host: `all-main-pro-ibot.${ROOT_DOMAIN}`,
+  authHost: `auth.relaypro.com`,
+  authRedirectHost: `auth-localredirect.relaypro.com`,
+  authRedirectPort: 8079,
+  authorizationEndpoint: `/realms/Relay/protocol/openid-connect/auth`,
+  tokenEndpoint: `/realms/Relay/protocol/openid-connect/token`,
+  endSessionEndpoint: `/realms/Relay/protocol/openid-connect/logout`,
+  stratusHost: `all-pro-api-proxy.nocell.io`,
+  contentHost: `relaypro.com`,
+  cli_id: `83756T4P`,
+  sdk_id: `RJZKRhh9`,
+}
 
 const config: Record<Env, EnvConfig> = {
-  qa: {
-    host: `all-main-qa-ibot.${ROOT_DOMAIN}`,
-    authHost: `auth2.relaygo.info`,
-    authPath: `/realms/Relay/protocol/openid-connect/`,
-    authRedirectHost: `auth2-localredirect.relaygo.info`,
-    authRedirectPort: 8079,
-    stratusHost: `all-qa-api-proxy.nocell.io`,
-    contentHost: `qa.relaygo.info`,
-    cli_id: `4EgeETYm`,
-    sdk_id: `rGGK996c`,
+  qa,
+  pro,
+  [`qa-legacy`]: {
+    ...qa,
+    authHost: `auth.relaygo.info`,
+    authRedirectHost: `localhost`,
+    authorizationEndpoint: `/oauth2/authorization`,
+    tokenEndpoint: `/oauth2/token`,
+    endSessionEndpoint: `/logout`,
+
   },
-  pro: {
-    host: `all-main-pro-ibot.${ROOT_DOMAIN}`,
-    authHost: `auth.relaypro.com`,
-    authPath: `/realms/Relay/protocol/openid-connect/`,
-    authRedirectHost: `auth-localredirect.relaypro.com`,
-    authRedirectPort: 8079,
-    stratusHost: `all-pro-api-proxy.nocell.io`,
-    contentHost: `relaypro.com`,
-    cli_id: `83756T4P`,
-    sdk_id: `RJZKRhh9`,
+  [`pro-legacy`]: {
+    ...pro,
+    authHost: `auth.relaygo.com`,
+    authRedirectHost: `localhost`,
+    authorizationEndpoint: `/oauth2/authorization`,
+    tokenEndpoint: `/oauth2/token`,
+    endSessionEndpoint: `/logout`,
   }
 }
 
 export class Vars {
-  get env(): Env {
+  get legacy(): ``|`-legacy` {
+    const _legacy = process.env.RELAY_LEGACY_AUTH
+    if (_legacy) {
+      if (_legacy === `1` || _legacy === `true`) {
+        return `-legacy`
+      }
+    }
+    return ``
+  }
+  get rawEnv(): Env {
     if (process.env.RELAY_ENV) {
       if (process.env.RELAY_ENV !== `qa` && process.env.RELAY_ENV !== `pro`) {
         throw new Error(`RELAY_ENV must be set to either "qa" or "pro"`)
@@ -56,9 +92,21 @@ export class Vars {
     }
   }
 
+  get env(): Env {
+    const _env = process.env.RELAY_ENV
+    if (_env) {
+      if (_env !== `qa` && _env !== `pro`) {
+        throw new Error(`RELAY_ENV must be set to either "qa" or "pro"`)
+      } else {
+        return `${_env}${this.legacy}`
+      }
+    }
+    return `pro${this.legacy}`
+  }
+
   get host(): string {
-    const h = process.env.RELAY_HOST || config[this.env].host
-    if (!h.includes(this.env)) {
+    const h = process.env.RELAY_HOST ?? config[this.env].host
+    if (!h.includes(this.rawEnv)) {
       process.env.RELAY_ENV && console.error(`RELAY_ENV=${process.env.RELAY_ENV}`)
       process.env.RELAY_HOST && console.error(`RELAY_HOST=${process.env.RELAY_HOST}`)
       console.error(`Host and environment must align`)
@@ -84,24 +132,16 @@ export class Vars {
     return config[this.env].authHost
   }
 
-  get authPath(): string {
-    return config[this.env].authPath
-  }
-
-  private get authUrl(): string {
-    return `https://${this.authHost}${this.authPath}`
-  }
-
   get authorizationEndpoint(): string {
-    return `${this.authUrl}auth`
+    return `https://${this.authHost}${config[this.env].authorizationEndpoint}`
   }
 
   get tokenEndpoint(): string {
-    return `${this.authUrl}token`
+    return `https://${this.authHost}${config[this.env].tokenEndpoint}`
   }
 
   get endSessionEndpoint(): string {
-    return `${this.authUrl}logout`
+    return `https://${this.authHost}${config[this.env].endSessionEndpoint}`
   }
 
   get authCliId(): string {
@@ -116,12 +156,8 @@ export class Vars {
     return config[this.env].authRedirectPort
   }
 
-  private get authRedirectHost(): string {
-    return config[this.env].authRedirectHost
-  }
-
   get authRedirectUrlBase(): string {
-    return `http://${this.authRedirectHost}:${this.authRedirectPort }`
+    return `http://${config[this.env].authRedirectHost}:${this.authRedirectPort }`
   }
 
   get authRedirectUrl(): string {
