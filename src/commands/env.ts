@@ -30,7 +30,7 @@ RELAY_HOST=all-main-qa-ibot.${ROOT_DOMAIN}
 
   async run(): Promise<EnvResult> {
     const result = {
-      env: vars.env,
+      env: vars.rawEnv,
       api: vars.host,
       auth: vars.authHost,
       auth_cli_id: vars.authCliId,

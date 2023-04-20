@@ -171,22 +171,58 @@ export class Login {
     return auth
   }
 
-  async generateSdkTokenAccount(): Promise<string> {
+  async generateSdkTokenAccount(isRetry=false): Promise<string> {
     const { refresh_token } = await this.generateToken(vars.authSdkId)
     if (refresh_token) {
       return refresh_token
     } else {
-      throw new Error(`failed-to-generate-sdk-token`)
+      if (isRetry) {
+        throw new Error(`failed-to-generate-sdk-token`)
+      }
+      debug(`no refresh_token`)
+      CliUx.ux.log(`To generate an authorization token, you must check the 'Remember me' box when logging in`)
+      CliUx.ux.url(`First, click here to fully logout`, `${vars.endSessionEndpoint}`)
+      await CliUx.ux.anykey(`Then press any key to log in again`)
+      return this.generateSdkTokenAccount(true)
     }
   }
 
   private async generateCliTokenAccount(): Promise<TokenAccount> {
-    return this.generateToken(vars.authCliId)
+    const tokens = await this.generateToken(vars.authCliId)
+    return await this.createTokenAccount(tokens)
   }
 
-  private async generateToken(client_id: string): Promise<TokenAccount> {
-    // set up callback server
-    const { url, codeVerifier } = this.createAuthorization(client_id)
+  private async createTokenAccount(tokens: Tokens): Promise<TokenAccount> {
+    const info = jwtValues(tokens.id_token)
+
+    debug(`info`, info)
+
+    const uuid = info.preferred_username
+    const username = info.email
+
+    return {
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+      id_token: tokens.id_token,
+      uuid,
+      username,
+    }
+  }
+
+  private async generateToken(client_id: string): Promise<Tokens> {
+    const codeVerifier = uuid()
+    const codeChallenge = base64url(crypto.createHash(`sha256`).update(codeVerifier).digest(`base64`))
+    const params = {
+      client_id: client_id,
+      response_type: `code`,
+      scope: `openid profile offline_access`,
+      redirect_uri: vars.authRedirectUrl,
+      state: uuid(),
+      code_challenge_method: `S256`,
+      code_challenge: codeChallenge,
+    }
+    const queryString = (new URLSearchParams(params)).toString()
+    const url = `${vars.authorizationEndpoint}?${queryString}`
 
     let urlDisplayed = false
     const showUrl = () => {
@@ -276,20 +312,7 @@ export class Login {
 
     debug(`tokens`, auth)
 
-    const info = jwtValues(auth.id_token)
-
-    debug(`info`, info)
-
-    const uuid = info.preferred_username
-    const username = info.email
-
-    return {
-      access_token: auth.access_token,
-      refresh_token: auth.refresh_token,
-      id_token: auth.id_token,
-      uuid,
-      username,
-    }
+    return auth
   }
 
   private startHttpCodeServer<T>(httpHandler: HttpHandler<T>): Promise<{ response: Promise<T> }> {
@@ -372,25 +395,6 @@ export class Login {
 
     return {
       url: `${vars.endSessionEndpoint}?${queryString}`
-    }
-  }
-
-  private createAuthorization(client_id: string): { url: string, codeVerifier: string } {
-    const codeVerifier = uuid()
-    const codeChallenge = base64url(crypto.createHash(`sha256`).update(codeVerifier).digest(`base64`))
-    const params = {
-      client_id,
-      response_type: `code`,
-      scope: `openid profile offline_access`,
-      redirect_uri: vars.authRedirectUrl,
-      state: uuid(),
-      code_challenge_method: `S256`,
-      code_challenge: codeChallenge,
-    }
-    const queryString = (new URLSearchParams(params)).toString()
-    return {
-      url: `${vars.authorizationEndpoint}?${queryString}`,
-      codeVerifier
     }
   }
 
