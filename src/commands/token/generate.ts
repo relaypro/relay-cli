@@ -14,6 +14,7 @@ export default class GenerateToken extends Command {
       char: `l`,
       env: `RELAY_LEGACY_AUTH`,
       hidden: true,
+      default: true,
     }),
   }
 
