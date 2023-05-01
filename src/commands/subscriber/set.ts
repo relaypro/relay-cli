@@ -38,7 +38,7 @@ export default class SubscriberSet extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags } = await (SubscriberSet)
+    const { flags } = await this.parse(SubscriberSet)
 
     if (flags.name) {
       throw new Error(`name not yet implemented`)
