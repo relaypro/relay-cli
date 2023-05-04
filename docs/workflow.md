@@ -12,14 +12,17 @@ Manage workflow configurations
 * [`relay workflow create button`](#relay-workflow-create-button)
 * [`relay workflow create call`](#relay-workflow-create-call)
 * [`relay workflow create event`](#relay-workflow-create-event)
+* [`relay workflow create geofence`](#relay-workflow-create-geofence)
 * [`relay workflow create http`](#relay-workflow-create-http)
 * [`relay workflow create nfc`](#relay-workflow-create-nfc)
 * [`relay workflow create phrase`](#relay-workflow-create-phrase)
+* [`relay workflow create position`](#relay-workflow-create-position)
 * [`relay workflow create timer`](#relay-workflow-create-timer)
 * [`relay workflow delete`](#relay-workflow-delete)
 * [`relay workflow install`](#relay-workflow-install)
 * [`relay workflow instance list`](#relay-workflow-instance-list)
 * [`relay workflow list`](#relay-workflow-list)
+* [`relay workflow logs`](#relay-workflow-logs)
 * [`relay workflow trigger`](#relay-workflow-trigger)
 * [`relay workflow uninstall`](#relay-workflow-uninstall)
 
@@ -250,6 +253,36 @@ DESCRIPTION
 
 _See code: [dist/commands/workflow/create/event.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/event.ts)_
 
+## `relay workflow create geofence`
+
+Create or update a workflow triggered by geofence transition
+
+```
+USAGE
+  $ relay workflow:create:geofence -n <value> -u <value> --trigger entry|exit --id <value> [-N] [-i <value> | -A] [-t] [-e]
+    [-a <value>] [-b <value>] [-r <value>]
+
+FLAGS
+  -n, --name=<value>                  (required) Name of the workflow
+  -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
+  --id=<value>                        (required) Geofence ID
+  --trigger=<option>                  (required) [default: entry] Transition trigger for the specified geofence
+                                      <options: entry|exit>
+  -A, --install-all                   Enable rule to install workflow on all device and users on the account
+  -N, --dry-run
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -e, --hidden                        Hide channel from originating device
+  -i, --install=<value>...            device / user ID to install workflow on
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+  -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
+
+DESCRIPTION
+  Create or update a workflow triggered by geofence transition
+```
+
+_See code: [dist/commands/workflow/create/geofence.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/geofence.ts)_
+
 ## `relay workflow create http`
 
 Create or update a workflow triggered by an HTTP request
@@ -334,6 +367,37 @@ DESCRIPTION
 ```
 
 _See code: [dist/commands/workflow/create/phrase.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/phrase.ts)_
+
+## `relay workflow create position`
+
+Create or update a workflow triggered by a position transition
+
+```
+USAGE
+  $ relay workflow:create:position -n <value> -u <value> --trigger entry|exit -v <value> -p <value> [-N] [-i <value> | -A]
+    [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
+
+FLAGS
+  -n, --name=<value>                  (required) Name of the workflow
+  -p, --position_id=<value>           (required) Position ID
+  -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
+  -v, --venue_id=<value>              (required) Venue ID
+  --trigger=<option>                  (required) [default: entry] Transition trigger for the specified position
+                                      <options: entry|exit>
+  -A, --install-all                   Enable rule to install workflow on all device and users on the account
+  -N, --dry-run
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -e, --hidden                        Hide channel from originating device
+  -i, --install=<value>...            device / user ID to install workflow on
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+  -t, --[no-]transient                Allow workflow to run in the background; otherwise terminate workflow
+
+DESCRIPTION
+  Create or update a workflow triggered by a position transition
+```
+
+_See code: [dist/commands/workflow/create/position.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/position.ts)_
 
 ## `relay workflow create timer`
 
@@ -495,6 +559,25 @@ DESCRIPTION
 
 _See code: [dist/commands/workflow/list.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/list.ts)_
 
+## `relay workflow logs`
+
+Display workflow realtime logs
+
+```
+USAGE
+  $ relay workflow:logs -s <value> [-w <value>] [-u <value>]
+
+FLAGS
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -u, --user-id=<value>        user id
+  -w, --workflow-id=<value>    workflow id
+
+DESCRIPTION
+  Display workflow realtime logs
+```
+
+_See code: [dist/commands/workflow/logs.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/logs.ts)_
+
 ## `relay workflow trigger`
 
 Trigger a workflow over HTTP
@@ -505,7 +588,7 @@ USAGE
 
 FLAGS
   -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
-  -u, --user-id=<value>...            (required) Target user id on behalf of which to trigger a workflow
+  -u, --user-id=<value>               (required) Target user id on behalf of which to trigger a workflow
   -w, --workflow-id=<value>           (required) workflow id
   -a, --arg=<value>...                String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
