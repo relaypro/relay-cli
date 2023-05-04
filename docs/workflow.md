@@ -20,6 +20,7 @@ Manage workflow configurations
 * [`relay workflow install`](#relay-workflow-install)
 * [`relay workflow instance list`](#relay-workflow-instance-list)
 * [`relay workflow list`](#relay-workflow-list)
+* [`relay workflow trigger`](#relay-workflow-trigger)
 * [`relay workflow uninstall`](#relay-workflow-uninstall)
 
 ## `relay workflow analytics`
@@ -57,7 +58,7 @@ DESCRIPTION
   Display and filter workflow analytics
 ```
 
-_See code: [dist/commands/workflow/analytics.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/analytics.ts)_
+_See code: [dist/commands/workflow/analytics.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/analytics.ts)_
 
 ## `relay workflow args get ARG`
 
@@ -75,7 +76,7 @@ DESCRIPTION
   display arguments for a workflow
 ```
 
-_See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/args/get.ts)_
+_See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/args/get.ts)_
 
 ## `relay workflow args list`
 
@@ -93,7 +94,7 @@ DESCRIPTION
   List a workflow's args
 ```
 
-_See code: [dist/commands/workflow/args/list.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/args/list.ts)_
+_See code: [dist/commands/workflow/args/list.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/args/list.ts)_
 
 ## `relay workflow args set`
 
@@ -114,7 +115,7 @@ DESCRIPTION
   set one or more workflow arguments
 ```
 
-_See code: [dist/commands/workflow/args/set.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/args/set.ts)_
+_See code: [dist/commands/workflow/args/set.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/args/set.ts)_
 
 ## `relay workflow args unset`
 
@@ -132,7 +133,7 @@ DESCRIPTION
   unset one or more workflow arguments
 ```
 
-_See code: [dist/commands/workflow/args/unset.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/args/unset.ts)_
+_See code: [dist/commands/workflow/args/unset.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/args/unset.ts)_
 
 ## `relay workflow create battery`
 
@@ -162,7 +163,7 @@ DESCRIPTION
   Create or update a workflow triggered by crossing a charging or discharging threshold of any device on the account
 ```
 
-_See code: [dist/commands/workflow/create/battery.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/create/battery.ts)_
+_See code: [dist/commands/workflow/create/battery.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/battery.ts)_
 
 ## `relay workflow create button`
 
@@ -190,7 +191,7 @@ DESCRIPTION
   Create or update a workflow triggered by button taps
 ```
 
-_See code: [dist/commands/workflow/create/button.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/create/button.ts)_
+_See code: [dist/commands/workflow/create/button.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/button.ts)_
 
 ## `relay workflow create call`
 
@@ -219,7 +220,7 @@ DESCRIPTION
   Create or update a workflow triggered by inbound or outbound calling
 ```
 
-_See code: [dist/commands/workflow/create/call.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/create/call.ts)_
+_See code: [dist/commands/workflow/create/call.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/call.ts)_
 
 ## `relay workflow create event`
 
@@ -247,7 +248,7 @@ DESCRIPTION
   Create or update a workflow triggered by event emitted by Relay device
 ```
 
-_See code: [dist/commands/workflow/create/event.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/create/event.ts)_
+_See code: [dist/commands/workflow/create/event.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/event.ts)_
 
 ## `relay workflow create http`
 
@@ -275,7 +276,7 @@ DESCRIPTION
   Create or update a workflow triggered by an HTTP request
 ```
 
-_See code: [dist/commands/workflow/create/http.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/create/http.ts)_
+_See code: [dist/commands/workflow/create/http.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/http.ts)_
 
 ## `relay workflow create nfc`
 
@@ -304,7 +305,7 @@ DESCRIPTION
   Create or update a workflow triggered by an NFC tap
 ```
 
-_See code: [dist/commands/workflow/create/nfc.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/create/nfc.ts)_
+_See code: [dist/commands/workflow/create/nfc.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/nfc.ts)_
 
 ## `relay workflow create phrase`
 
@@ -332,7 +333,7 @@ DESCRIPTION
   Create or update a workflow triggered by a spoken phrase
 ```
 
-_See code: [dist/commands/workflow/create/phrase.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/create/phrase.ts)_
+_See code: [dist/commands/workflow/create/phrase.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/phrase.ts)_
 
 ## `relay workflow create timer`
 
@@ -386,7 +387,7 @@ FLAGS
       Number name/value pair workflow arg
 
   -s, --start=<value>
-      [default: 2022-11-15T16:00:00]
+      [default: 2023-05-04T16:00:00]
 
   -t, --[no-]transient
       Allow workflow to run in the background; otherwise terminate workflow
@@ -395,7 +396,7 @@ DESCRIPTION
   Create or update a workflow triggered immediately or with a repeating rule
 ```
 
-_See code: [dist/commands/workflow/create/timer.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/create/timer.ts)_
+_See code: [dist/commands/workflow/create/timer.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/create/timer.ts)_
 
 ## `relay workflow delete`
 
@@ -413,7 +414,7 @@ DESCRIPTION
   Destructively delete and remove a workflow
 ```
 
-_See code: [dist/commands/workflow/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/delete.ts)_
+_See code: [dist/commands/workflow/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/delete.ts)_
 
 ## `relay workflow install`
 
@@ -434,7 +435,7 @@ DESCRIPTION
   Install an existing workflow into one or more devices
 ```
 
-_See code: [dist/commands/workflow/install.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/install.ts)_
+_See code: [dist/commands/workflow/install.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/install.ts)_
 
 ## `relay workflow instance list`
 
@@ -465,7 +466,7 @@ DESCRIPTION
   List workflow instances
 ```
 
-_See code: [dist/commands/workflow/instance/list.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/instance/list.ts)_
+_See code: [dist/commands/workflow/instance/list.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/instance/list.ts)_
 
 ## `relay workflow list`
 
@@ -492,7 +493,29 @@ DESCRIPTION
   List workflow configurations
 ```
 
-_See code: [dist/commands/workflow/list.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/list.ts)_
+_See code: [dist/commands/workflow/list.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/list.ts)_
+
+## `relay workflow trigger`
+
+Trigger a workflow over HTTP
+
+```
+USAGE
+  $ relay workflow:trigger -w <value> -u <value> -s <value> [-a <value>] [-b <value>] [-r <value>]
+
+FLAGS
+  -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -u, --user-id=<value>...            (required) Target user id on behalf of which to trigger a workflow
+  -w, --workflow-id=<value>           (required) workflow id
+  -a, --arg=<value>...                String name/value pair workflow arg
+  -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
+  -r, --number=arg1=100.0...          Number name/value pair workflow arg
+
+DESCRIPTION
+  Trigger a workflow over HTTP
+```
+
+_See code: [dist/commands/workflow/trigger.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/trigger.ts)_
 
 ## `relay workflow uninstall`
 
@@ -513,4 +536,4 @@ DESCRIPTION
   Uninstall an existing workflow from one or more devices
 ```
 
-_See code: [dist/commands/workflow/uninstall.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/workflow/uninstall.ts)_
+_See code: [dist/commands/workflow/uninstall.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/workflow/uninstall.ts)_

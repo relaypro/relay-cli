@@ -33,4 +33,4 @@ DESCRIPTION
   list all venues
 ```
 
-_See code: [dist/commands/venues.ts](https://github.com/relaypro/relay-cli/blob/v1.4.1/dist/commands/venues.ts)_
+_See code: [dist/commands/venues.ts](https://github.com/relaypro/relay-cli/blob/v1.5.0/dist/commands/venues.ts)_
