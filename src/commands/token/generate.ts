@@ -10,11 +10,10 @@ export default class GenerateToken extends Command {
   static description = `generate a token that can be used with the Relay SDK`
 
   static flags = {
-    [`legacy-auth`]: flags.boolean({
+    [`jwt`]: flags.boolean({
       char: `l`,
-      env: `RELAY_LEGACY_AUTH`,
       hidden: true,
-      default: true,
+      default: false,
     }),
   }
 
@@ -22,7 +21,9 @@ export default class GenerateToken extends Command {
     const { flags } = await this.parse(GenerateToken)
 
     // reverse syncing environment as vars depend on only env
-    process.env.RELAY_LEGACY_AUTH = `${flags[`legacy-auth`]}`
+    if (process.env.RELAY_LEGACY_AUTH === undefined) {
+      process.env.RELAY_LEGACY_AUTH = `${!flags[`jwt`]}`
+    }
 
     const token = await this.relay.generateToken()
 
