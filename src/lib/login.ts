@@ -1,12 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { Interfaces, CliUx } from '@oclif/core'
+import { CliUx } from '@oclif/core'
 import HTTP from 'http-call'
 import encode from 'form-urlencoded'
 import open from 'open'
 import http from 'http'
 import { URL, URLSearchParams } from 'url'
-import { isEmpty, map } from 'lodash'
+import { isEmpty } from 'lodash'
 import debugFn from 'debug'
 import crypto = require('crypto') // eslint-disable-line quotes
 
@@ -14,9 +14,10 @@ import crypto = require('crypto') // eslint-disable-line quotes
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
 import { vars } from './vars'
-import { AccountEnvelope, clearSubscribers, deleteSession, getToken, resolveSubscriber, saveSubscribers, setToken, Subscriber, TokenAccount, Tokens } from './session'
-import { getOrThrow, uuid, base64url } from './utils'
+import { clearSubscribers, deleteSession, getToken, resolveSubscriber, setToken, Subscriber, TokenAccount, Tokens } from './session'
+import { uuid, base64url } from './utils'
 import jwtValues from './jwt'
+import { APIClient } from './api-client'
 
 const debug = debugFn(`login`)
 
@@ -50,10 +51,9 @@ type HttpHandler<T> = (url: string, responseHandler: ResponseHandler, resolve: (
 
 export class Login {
 
-  constructor(private readonly config: Interfaces.Config) {}
+  constructor(private readonly api: APIClient) {}
 
   async login(): Promise<TokenAccount> {
-    debug(this.config)
     let loggedIn = false
     try {
       setTimeout(() => {
@@ -75,12 +75,11 @@ export class Login {
 
       const auth = await this.generateCliTokenAccount()
       debug(`auth`, auth)
-      const subscribers = await this.fetchSubscribers(auth.access_token)
+      setToken(auth)
+      const subscribers = await this.fetchSubscribers()
       debug(`subscribers`, subscribers)
 
       if (!isEmpty(subscribers)) {
-        setToken(auth)
-        saveSubscribers(subscribers)
         const success = await resolveSubscriber(subscribers)
         if (success) {
           loggedIn = true
@@ -496,20 +495,14 @@ export class Login {
     }
   }
 
-  private async fetchSubscribers(token: string): Promise<Subscriber[]> {
-    const options = {
-      headers: {
-        authorization: `Bearer ${token}`
-      },
-      timeout: 15000,
-    }
+  private async fetchSubscribers(): Promise<Subscriber[]> {
 
     const timeout = setTimeout(() => {
       CliUx.ux.action.start(`Retrieving authorized subscribers`)
     }, 2000)
 
     try {
-      const { body: accounts } = await HTTP.get<Record<string, AccountEnvelope>[]>(`${vars.stratusUrl}/v3/subscribers;view=dash_overview`, options)
+      const [accounts] = await this.api.subscribers({}, false, 100)
 
       debug(`accounts`, accounts)
 
@@ -517,17 +510,12 @@ export class Login {
         CliUx.ux.action.stop()
       }
 
-      return map(accounts, account => ({
-        id: getOrThrow(account, [`account`, `subscriber_id`]),
-        email: getOrThrow(account, [`account`, `owner_email`]),
-        name: getOrThrow(account, [`account`, `account_name`]),
-      }))
+      return accounts
     } catch (err) {
       debug(`accounts error`, err)
       return []
     } finally {
       clearTimeout(timeout)
     }
-
   }
 }

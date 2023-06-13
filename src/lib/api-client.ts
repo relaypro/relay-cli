@@ -2,7 +2,7 @@
 
 import { Interfaces, Errors, CliUx } from '@oclif/core'
 import { HTTP, HTTPError, HTTPRequestOptions } from 'http-call'
-import { find, includes, isString, map, filter, pick } from 'lodash'
+import { find, includes, isString, map, filter, pick, isEmpty } from 'lodash'
 import * as url from 'url'
 
 import deps from './deps'
@@ -11,9 +11,9 @@ import { RequestId, requestIdHeader } from './request-id'
 import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
-import { clearConfig, clearSubscribers, AccountEnvelope, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount } from './session'
+import { clearConfig, clearSubscribers, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
 import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, WorkflowLogQuery } from './api'
-import { getOrThrow, normalize } from './utils'
+import { normalize } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
 import { R_OK } from 'constants'
@@ -63,11 +63,10 @@ export class APIError extends Errors.CLIError {
 export class APIClient {
   authPromise?: Promise<TokenAccount>
   http: typeof HTTP
-  private readonly _login = new Login(this.config)
+  private readonly _login = new Login(this)
   private _auth?: string
 
   constructor(protected config: Interfaces.Config, public options: IOptions = {}) {
-    this.config = config
     if (options.required === undefined) options.required = true
     options.preauth = options.preauth !== false
     this.options = options
@@ -80,7 +79,7 @@ export class APIClient {
       protocol: apiUrl.protocol,
       headers: {
         accept: `application/json`,
-        'user-agent': this.config.userAgent,
+        'user-agent': config.userAgent,
         ...envHeaders,
       },
     }
@@ -454,13 +453,23 @@ export class APIClient {
   session(): Session {
     return getSession()
   }
-  async subscribers(): Promise<Subscriber[]> {
-    const { body: accounts } = await this.request<Record<string, AccountEnvelope>[]>(`${vars.stratusUrl}/v3/subscribers;view=dash_overview`)
-    return map(accounts, account => ({
-      id: getOrThrow(account, [`account`, `subscriber_id`]),
-      email: getOrThrow(account, [`account`, `owner_email`]),
-      name:  getOrThrow(account, [`account`, `account_name`]),
-    }))
+  async subscribers(query: SubscriberQuery={}, paged=false, size=100): Promise<[Subscriber[], string]> {
+    const allSubscribers: Subscriber[] = []
+    let path = `/stratus/rest/v3/subscribers;view=paged_dash_overview?page_size=${size}`
+    let pagedPath = ``
+    let search = ``
+    if (!isEmpty(query)) {
+      const params = new URLSearchParams(query)
+      search = `&${params}`
+    }
+    do {
+      const { body: subscribers } = await this.request<SubscriberPagedResults>(`https://${vars.stratusHost}${path}${search}`)
+      allSubscribers.push(...subscribers.members)
+      path = subscribers.next
+      pagedPath = path
+    } while(paged && !isEmpty(path))
+
+    return [allSubscribers, pagedPath]
   }
   async listAudio(subscriberId: string): Promise<CustomAudio[]> {
     const { body } = await this.get<CustomAudio[]>(`/ibot/custom_audio?subscriber_id=${subscriberId}`)
