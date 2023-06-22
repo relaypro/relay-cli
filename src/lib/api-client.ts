@@ -249,7 +249,7 @@ export class APIClient {
     return subscriberInfo.capabilities
   }
   async subscriberInfo(subscriberId: string): Promise<SubscriberInfo> {
-    const { body: subscriberInfo } = await this.get<SubscriberInfo>(`/ibot/subscriber/${subscriberId}?include_devices=false`)
+    const { body: subscriberInfo } = await this.get<SubscriberInfo>(`/ibot/subscriber_info/${subscriberId}`)
     debug(`subscriberInfo`, subscriberInfo)
     return subscriberInfo
   }
