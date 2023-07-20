@@ -111,7 +111,7 @@ export default class WorkflowAnalytics extends Command {
 
       if (!this.jsonEnabled()) {
         if (!isEmpty(analytics)) {
-          CliUx.ux.log(`=> Showing up to 100 events`)
+          CliUx.ux.log(`=> Showing ${analytics?.length} events`)
           CliUx.ux.table(analytics, {
             workflow_id: {
               header: `Workflow ID`,
@@ -145,6 +145,7 @@ export default class WorkflowAnalytics extends Command {
               }
             },
           })
+          CliUx.ux.log(`=> Showing ${analytics?.length} events`)
         } else {
           this.log(`No analytic events`)
         }

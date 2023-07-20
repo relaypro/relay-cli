@@ -365,14 +365,32 @@ export class APIClient {
       ...query as Record<string, string|number>,
     })
 
-    const url = `/ibot/workflow_analytics_events?${params.toString()}`
+    let cursor = ``
+    let events: WorkflowEvents = []
 
-    const response = await this.get<WorkflowEventResults>(url)
+    do {
 
-    const events = map(response?.body?.data, event => ({
-      ...event,
-      jsonContent: event.content_type === `application/json` ? JSON.parse(event.content) : undefined
-    }))
+      if (isEmpty(cursor)) {
+        params.delete(`cursor`)
+      } else {
+        params.set(`cursor`, cursor)
+      }
+
+      const url = `/ibot/workflow_analytics_events?${params.toString()}`
+
+      const response = await this.get<WorkflowEventResults>(url)
+
+      debug(`cursor => ${response?.body?.cursor}`)
+      debug(`length => ${response?.body?.data?.length}`)
+
+      cursor = response?.body?.cursor
+
+      events = [ ...events, ...map(response?.body?.data, event => ({
+        ...event,
+        jsonContent: event.content_type === `application/json` ? JSON.parse(event.content) : undefined
+      }))]
+
+    } while (!isEmpty(cursor))
 
     return events
   }
