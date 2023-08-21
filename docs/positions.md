@@ -15,7 +15,7 @@ USAGE
     [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: ae0f3ba5-e35e-421a-98e2-e9ae93136997] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -v, --venue-id=<value>       (required) venue id
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
@@ -34,4 +34,4 @@ DESCRIPTION
   list all positions by venue
 ```
 
-_See code: [dist/commands/positions.ts](https://github.com/relaypro/relay-cli/blob/v1.6.0/dist/commands/positions.ts)_
+_See code: [dist/commands/positions.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/positions.ts)_
