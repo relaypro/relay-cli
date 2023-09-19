@@ -9,7 +9,7 @@ export const appendTag = (jsonObj: any, tag: string): any => {
 export const deviceUri = (deviceName: string): string => {
     var deviceUri = deviceName
     if (deviceName.substring(0,3) != "urn") {
-        deviceUri = "urn:relay-resource:name:device:" + deviceName.toLowerCase().replace(" ", "%20")
+        deviceUri = "urn:relay-resource:name:device:" + encodeURI(deviceName.toLowerCase())
     }
     return deviceUri
 }
