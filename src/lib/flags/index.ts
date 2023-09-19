@@ -24,6 +24,15 @@ export type WorkflowFlags = {
   hidden: boolean,
 }
 
+export type TaskFlags = {
+  task_type_name: string,
+  task_type_major: number,
+  task_name: string,
+  assign_to: string,
+  args: any,
+  tag: string | undefined,
+}
+
 export type TimerFlags = WorkflowFlags & {
   trigger: string,
   timezone: string,

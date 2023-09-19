@@ -2,7 +2,7 @@
 
 import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Geofence, MergedWorkflowInstance, Workflow } from './api'
+import { Geofence, MergedWorkflowInstance, Task, Workflow } from './api'
 import { ALL } from './constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -201,6 +201,62 @@ export const printWorkflowInstances = (instances: MergedWorkflowInstance[], flag
       extended: true,
     },
 
+  }, options)
+}
+
+export const printTasks = (tasks: Task[], flags: unknown): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
+  CliUx.ux.table(tasks, {
+    workflow_instance_id: {
+      header: `Workflow Instance ID`,
+      get: row=> row.workflow_instance_id
+    },
+    workflow_id: {
+      header: `Workflow ID`,
+      get: row=> row.workflow_id
+    },
+    timestamp: {
+      header: `Timestamp`,
+      get: row=> row.timestamp
+    },
+    task_name: {
+      header: `Task name`,
+      get: row => row.task_name,
+    },
+    task_id: {
+      header: `Task ID`,
+      get: row => row.task_id,
+      minWidth: 25,
+    },
+    task_type_name: {
+      header: `Task type name`,
+      get: row => row.task_type_name,
+    },
+    status: {
+      header: `Status`,
+      get: row => row.status
+    },
+    task_type_namespace: {
+      header: `Namespace`,
+      get: row => row.task_type_namespace
+    },
+    assign_to: {
+      header: `Assignee`,
+      get: row => row.assign_to
+    },
+    task_type_major: {
+      header: `Major`,
+      get: row => row.task_type_major,
+    },
+    subscriber_id: {
+      header: `Subscriber ID`,
+      get: row => row.subscriber_id
+    },
+    args: {
+      header: `Args`,
+      get: row => row.args,
+    },
   }, options)
 }
 

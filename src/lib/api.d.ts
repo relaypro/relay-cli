@@ -284,3 +284,24 @@ export type PagingParams = {
   cursor?: string,
   limit?: number,
 }
+
+export type Task = {
+  workflow_instance_id: string,
+  workflow_id: string,
+  timestamp: string,
+  task_name: string,
+  task_id: string,
+  task_type_name: string,
+  status: string,
+  task_type_namespace: string,
+  assign_to: string[],
+  task_type_major: integer,
+  subscriber_id: string,
+  args: string,
+}
+
+export type NewTask = Omit<Task, `task_id` | `workflow_instance_id` | `workflow_id` | `timestamp` | `status` | `subscriber_id`>
+
+export type TaskResults = {
+  results: Task[],
+}
