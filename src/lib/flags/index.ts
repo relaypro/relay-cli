@@ -24,14 +24,22 @@ export type WorkflowFlags = {
   hidden: boolean,
 }
 
-export type TaskFlags = {
-  task_type_name: string,
-  task_type_major: number,
-  task_name: string,
-  assign_to: string,
+export type ScheduledTaskFlags = {
+  namespace: string,
+  type: string,
+  major: number,
+  name: string,
+  [`assign-to`]: string,
   args: any,
-  tag: string | undefined,
+  start: string,
+  timezone: string
+  tag?: string,
+  frequency?: string,
+  count?: number,
+  until?: string,
 }
+
+export type TaskFlags = Omit<ScheduledTaskFlags, `frequency` | `count` | `until` | `start` | `timezone`>
 
 export type TimerFlags = WorkflowFlags & {
   trigger: string,
@@ -253,6 +261,53 @@ const pagingFlags = {
   }),
 }
 
+const taskStartFlags = {
+  namespace: flags.string({
+    char: `N`,
+    required: true,
+    multiple: false,
+    default: `account`,
+    options: [`account`, `system`],
+    description: `Namespace of the task type`
+  }),
+  type: flags.string({
+    char: `t`,
+    required: true,
+    multiple: false,
+    description: `Name of the task type for this task`,
+  }),
+  major: flags.integer({
+    char: `m`,
+    required: true,
+    multiple: false,
+    default: 1,
+    description: `Major version of the task type`,
+  }),
+  name: flags.string({
+    char: `n`,
+    required: true,
+    multiple: false,
+    description: `Name of the task`,
+  }),
+  [`assign-to`]: flags.string({
+    char: `A`,
+    required: true,
+    multiple: false,
+    description: `Devices on which to start this task`,
+  }),
+  args: flags.string({
+    char: `a`,
+    required: true,
+    multiple: false,
+    description: `Encoded JSON or @filename`,
+  }),
+  tag: flags.string({
+    required: false,
+    multiple: false,
+    description: `Optional tag to tie to your task`
+  })
+}
+
 export {
   pagingFlags,
   apiFlags,
@@ -269,4 +324,5 @@ export {
   waitFlags,
   installFlags,
   coordinate,
+  taskStartFlags
 }

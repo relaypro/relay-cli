@@ -280,3 +280,22 @@ export const normalize = (endpoint: string, args: Record<string, string>) => {
 
   return endpoint
 }
+
+export const isTagMatch= (args: any, tag: string): boolean => {
+  for (const t of args.tags) {
+    if (t == tag) {
+      return true
+    }
+  }
+  return false
+}
+
+export const filterByTag = (tasks: Task[], tag: string): Task[] => {
+  const filteredTasks: Task[] = []
+  for (const task of tasks) {
+    if (isTagMatch((task as Task).args, tag)) {
+      filteredTasks.push(task as Task)
+    }
+  }
+  return filteredTasks
+}

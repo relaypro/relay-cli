@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, Task, TaskResults, WorkflowLogQuery, NewTask } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, Task, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask } from './api'
 import { normalize } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
@@ -571,22 +571,25 @@ export class APIClient {
 
   // API client functions for capsule. Must have IBOT environment variable set.
   async fetchTasks(subscriberId: string, taskEndpoint: string): Promise<Task[]> {
-    const url = `https://${process.env.IBOT}/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}`
-    const response =  await this.get<TaskResults>(url)
+    const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}`)
     return response.body.results
   }
 
   async deleteTask(subscriberId: string, taskEndpoint: string, taskId: string): Promise<boolean> {
-    await this.delete(`https://${process.env.IBOT}/relaypro/api/v1/${taskEndpoint}/${taskId}?subscriber_id=${subscriberId}`)
+    await this.delete(`/relaypro/api/v1/${taskEndpoint}/${taskId}?subscriber_id=${subscriberId}`)
     return true
   }
 
-  async startTask(task: NewTask): Promise<boolean> {
-    const subscriberId = getDefaultSubscriberId()
-    await this.post(`https://${process.env.IBOT}/relaypro/api/v1/task?subscriber_id=${subscriberId}`, {
+  async startTask(subscriberId: string, task: NewTask): Promise<boolean> {
+    await this.post(`/relaypro/api/v1/task?subscriber_id=${subscriberId}`, {
       body: task,
     })
     return true
   }
-
+  async scheduleTask(subscriberId: string, task: NewScheduledTask): Promise<boolean> {
+    await this.post(`/relaypro/api/v1/scheduled_task?subscriber_id=${subscriberId}`, {
+      body: task,
+    })
+    return true
+  }
 }
