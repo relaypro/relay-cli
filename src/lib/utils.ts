@@ -341,6 +341,7 @@ export const normalize = (endpoint: string, args: Record<string, string>) => {
   return endpoint
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isTagMatch= (args: any, tag: string): boolean => {
   for (const t of args.tags) {
     if (t == tag) {

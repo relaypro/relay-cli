@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as flags from '../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
+
 import { createScheduledTask } from '../../lib/tasks'
 import { NewScheduledTask } from '../../lib/api'
 import { Command } from '../../lib/command'
@@ -13,7 +14,7 @@ export default class TasksScheduleCommand extends Command {
   static description = `Schedule a task with the given configuration`
   // static hidden = true
 
-  static flags = { // NOTE: how to change ordering of these in help command?
+  static flags = {
     ...flags.subscriber,
     ...flags.taskStartFlags,
     start: flags.string({
@@ -73,6 +74,7 @@ export default class TasksScheduleCommand extends Command {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const jsonObj = (flags.args as any)
+
     jsonObj.tags = [flags.type]
 
     if (flags.tag) {

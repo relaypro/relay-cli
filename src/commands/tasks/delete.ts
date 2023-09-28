@@ -1,8 +1,8 @@
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
+import { filterByTag } from '../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
-import { filterByTag } from '../../lib/utils'
 
 const debug = debugFn(`task`)
 

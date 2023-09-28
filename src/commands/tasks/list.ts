@@ -2,11 +2,12 @@ import { CliUx } from '@oclif/core'
 
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-const debug = debugFn(`task`)
 import { isEmpty } from 'lodash'
 import { filterByTag, printScheduledTasks, printTasks } from '../../lib/utils'
+// eslint-disable-next-line quotes
+import debugFn = require('debug')
+
+const debug = debugFn(`task`)
 
 export default class TaskListCommand extends Command {
   static description = `List task configurations`

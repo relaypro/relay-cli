@@ -570,6 +570,7 @@ export class APIClient {
   // }
 
   // API client functions for capsule. Must have IBOT environment variable set.
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async fetchTasks(subscriberId: string, taskEndpoint: string): Promise<any[]> {
     const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}`)

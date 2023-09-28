@@ -30,6 +30,7 @@ export type ScheduledTaskFlags = {
   major: number,
   name: string,
   [`assign-to`]: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: any,
   start: string,
   timezone: string
