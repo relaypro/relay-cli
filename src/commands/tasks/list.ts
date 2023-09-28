@@ -6,7 +6,7 @@ import * as flags from '../../lib/flags'
 import debugFn = require('debug')
 const debug = debugFn(`task`)
 import { isEmpty } from 'lodash'
-import { filterByTag, printTasks } from '../../lib/utils'
+import { filterByTag, printScheduledTasks, printTasks } from '../../lib/utils'
 
 export default class TaskListCommand extends Command {
   static description = `List task configurations`
@@ -46,9 +46,13 @@ export default class TaskListCommand extends Command {
         if (flags.tag) {
           tasks = filterByTag(tasks, flags.tag)
         }
-        printTasks(tasks, flags)
+        if (scheduled) {
+          printScheduledTasks(tasks, flags)
+        } else {
+          printTasks(tasks, flags)
+        }
       } else {
-        this.log(`No tasks have been started yet`)
+        this.log(`No tasks have been started or scheduled yet`)
       }
     } catch (err) {
       debug(err)

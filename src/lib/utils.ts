@@ -2,7 +2,7 @@
 
 import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Geofence, MergedWorkflowInstance, Task, Workflow } from './api'
+import { Geofence, MergedWorkflowInstance, ScheduledTask, Task, Workflow } from './api'
 import { ALL } from './constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -240,6 +240,66 @@ export const printTasks = (tasks: Task[], flags: unknown): void => {
     task_type_namespace: {
       header: `Namespace`,
       get: row => row.task_type_namespace
+    },
+    assign_to: {
+      header: `Assignee`,
+      get: row => row.assign_to
+    },
+    task_type_major: {
+      header: `Major`,
+      get: row => row.task_type_major,
+    },
+    subscriber_id: {
+      header: `Subscriber ID`,
+      get: row => row.subscriber_id
+    },
+    args: {
+      header: `Args`,
+      get: row => row.args,
+    },
+  }, options)
+}
+
+export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
+  CliUx.ux.table(tasks, {
+    task_name: {
+      header: `Task name`,
+      get: row => row.task_name,
+    },
+    scheduled_task_id: {
+      header: `Scheduled Task ID`,
+      get: row => row.scheduled_task_id,
+      minWidth: 25
+    },
+    task_type_name: {
+      header: `Task type name`,
+      get: row => row.task_type_name,
+    },
+    task_type_namespace: {
+      header: `Namespace`,
+      get: row => row.task_type_namespace
+    },
+    start_time: {
+      header: `Start time`,
+      get: row => row.start_time
+    },
+    timezone: {
+      header: `Timezone`,
+      get: row => row.timezone
+    },
+    frequency: {
+      header: `Frequency`,
+      get: row => row.frequency
+    },
+    until: {
+      header: `Until`,
+      get: row => row.until
+    },
+    count: {
+      header: `Count`,
+      get: row => row.count
     },
     assign_to: {
       header: `Assignee`,
