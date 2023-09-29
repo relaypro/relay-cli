@@ -22,7 +22,7 @@ export default class TaskListCommand extends Command {
     }),
     tag: flags.string({
       required: false,
-      multiple: false,
+      multiple: true,
       description: `Optional tag to tie to your task`
     })
   }

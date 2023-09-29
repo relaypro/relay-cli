@@ -28,7 +28,7 @@ export default class TaskDeleteCommand extends Command {
     }),
     tag: flags.string({
       required: false,
-      multiple: false,
+      multiple: true,
       exclusive: [`task-id`],
       description: `Delete all tasks with the specified tag`
     })
@@ -57,15 +57,21 @@ export default class TaskDeleteCommand extends Command {
 
       if (answer) {
         if (taskId) {
-          await this.relay.deleteTask(subscriberId, taskEndpoint, taskId)
+          const success = await this.relay.deleteTask(subscriberId, taskEndpoint, taskId)
+          success ? this.log(`Task deleted`) : this.log(`Task NOT deleted`)
         }
         else if (flags.tag) {
           let tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
           tasks = filterByTag(tasks, flags.tag)
-          for (const task of tasks) {
-            let id
-            flags.scheduled ? id = task.scheduled_task_id : id = task.task_id
-            await this.relay.deleteTask(subscriberId, taskEndpoint, id)
+          if (tasks.length > 0) {
+            for (const task of tasks) {
+              let id
+              flags.scheduled ? id = task.scheduled_task_id : id = task.task_id
+              await this.relay.deleteTask(subscriberId, taskEndpoint, id)
+            }
+            this.log(`Tasks deleted`)
+          } else {
+            this.log(`No tasks matching the tags: ${flags.tag}`)
           }
         }
       } else {

@@ -79,7 +79,7 @@ export default class TasksScheduleCommand extends Command {
     jsonObj.tags = [flags.type]
 
     if (flags.tag) {
-      jsonObj.tags.push(flags.tag)
+      jsonObj.tags.push(...flags.tag)
     }
 
     flags.args = jsonObj

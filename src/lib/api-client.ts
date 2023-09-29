@@ -578,8 +578,12 @@ export class APIClient {
   }
 
   async deleteTask(subscriberId: string, taskEndpoint: string, taskId: string): Promise<boolean> {
-    await this.delete(`/relaypro/api/v1/${taskEndpoint}/${taskId}?subscriber_id=${subscriberId}`)
-    return true
+    try {
+      await this.delete(`/relaypro/api/v1/${taskEndpoint}/${taskId}?subscriber_id=${subscriberId}`)
+      return true
+    } catch(err) {
+      return false
+    }
   }
 
   async startTask(subscriberId: string, task: NewTask): Promise<boolean> {

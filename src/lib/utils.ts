@@ -315,19 +315,19 @@ export const normalize = (endpoint: string, args: Record<string, string>) => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isTagMatch= (args: any, tag: string): boolean => {
-  for (const t of args.tags) {
-    if (t == tag) {
-      return true
+export const isTagMatch= (args: any, tags: string[]): boolean => {
+  for (const t of tags) {
+    if (!args.tags.includes(t)) {
+      return false
     }
   }
-  return false
+  return true
 }
 
-export const filterByTag = (tasks: Task[], tag: string): Task[] => {
+export const filterByTag = (tasks: Task[], tags: string[]): Task[] => {
   const filteredTasks: Task[] = []
   for (const task of tasks) {
-    if (isTagMatch((task as Task).args, tag)) {
+    if (isTagMatch((task as Task).args, tags)) {
       filteredTasks.push(task as Task)
     }
   }

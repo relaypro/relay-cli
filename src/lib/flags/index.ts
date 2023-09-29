@@ -34,7 +34,7 @@ export type ScheduledTaskFlags = {
   args: any,
   start: string,
   timezone: string
-  tag?: string,
+  tag?: string[],
   frequency?: string,
   count?: number,
   until?: string,
@@ -304,7 +304,7 @@ const taskStartFlags = {
   }),
   tag: flags.string({
     required: false,
-    multiple: false,
+    multiple: true,
     description: `Optional tag to tie to your task`
   })
 }
