@@ -35,7 +35,8 @@ export default class TasksScheduleCommand extends Command {
         `America/New_York`,
         `America/Phoenix`,
         `Pacific/Honolulu`
-      ]
+      ],
+      description: `Timezone of start time`
     }),
     frequency: flags.string({
       char: `f`,

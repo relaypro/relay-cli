@@ -7,7 +7,7 @@ import { filterByTag, printScheduledTasks, printTasks } from '../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-const debug = debugFn(`task`)
+const debug = debugFn(`tasks:list`)
 
 export default class TaskListCommand extends Command {
   static description = `List task configurations`
@@ -29,11 +29,10 @@ export default class TaskListCommand extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(TaskListCommand)
     const subscriberId = flags[`subscriber-id`]
-    const scheduled = flags[`scheduled`]
 
     try {
       let taskEndpoint
-      if (scheduled) {
+      if (flags.scheduled) {
         taskEndpoint = `scheduled_task`
       } else {
         taskEndpoint = `task`
@@ -47,13 +46,13 @@ export default class TaskListCommand extends Command {
         if (flags.tag) {
           tasks = filterByTag(tasks, flags.tag)
         }
-        if (scheduled) {
+        if (flags.scheduled) {
           printScheduledTasks(tasks, flags)
         } else {
           printTasks(tasks, flags)
         }
       } else {
-        this.log(`No tasks have been started or scheduled yet`)
+        this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet`)
       }
     } catch (err) {
       debug(err)

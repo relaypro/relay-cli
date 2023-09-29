@@ -4,7 +4,7 @@ import { filterByTag } from '../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-const debug = debugFn(`task`)
+const debug = debugFn(`tasks:delete`)
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
@@ -37,10 +37,9 @@ export default class TaskDeleteCommand extends Command {
     const { flags } = await  this.parse(TaskDeleteCommand)
     const taskId = flags[`task-id`]
     const subscriberId = flags[`subscriber-id`]
-    const scheduled = flags[`scheduled`]
 
     let taskEndpoint
-    if (scheduled) {
+    if (flags.scheduled) {
       taskEndpoint = `scheduled_task`
     } else {
       taskEndpoint = `task`
@@ -64,11 +63,13 @@ export default class TaskDeleteCommand extends Command {
           let tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
           tasks = filterByTag(tasks, flags.tag)
           for (const task of tasks) {
-            await this.relay.deleteTask(subscriberId, taskEndpoint, task.task_id)
+            let id
+            flags.scheduled ? id = task.scheduled_task_id : id = task.task_id
+            await this.relay.deleteTask(subscriberId, taskEndpoint, id)
           }
         }
       } else {
-        this.log(`Task NOT deleted`)
+        this.log(`Task${taskId ? `` : `s`} NOT deleted`)
       }
     } catch (err) {
       debug(err)
