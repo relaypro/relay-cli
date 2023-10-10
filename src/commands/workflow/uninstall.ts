@@ -56,6 +56,10 @@ export class UninstallWorkflowCommand extends CreateCommand {
           workflow.install = uniq(filter(install, i => !includes(flags.install, i)))
         } else if (flags[`install-all`]) {
           workflow.install = []
+          workflow.install_rule = undefined
+        } else if (flags[`install-group`]) {
+          workflow.install = []
+          workflow.install_rule = undefined
         }
 
         await this.saveWorkflow(workflow, dryRun)

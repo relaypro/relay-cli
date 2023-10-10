@@ -356,3 +356,29 @@ export type MajorResults = {
 export type MinorResults = {
   results: Minor[]
 }
+
+export type ResourceEntity = {
+  entity_attributes: {
+    tag_type: `user`,
+  },
+  entity_id: string,
+  entity_type: string,
+  resource_entity_id: string,
+  resource_folder_id: string,
+  subscriber_id: string,
+}
+
+export type ResourceFolder = {
+  folder_name: string,
+  resource_folder_id: string,
+  parent_id?: string,
+  subscriber_id: string,
+}
+
+export type ResourceResults = {
+  results: {
+    folder: ResourceFolder,
+    folders: ResourceFolder[],
+    entities: ResourceEntity[],
+  }
+}
