@@ -65,6 +65,8 @@ export const createWorkflow = async (flags: WorkflowFlags, tokens: Interfaces.Pa
 
   if (flags[`install-all`]) {
     workflow.install_rule = ALL
+  } else if (flags[`install-group`]) {
+    workflow.install_rule = flags[`install-group`]
   } else {
     workflow.install = flags.install || []
   }

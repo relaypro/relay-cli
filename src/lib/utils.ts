@@ -4,7 +4,7 @@ import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
 import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow } from './api'
 
-import { ALL } from './constants'
+import { ALL, RESOURCE_PREFIX } from './constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const formatWorkflowArgs = (workflow: any, json=false): string => { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -107,6 +107,8 @@ const displayInstall = (workflow: Workflow) => {
   if (workflow.install_rule) {
     if (workflow.install_rule === ALL) {
       return `all devices`
+    } else if (workflow.install_rule.startsWith(RESOURCE_PREFIX)) {
+      return workflow.install_rule//.slice(RESOURCE_PREFIX.length)
     } else {
       return `unknown rule`
     }

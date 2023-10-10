@@ -16,8 +16,9 @@ const subscriber = {
 }
 
 export type WorkflowFlags = {
-  [`install-all`]?: boolean,
   install?: string[],
+  [`install-all`]?: boolean,
+  [`install-group`]?: string,
   absorb?: string[],
   name: string,
   uri: string,
@@ -82,15 +83,22 @@ const installFlags = {
     multiple: true,
     required: false,
     description: `device / user ID to install workflow on`,
-    exclusive: [`install-all`],
+    exclusive: [`install-all`, `install-group`],
   }),
   [`install-all`]: Flags.boolean({
     char: `A`,
     default: false,
     allowNo: false,
     description: `Enable rule to install workflow on all device and users on the account`,
-    exclusive: [`install`],
+    exclusive: [`install`, `install-group`],
   }),
+  [`install-group`]: Flags.string({
+    char: `G`,
+    multiple: false,
+    required: false,
+    description: `Enable rule to install workflow on a group of device and users`,
+    exclusive: [`install`, `install-all`],
+  })
 }
 
 const workflowFlags = {

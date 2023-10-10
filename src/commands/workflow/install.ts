@@ -57,6 +57,8 @@ export class InstallWorkflowCommand extends CreateCommand {
           workflow.install = uniq([...(install ?? []), ..._install])
         } else if (flags[`install-all`]) {
           workflow.install_rule = ALL
+        } else if (flags[`install-group`]) {
+          workflow.install_rule = flags[`install-group`]
         }
 
         await this.saveWorkflow(workflow, dryRun)
