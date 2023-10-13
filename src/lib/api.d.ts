@@ -285,34 +285,42 @@ export type PagingParams = {
   limit?: number,
 }
 
-export type ScheduledTask = {
-  workflow_instance_id: string,
-  workflow_id: string,
+export type TaskResults = {
+  results: Task[],
+}
+
+export type NewTask = {
   task_name: string,
-  task_id: string,
-  scheduled_task_id: string,
   task_type_name: string,
-  status: string,
   task_type_namespace: string,
   assign_to: string[],
   task_type_major: integer,
-  subscriber_id: string,
-  args: string,
+  args: Record<string, unknown>,
+}
+
+export type Task = NewTask & {
+  workflow_instance_id: string,
+  workflow_id: string,
+  task_id: string,
   timestamp: string,
+  status: string,
+  subscriber_id: string
+}
+
+export type NewScheduledTask = NewTask & {
   timezone: string,
-  start_time: string
+  start_time: string,
   frequency?: string,
   count?: integer,
   until?: string
 }
 
-export type NewScheduledTask = Omit<ScheduledTask, `task_id`| `workflow_instance_id` | `workflow_id` | `timestamp` | `status` | `subscriber_id` | `scheduled_task_id`>
-
-export type Task = Omit<ScheduledTask, `scheduled_task_id` | `timezone` | `start_time` | `frequency` | `count` | `until`>
-
-export type NewTask = Omit<Task, `task_id` | `workflow_instance_id` | `workflow_id` | `timestamp` | `status` | `subscriber_id`>
-
-
-export type TaskResults = {
-  results: Task[],
+export type ScheduledTask = Task & {
+  scheduled_task_id: string,
+  timezone: string,
+  start_time: string,
+  frequency?: string,
+  count?: integer,
+  until?: string
 }
+
