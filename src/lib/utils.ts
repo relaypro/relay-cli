@@ -2,7 +2,7 @@
 
 import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Geofence, MergedWorkflowInstance, Workflow } from './api'
+import { Geofence, MergedWorkflowInstance, ScheduledTask, Task, TaskArgs, Workflow } from './api'
 import { ALL } from './constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -204,6 +204,93 @@ export const printWorkflowInstances = (instances: MergedWorkflowInstance[], flag
   }, options)
 }
 
+export const printTasks = (tasks: Task[], flags: unknown): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
+  CliUx.ux.table(tasks, {
+    workflow_instance_id: {
+      header: `Workflow Instance ID`,
+    },
+    workflow_id: {
+      header: `Workflow ID`,
+    },
+    timestamp: {},
+    task_name: {
+      header: `Task name`,
+    },
+    task_id: {
+      header: `Task ID`,
+      minWidth: 25,
+    },
+    task_type_name: {
+      header: `Task type name`,
+    },
+    status: {},
+    task_type_namespace: {
+      header: `Namespace`,
+    },
+    assign_to: {
+      header: `Assignee`,
+    },
+    task_type_major: {
+      header: `Major`,
+    },
+    subscriber_id: {
+      header: `Subscriber ID`,
+    },
+    tags: {
+      get: row => `${row.args.tags ?? ``}`
+    },
+    args: {},
+  }, options)
+}
+
+export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
+  CliUx.ux.table(tasks, {
+    task_name: {
+      header: `Task name`,
+    },
+    scheduled_task_id: {
+      header: `Scheduled Task ID`,
+      minWidth: 25
+    },
+    task_type_name: {
+      header: `Task type name`,
+    },
+    task_type_namespace: {
+      header: `Namespace`,
+    },
+    start_time: {
+      header: `Start time`,
+    },
+    timezone: {},
+    frequency: {
+      get: row => `${row.frequency ?? ``}`
+    },
+    until: {
+      get: row => `${row.until ?? ``}`
+    },
+    count: {
+      get: row => `${row.count ?? ``}`
+    },
+    assign_to: {
+      header: `Assignee`,
+    },
+    task_type_major: {
+      header: `Major`,
+    },
+    subscriber_id: {
+      header: `Subscriber ID`,
+    },
+    tags: {
+      get: row => `${row.args.tags ?? ``}`
+    },
+    args: {},
+  }, options)
+}
+
 const mappings = {
   subscriberId: [`subId`, `sub_id`, `subscriber_id`, `subscriber`, `subscriberId`],
   userId: [`userId`, `uid`, `user_id`, `u_id`, `user`, `device`, `device_id`, `deviceId`, `userId`],
@@ -223,4 +310,23 @@ export const normalize = (endpoint: string, args: Record<string, string>) => {
   })
 
   return endpoint
+}
+
+export const isTagMatch= (args: TaskArgs, tags: string[]): boolean => {
+  for (const t of tags) {
+    if (!args.tags.includes(t)) {
+      return false
+    }
+  }
+  return true
+}
+
+export const filterByTag = (tasks: Task[], tags: string[]): Task[] => {
+  const filteredTasks = []
+  for (const task of tasks) {
+    if (isTagMatch(task.args, tags)) {
+      filteredTasks.push(task as Task)
+    }
+  }
+  return filteredTasks
 }

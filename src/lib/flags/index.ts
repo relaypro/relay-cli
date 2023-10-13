@@ -8,6 +8,7 @@ import { workflowId } from './workflow'
 import { booleanValue } from './boolean'
 import { numberValue, coordinate } from './number'
 import { flags } from '@oclif/core/lib/parser'
+import { TaskArgs } from '../api'
 export { timerFlags, TimerOptions, TimerWorkflow } from './timer'
 
 const subscriber = {
@@ -22,6 +23,24 @@ export type WorkflowFlags = {
   uri: string,
   transient: boolean,
   hidden: boolean,
+}
+
+export type TaskFlags = {
+  namespace: string,
+  type: string,
+  major: number,
+  name: string,
+  [`assign-to`]: string,
+  args: TaskArgs,
+  tag?: string[],
+}
+
+export type ScheduledTaskFlags = TaskFlags & {
+  frequency?: string,
+  count?: number,
+  until?: string,
+  start: string,
+  timezone: string,
 }
 
 export type TimerFlags = WorkflowFlags & {
@@ -244,6 +263,53 @@ const pagingFlags = {
   }),
 }
 
+const taskStartFlags = {
+  namespace: flags.string({
+    char: `N`,
+    required: true,
+    multiple: false,
+    default: `account`,
+    options: [`account`, `system`],
+    description: `Namespace of the task type`
+  }),
+  type: flags.string({
+    char: `t`,
+    required: true,
+    multiple: false,
+    description: `Name of the task type for this task`,
+  }),
+  major: flags.integer({
+    char: `m`,
+    required: true,
+    multiple: false,
+    default: 1,
+    description: `Major version of the task type`,
+  }),
+  name: flags.string({
+    char: `n`,
+    required: true,
+    multiple: false,
+    description: `Name of the task`,
+  }),
+  [`assign-to`]: flags.string({
+    char: `A`,
+    required: true,
+    multiple: false,
+    description: `Devices on which to start this task`,
+  }),
+  args: flags.string({
+    char: `a`,
+    required: true,
+    multiple: false,
+    description: `Encoded JSON or @filename`,
+  }),
+  tag: flags.string({
+    required: false,
+    multiple: true,
+    description: `Optional tag to tie to your task`
+  })
+}
+
 export {
   pagingFlags,
   apiFlags,
@@ -260,4 +326,5 @@ export {
   waitFlags,
   installFlags,
   coordinate,
+  taskStartFlags
 }

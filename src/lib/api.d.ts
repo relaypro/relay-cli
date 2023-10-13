@@ -284,3 +284,45 @@ export type PagingParams = {
   cursor?: string,
   limit?: number,
 }
+
+export type TaskResults = {
+  results: Task[],
+}
+
+export type TaskArgs = Record<string, unknown> & Record<`tags`, string[]>
+
+export type NewTask = {
+  task_name: string,
+  task_type_name: string,
+  task_type_namespace: string,
+  assign_to: string[],
+  task_type_major: integer,
+  args: TaskArgs,
+}
+
+export type Task = NewTask & {
+  workflow_instance_id: string,
+  workflow_id: string,
+  task_id: string,
+  timestamp: string,
+  status: string,
+  subscriber_id: string
+}
+
+export type NewScheduledTask = NewTask & {
+  timezone: string,
+  start_time: string,
+  frequency?: string,
+  count?: integer,
+  until?: string
+}
+
+export type ScheduledTask = Task & {
+  scheduled_task_id: string,
+  timezone: string,
+  start_time: string,
+  frequency?: string,
+  count?: integer,
+  until?: string
+}
+
