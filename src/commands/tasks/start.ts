@@ -27,18 +27,10 @@ export default class TasksStartCommand extends Command {
     if (encoded_string.charAt(0) == `@`) {
       encoded_string = fs.readFileSync(encoded_string.substring(1, encoded_string.length),{ encoding: `utf8`, flag: `r` }).toString()
     }
-    flags.args = JSON.parse(encoded_string)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const jsonObj = (flags.args as any)
-
-    jsonObj.tags = [flags.type]
-
-    if (flags.tag) {
-      jsonObj.tags.push(...flags.tag)
-    }
-
-    flags.args = jsonObj
+    const args = JSON.parse(encoded_string)
+    args.tags = [flags.type, ...(flags.tag ?? [])]
+    flags.args = args
 
     try {
       const task: NewTask = await createTask(flags) as NewTask
