@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major } from './api'
 
 import { normalize } from './utils'
 import { createReadStream } from 'fs'
@@ -619,19 +619,19 @@ export class APIClient {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async fetchTaskTypes(subscriberId: string, namespace: string): Promise<any[]> {
+  async fetchTaskTypes(subscriberId: string, namespace: string): Promise<TaskType[]> {
     const response =  await this.get<TaskTypeResults>(`/relaypro/api/v1/task_types/${namespace}?subscriber_id=${subscriberId}`)
     return response.body.results
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async fetchMajors(subscriberId: string, namespace: string, name: string): Promise<any[]> {
+  async fetchMajors(subscriberId: string, namespace: string, name: string): Promise<Major[]> {
     const response =  await this.get<MajorResults>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors?subscriber_id=${subscriberId}`)
     return response.body.results
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async fetchMinors(subscriberId: string, namespace: string, name: string, major: number): Promise<any[]> {
+  async fetchMinors(subscriberId: string, namespace: string, name: string, major: number): Promise<Minor[]> {
     const response =  await this.get<MinorResults>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`)
     return response.body.results
   }
