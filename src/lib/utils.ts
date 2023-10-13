@@ -2,7 +2,8 @@
 
 import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, Workflow } from './api'
+import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow } from './api'
+
 import { ALL } from './constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -239,8 +240,7 @@ export const printTasks = (tasks: Task[], flags: unknown): void => {
       header: `Subscriber ID`,
     },
     tags: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      get: row => `${(row.args as any).tags ?? ``}`
+      get: row => `${row.args.tags ?? ``}`
     },
     args: {},
   }, options)
@@ -286,8 +286,7 @@ export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): voi
       header: `Subscriber ID`,
     },
     tags: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      get: row => `${(row.args as any).tags ?? ``}`
+      get: row => `${row.args.tags ?? ``}`
     },
     args: {},
   }, options)
@@ -343,8 +342,7 @@ export const normalize = (endpoint: string, args: Record<string, string>) => {
   return endpoint
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isTagMatch= (args: any, tags: string[]): boolean => {
+export const isTagMatch= (args: TaskArgs, tags: string[]): boolean => {
   for (const t of tags) {
     if (!args.tags.includes(t)) {
       return false
@@ -354,9 +352,9 @@ export const isTagMatch= (args: any, tags: string[]): boolean => {
 }
 
 export const filterByTag = (tasks: Task[], tags: string[]): Task[] => {
-  const filteredTasks: Task[] = []
+  const filteredTasks = []
   for (const task of tasks) {
-    if (isTagMatch((task as Task).args, tags)) {
+    if (isTagMatch(task.args, tags)) {
       filteredTasks.push(task as Task)
     }
   }

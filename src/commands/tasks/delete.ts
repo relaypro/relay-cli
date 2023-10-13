@@ -1,3 +1,4 @@
+import { ScheduledTask } from '../../lib/api'
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
 import { filterByTag } from '../../lib/utils'
@@ -65,8 +66,9 @@ export default class TaskDeleteCommand extends Command {
           tasks = filterByTag(tasks, flags.tag)
           if (tasks.length > 0) {
             for (const task of tasks) {
-              let id
-              flags.scheduled ? id = task.scheduled_task_id : id = task.task_id
+
+              const id = flags.scheduled ? (task as ScheduledTask).scheduled_task_id : task.task_id
+
               await this.relay.deleteTask(subscriberId, taskEndpoint, id)
             }
             this.log(`Tasks deleted`)

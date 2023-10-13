@@ -7,6 +7,8 @@ import { filterByTag, printScheduledTasks, printTasks } from '../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
+import { ScheduledTask } from '../../lib/api'
+
 const debug = debugFn(`tasks:list`)
 
 export default class TaskListCommand extends Command {
@@ -47,7 +49,7 @@ export default class TaskListCommand extends Command {
           tasks = filterByTag(tasks, flags.tag)
         }
         if (flags.scheduled) {
-          printScheduledTasks(tasks, flags)
+          printScheduledTasks((tasks as ScheduledTask[]), flags)
         } else {
           printTasks(tasks, flags)
         }
