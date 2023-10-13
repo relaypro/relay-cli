@@ -42,6 +42,12 @@ export type ScheduledTaskFlags = {
 
 export type TaskFlags = Omit<ScheduledTaskFlags, `frequency` | `count` | `until` | `start` | `timezone`>
 
+export type TaskTypeFlags = {
+  name: string,
+  source: string,
+  key: string | undefined
+}
+
 export type TimerFlags = WorkflowFlags & {
   trigger: string,
   timezone: string,

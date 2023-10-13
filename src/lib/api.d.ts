@@ -312,7 +312,36 @@ export type Task = Omit<ScheduledTask, `scheduled_task_id` | `timezone` | `start
 
 export type NewTask = Omit<Task, `task_id` | `workflow_instance_id` | `workflow_id` | `timestamp` | `status` | `subscriber_id`>
 
-
 export type TaskResults = {
   results: Task[],
+}
+
+export type Minor = {
+  capsule_source: string,
+  comment: string
+}
+
+export type NewMajor = {
+  minor: Minor
+}
+
+export type Major = {
+  major: integer
+}
+
+export type TaskType = {
+  name: string,
+  major: NewMajor
+}
+
+export type TaskTypeResults = {
+  results: TaskType[]
+}
+
+export type MajorResults = {
+  results: Major[]
+}
+
+export type MinorResults = {
+  results: Minor[]
 }

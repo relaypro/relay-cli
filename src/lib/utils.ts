@@ -2,7 +2,7 @@
 
 import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Geofence, MergedWorkflowInstance, ScheduledTask, Task, Workflow } from './api'
+import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, Workflow } from './api'
 import { ALL } from './constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -290,6 +290,35 @@ export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): voi
       get: row => `${(row.args as any).tags ?? ``}`
     },
     args: {},
+  }, options)
+}
+
+export const printTaskTypes = (taskTypes: TaskType[], flags: unknown): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Installed Task Type${taskTypes.length > 1 ? `s` : ``}`)
+  CliUx.ux.table(taskTypes, {
+    name: {}
+  }, options)
+}
+
+export const printMajors = (majors: Major[], flags: unknown, type: string): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type}`)
+  CliUx.ux.table(majors, {
+    major: {
+      get: row => row.major
+    }
+  }, options)
+}
+
+export const printMinors = (minors: Minor[], flags: unknown, type: string): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Minor${minors.length > 1 ? `s` : ``} for ${type}`)
+  CliUx.ux.table(minors, {
+    source: {
+      get: row => row.capsule_source
+    },
+    comment: {}
   }, options)
 }
 
