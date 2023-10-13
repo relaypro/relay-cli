@@ -4,7 +4,6 @@ import * as flags from '../../lib/flags'
 import debugFn = require('debug')
 
 import { createScheduledTask } from '../../lib/tasks'
-import { NewScheduledTask } from '../../lib/api'
 import { Command } from '../../lib/command'
 
 const debug = debugFn(`tasks:schedule`)
@@ -76,8 +75,13 @@ export default class TasksScheduleCommand extends Command {
     args.tags = [flags.type, ...(flags.tag ?? [])]
     flags.args = args
 
+    const newTask = {
+      ...flags,
+      args,
+    }
+
     try {
-      const task: NewScheduledTask = await createScheduledTask(flags) as NewScheduledTask
+      const task = await createScheduledTask(newTask)
       const success = await this.relay.scheduleTask(subscriberId, task)
 
       if (success) {
@@ -92,4 +96,3 @@ export default class TasksScheduleCommand extends Command {
     }
   }
 }
-

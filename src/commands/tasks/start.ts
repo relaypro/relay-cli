@@ -4,7 +4,6 @@ import * as flags from '../../lib/flags'
 import debugFn = require('debug')
 
 import { createTask } from '../../lib/tasks'
-import { NewTask } from '../../lib/api'
 import { Command } from '../../lib/command'
 
 const debug = debugFn(`tasks:start`)
@@ -30,10 +29,14 @@ export default class TasksStartCommand extends Command {
 
     const args = JSON.parse(encoded_string)
     args.tags = [flags.type, ...(flags.tag ?? [])]
-    flags.args = args
+
+    const newTask = {
+      ...flags,
+      args,
+    }
 
     try {
-      const task: NewTask = await createTask(flags) as NewTask
+      const task = await createTask(newTask)
       const success = await this.relay.startTask(subscriberId, task)
 
       if (success) {

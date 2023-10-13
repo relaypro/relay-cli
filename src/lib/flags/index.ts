@@ -8,6 +8,7 @@ import { workflowId } from './workflow'
 import { booleanValue } from './boolean'
 import { numberValue, coordinate } from './number'
 import { flags } from '@oclif/core/lib/parser'
+import { TaskArgs } from '../api'
 export { timerFlags, TimerOptions, TimerWorkflow } from './timer'
 
 const subscriber = {
@@ -24,23 +25,23 @@ export type WorkflowFlags = {
   hidden: boolean,
 }
 
-export type ScheduledTaskFlags = {
+export type TaskFlags = {
   namespace: string,
   type: string,
   major: number,
   name: string,
   [`assign-to`]: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  args: any,
-  start: string,
-  timezone: string
+  args: TaskArgs,
   tag?: string[],
+}
+
+export type ScheduledTaskFlags = TaskFlags & {
   frequency?: string,
   count?: number,
   until?: string,
+  start: string,
+  timezone: string,
 }
-
-export type TaskFlags = Omit<ScheduledTaskFlags, `frequency` | `count` | `until` | `start` | `timezone`>
 
 export type TimerFlags = WorkflowFlags & {
   trigger: string,
