@@ -1,3 +1,5 @@
+// Copyright © 2023 Relay Inc.
+
 import { ScheduledTask } from '../../lib/api'
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
