@@ -289,6 +289,7 @@ export type TaskResults = {
   results: Task[],
 }
 
+
 export type TaskArgs = Record<string, unknown> & Record<`tags`, string[]>
 
 export type NewTask = {
@@ -326,3 +327,32 @@ export type ScheduledTask = Task & {
   until?: string
 }
 
+export type Minor = {
+  capsule_source: string,
+  comment: string
+}
+
+export type NewMajor = {
+  minor: Minor
+}
+
+export type Major = {
+  major: integer
+}
+
+export type TaskType = {
+  name: string,
+  major: NewMajor
+}
+
+export type TaskTypeResults = {
+  results: TaskType[]
+}
+
+export type MajorResults = {
+  results: Major[]
+}
+
+export type MinorResults = {
+  results: Minor[]
+}

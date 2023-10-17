@@ -10,6 +10,7 @@ export const deviceUri = (deviceName: string): string => {
 }
 
 export const createTask = async (flags: TaskFlags): Promise<NewTask> => {
+
   const task = {
     task_type_name: flags.type,
     task_type_major: flags.major,

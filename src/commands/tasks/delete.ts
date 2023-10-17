@@ -66,7 +66,9 @@ export default class TaskDeleteCommand extends Command {
           tasks = filterByTag(tasks, flags.tag)
           if (tasks.length > 0) {
             for (const task of tasks) {
+
               const id = flags.scheduled ? (task as ScheduledTask).scheduled_task_id : task.task_id
+
               await this.relay.deleteTask(subscriberId, taskEndpoint, id)
             }
             this.log(`Tasks deleted`)

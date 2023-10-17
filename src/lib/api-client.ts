@@ -12,7 +12,8 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major } from './api'
+
 import { normalize } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
@@ -27,6 +28,7 @@ const debug = debugFn(`api-client`)
 export namespace APIClient {
   export interface Options extends HTTPRequestOptions {
     retryAuth?: boolean
+    admin?: boolean
   }
 }
 
@@ -97,7 +99,7 @@ export class APIClient {
         opts.headers[requestIdHeader] = RequestId.create() && RequestId.headerValue
 
         if (!Object.keys(opts.headers).find(h => h.toLowerCase() === `authorization`)) {
-          opts.headers.authorization = `Bearer ${self.auth}`
+          opts.headers.authorization = `Bearer ${opts.admin ? process.env.ADMIN_TOKEN : self.auth}`
         }
         retries--
         try {
@@ -110,7 +112,7 @@ export class APIClient {
             if (opts.retryAuth !== false && err.http.statusCode === 401) {
               debug(`Token expired`)
               if (process.env.RELAY_API_KEY) {
-                throw new Error(`The token provided to RELAY_API_KEY is invalid. Please double-heck that you have the correct token, or run 'relay login' without RELAY_API_KEY set.`)
+                throw new Error(`The token provided to ${opts.admin ? `ADMIN_TOKEN` : `RELAY_API_KEY`} is invalid. Please double-check that you have the correct token${opts.admin ? `.` : `, or run 'relay login' without RELAY_API_KEY set.`}`)
               }
               const tokens = getToken()
               if (tokens?.refresh_token) {
@@ -572,6 +574,7 @@ export class APIClient {
   // API client functions for capsule. Must have IBOT environment variable set.
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   async fetchTasks(subscriberId: string, taskEndpoint: string): Promise<Task[]> {
     const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}`)
     return response.body.results
@@ -592,10 +595,61 @@ export class APIClient {
     })
     return true
   }
+
   async scheduleTask(subscriberId: string, task: NewScheduledTask): Promise<boolean> {
     await this.post(`/relaypro/api/v1/scheduled_task?subscriber_id=${subscriberId}`, {
       body: task,
     })
     return true
   }
+
+  async addTaskType(subscriberId: string, taskType: TaskType, namespace: string): Promise<boolean> {
+    await this.post(`/relaypro/api/v1/task_types/${namespace}?subscriber_id=${subscriberId}`, {
+      body: taskType,
+      admin: true
+    })
+    return true
+  }
+
+  async deleteTaskType(subscriberId: string, name: string, namespace: string): Promise<boolean> {
+    await this.delete(`/relaypro/api/v1/task_types/${namespace}/${name}?subscriber_id=${subscriberId}`, {
+      admin: true
+    })
+    return true
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async fetchTaskTypes(subscriberId: string, namespace: string): Promise<TaskType[]> {
+    const response =  await this.get<TaskTypeResults>(`/relaypro/api/v1/task_types/${namespace}?subscriber_id=${subscriberId}`)
+    return response.body.results
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async fetchMajors(subscriberId: string, namespace: string, name: string): Promise<Major[]> {
+    const response =  await this.get<MajorResults>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors?subscriber_id=${subscriberId}`)
+    return response.body.results
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async fetchMinors(subscriberId: string, namespace: string, name: string, major: number): Promise<Minor[]> {
+    const response =  await this.get<MinorResults>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`)
+    return response.body.results
+  }
+
+  async createMajor(subscriberId: string, name: string, namespace: string, major: NewMajor): Promise<boolean> {
+    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}?subscriber_id=${subscriberId}`, {
+      body: major,
+      admin: true
+    })
+    return true
+  }
+
+  async createMinor(subscriberId: string, name: string, namespace: string, major: number, minor: Minor): Promise<boolean> {
+    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`, {
+      body: minor,
+      admin: true
+    })
+    return true
+  }
+
 }

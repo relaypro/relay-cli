@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash'
 import { filterByTag, printScheduledTasks, printTasks } from '../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
+
 import { ScheduledTask } from '../../lib/api'
 
 const debug = debugFn(`tasks:list`)

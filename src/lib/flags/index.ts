@@ -25,6 +25,7 @@ export type WorkflowFlags = {
   hidden: boolean,
 }
 
+
 export type TaskFlags = {
   namespace: string,
   type: string,
@@ -41,6 +42,12 @@ export type ScheduledTaskFlags = TaskFlags & {
   until?: string,
   start: string,
   timezone: string,
+}
+
+export type TaskTypeFlags = {
+  name: string,
+  source: string,
+  key: string | undefined
 }
 
 export type TimerFlags = WorkflowFlags & {
