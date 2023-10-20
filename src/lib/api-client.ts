@@ -699,4 +699,12 @@ export class APIClient {
     await this.delete(`/relaypro/api/v1/task_groups/${taskGroupId}?subscriber_id=${subscriberId}`)
     return true
   }
+  async saveAliceWorkflow(workflow: NewWorkflow): Promise<boolean> {
+    // TODO use parameterized subscriberId
+    const subscriberId = getDefaultSubscriberId()
+    await this.post(`/relaypro/api/v1/workflow?subscriber_id=${subscriberId}`, {
+      body: workflow,
+    })
+    return true
+  }
 }

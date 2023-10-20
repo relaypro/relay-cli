@@ -37,6 +37,23 @@ export type TaskTypeFlags = {
 
 export type UpdateFlags = Omit<TaskTypeFlags, `name` | `source`>
 
+export type WebhookStartFlags = {
+  install?: string[],
+  [`install-all`]?: boolean,
+  [`install-group`]?: string,
+  namespace: string,
+  name: string,
+  tag: string[],
+  major: number,
+  config: string
+}
+
+export type TicketerStartFlags = WebhookStartFlags & {
+  type: string,
+  phrases: string[],
+  service_id: string
+}
+
 export type TimerFlags = WorkflowFlags & {
   trigger: string,
   timezone: string,
@@ -264,6 +281,42 @@ const pagingFlags = {
   }),
 }
 
+const aliceStartFlags = {
+  namespace: flags.string({
+    char: `N`,
+    required: true,
+    multiple: false,
+    default: `account`,
+    options: [`account`, `system`],
+    description: `Namespace of the task type`
+  }),
+  name: flags.string({
+    char: `n`,
+    required: true,
+    multiple: false,
+    default: `alice_webhook`,
+    description: `Task name`
+  }),
+  tag: flags.string({
+    required: true,
+    multiple: true,
+    description: `Tag to tie to webhook`
+  }),
+  major: flags.integer({
+    char: `m`,
+    required: true,
+    multiple: false,
+    default: 1,
+    description: `Major version`,
+  }),
+  config: flags.string({
+    char: `c`,
+    required: true,
+    multiple: false,
+    description: `Subscriber config file name`,
+  })
+}
+
 export {
   pagingFlags,
   apiFlags,
@@ -279,5 +332,6 @@ export {
   workflowInstanceFlags,
   waitFlags,
   installFlags,
-  coordinate
+  coordinate,
+  aliceStartFlags
 }

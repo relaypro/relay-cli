@@ -6,7 +6,7 @@ import reduce from 'lodash/reduce'
 
 import type { Interfaces } from '@oclif/core'
 
-import { booleanValue, numberValue, TimerFlags, TimerOptions, TimerWorkflow, WorkflowFlags } from './flags'
+import { booleanValue, numberValue, TicketerStartFlags, TimerFlags, TimerOptions, TimerWorkflow, WorkflowFlags } from './flags'
 import { parseArg } from './utils'
 import { NewWorkflow } from './api'
 import { getTimestampFarFuture, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
@@ -128,5 +128,39 @@ export const createTimerWorkflow = async (flags: TimerFlags, tokens: Interfaces.
 
     workflow.config.trigger.on_timer = options
   }
+  return workflow
+}
+
+export const createTicketingWorkflow = async (flags: TicketerStartFlags, wf_source: string, wf_args: Record<string, unknown>): Promise<NewWorkflow> => {
+  const workflow: NewWorkflow = {
+    name: flags.name,
+    options: {
+      transient: false,
+      hidden: false,
+      absorb_triggers: undefined,
+    },
+    config: {
+      trigger: {
+        start: {
+          workflow: {
+            uri: `relay-local://capsule`,
+            args: {
+              source: wf_source,
+              name: flags.name,
+              args: JSON.stringify(wf_args)
+            }
+          }
+        }
+      }
+    }
+  }
+  if (flags[`install-all`]) {
+    workflow.install_rule = ALL
+  } else if (flags[`install-group`]) {
+    workflow.install_rule = flags[`install-group`]
+  } else {
+    workflow.install = flags.install || []
+  }
+
   return workflow
 }
