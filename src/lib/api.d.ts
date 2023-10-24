@@ -327,17 +327,23 @@ export type ScheduledTask = Task & {
   until?: string
 }
 
-export type Minor = {
+export type NewMinor = {
   capsule_source: string,
   comment: string
 }
 
+export type Minor = NewMinor & {
+  minor: integer
+}
+
 export type NewMajor = {
-  minor: Minor
+  minor: NewMinor
 }
 
 export type Major = {
-  major: integer
+  major: integer,
+  capsule_source: string,
+  comment: string
 }
 
 export type TaskType = {

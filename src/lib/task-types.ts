@@ -1,8 +1,8 @@
-import { Minor, TaskType, NewMajor } from './api'
+import { NewMinor, TaskType, NewMajor } from './api'
 import { TaskTypeFlags } from './flags'
 
 export const createTaskType = async (flags: TaskTypeFlags): Promise<TaskType> => {
-  const minor: Minor = {
+  const minor: NewMinor = {
     capsule_source: flags.source,
     comment: flags.key as string
   }
@@ -17,7 +17,7 @@ export const createTaskType = async (flags: TaskTypeFlags): Promise<TaskType> =>
 }
 
 export const updateMajor = async (flags: TaskTypeFlags): Promise<NewMajor> => {
-  const minor: Minor = {
+  const minor: NewMinor = {
     capsule_source: flags.source,
     comment: flags.key as string
   }
@@ -27,8 +27,8 @@ export const updateMajor = async (flags: TaskTypeFlags): Promise<NewMajor> => {
   return major
 }
 
-export const updateMinor = async (flags: TaskTypeFlags): Promise<Minor> => {
-  const minor: Minor = {
+export const updateMinor = async (flags: TaskTypeFlags): Promise<NewMinor> => {
+  const minor: NewMinor = {
     capsule_source: flags.source,
     comment: flags.key as string
   }

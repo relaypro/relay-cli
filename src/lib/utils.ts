@@ -316,6 +316,7 @@ export const printMinors = (minors: Minor[], flags: unknown, type: string): void
   const options = { ...(flags as Record<string, unknown>) }
   CliUx.ux.styledHeader(`Minor${minors.length > 1 ? `s` : ``} for ${type}`)
   CliUx.ux.table(minors, {
+    minor: {},
     source: {
       get: row => row.capsule_source
     },

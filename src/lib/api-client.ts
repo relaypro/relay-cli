@@ -99,7 +99,7 @@ export class APIClient {
         // opts.headers[requestIdHeader] = RequestId.create() && RequestId.headerValue
 
         if (!Object.keys(opts.headers).find(h => h.toLowerCase() === `authorization`)) {
-          opts.headers.authorization = `Bearer ${opts.admin ? process.env.ADMIN_TOKEN : self.auth}`
+          opts.headers.authorization = `Bearer ${opts.admin ? process.env.RELAY_ADMIN_TOKEN : self.auth}`
         }
         retries--
         try {
@@ -112,7 +112,7 @@ export class APIClient {
             if (opts.retryAuth !== false && err.http.statusCode === 401) {
               debug(`Token expired`)
               if (process.env.RELAY_API_KEY) {
-                throw new Error(`The token provided to ${opts.admin ? `ADMIN_TOKEN` : `RELAY_API_KEY`} is invalid. Please double-check that you have the correct token${opts.admin ? `.` : `, or run 'relay login' without RELAY_API_KEY set.`}`)
+                throw new Error(`The token provided to ${opts.admin ? `RELAY_ADMIN_TOKEN` : `RELAY_API_KEY`} is invalid. Please double-check that you have the correct token${opts.admin ? `.` : `, or run 'relay login' without RELAY_API_KEY set.`}`)
               }
               const tokens = getToken()
               if (tokens?.refresh_token) {
@@ -636,8 +636,28 @@ export class APIClient {
     return response.body.results
   }
 
+  async fetchMajor(subscriberId: string, namespace: string, name: string, major: number, latest: boolean): Promise<Major> {
+    let response
+    if (latest){
+      response = await this.get<Major>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/latest?subscriber_id=${subscriberId}`)
+    } else {
+      response = await this.get<Major>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}?subscriber_id=${subscriberId}`)
+    }
+    return response.body
+  }
+
+  async fetchMinor(subscriberId: string, namespace: string, name: string, major: number, minor: number, latest: boolean): Promise<Minor> {
+    let response
+    if (latest){
+      response = await this.get<Minor>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors/latest?subscriber_id=${subscriberId}`)
+    } else {
+      response = await this.get<Minor>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors${minor}?subscriber_id=${subscriberId}`)
+    }
+    return response.body
+  }
+
   async createMajor(subscriberId: string, name: string, namespace: string, major: NewMajor): Promise<boolean> {
-    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}?subscriber_id=${subscriberId}`, {
+    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}/majors?subscriber_id=${subscriberId}`, {
       body: major,
       admin: true
     })
