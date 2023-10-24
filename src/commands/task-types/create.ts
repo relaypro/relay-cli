@@ -22,7 +22,7 @@ async function execute (command: string): Promise<string> {
 
 export default class TaskTypesCreateCommand extends Command {
 
-  static description = `Create a task type. Must have admin priviledges and ADMIN_TOKEN env variable set to run this command.`
+  static description = `Create a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command.`
   // static hidden = true
 
   static flags = {
@@ -60,30 +60,24 @@ export default class TaskTypesCreateCommand extends Command {
     const { flags } = await this.parse(TaskTypesCreateCommand)
     const subscriberId = flags[`subscriber-id`]
     try {
-      if (process.env.ADMIN_TOKEN) {
-        if (!flags.key) {
-          const scriptDir = (await execute(`dirname ${flags.source}`))
-          const gitBranch = (await execute(`cd ${scriptDir} && git branch --show-current`))
-          const gitCommit = (await execute(`cd ${scriptDir} && git rev-parse HEAD`))
-          flags.key = `${gitBranch}@${gitCommit}`
-        }
-        flags.source = readFileSync(flags.source, `utf-8`)
-        const taskType: TaskType = await createTaskType(flags) as TaskType
-        const success = await this.relay.addTaskType(subscriberId, taskType, flags.namespace)
-
-        if (success) {
-          this.log(`Successfully created task type`)
-        } else {
-          this.log(`Could not create task type`)
-        }
-      } else {
-        this.log(`Must have env variable ADMIN_TOKEN set`)
+      if (!flags.key) {
+        const scriptDir = (await execute(`dirname ${flags.source}`))
+        const gitBranch = (await execute(`cd ${scriptDir} && git branch --show-current`))
+        const gitCommit = (await execute(`cd ${scriptDir} && git rev-parse HEAD`))
+        flags.key = `${gitBranch}@${gitCommit}`
       }
+      flags.source = readFileSync(flags.source, `utf-8`)
+      const taskType: TaskType = await createTaskType(flags) as TaskType
+      const success = await this.relay.addTaskType(subscriberId, taskType, flags.namespace)
 
+      if (success) {
+        this.log(`Successfully created task type`)
+      } else {
+        this.log(`Could not create task type`)
+      }
     } catch (err) {
       debug(err)
       this.safeError(err)
     }
   }
 }
-

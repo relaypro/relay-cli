@@ -14,7 +14,7 @@ const debug = debugFn(`task-types:delete`)
 
 export default class TaskTypesDeleteCommand extends Command {
 
-  static description = `Delete a task type. Must have admin priviledges and ADMIN_TOKEN env variable set to run this command.`
+  static description = `Delete a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command.`
   // static hidden = true
 
   static flags = {
@@ -39,25 +39,16 @@ export default class TaskTypesDeleteCommand extends Command {
     const { flags } = await this.parse(TaskTypesDeleteCommand)
     const subscriberId = flags[`subscriber-id`]
     try {
-      if (process.env.ADMIN_TOKEN) {
-        try {
-          const prompt = new Confirm({
-            name: `question`,
-            message: `Deleting ${flags.name}. Are you sure?`
-          })
-          const answer = await prompt.run()
-          if (answer) {
-            const success = await this.relay.deleteTaskType(subscriberId, flags.name, flags.namespace)
-            success ? this.log(`Task type deleted`) : this.log(`Task type NOT deleted`)
-          } else {
-            this.log(`Task type NOT deleted`)
-          }
-        } catch (err) {
-          debug(err)
-          this.safeError(err)
-        }
+      const prompt = new Confirm({
+        name: `question`,
+        message: `Deleting ${flags.name}. Are you sure?`
+      })
+      const answer = await prompt.run()
+      if (answer) {
+        const success = await this.relay.deleteTaskType(subscriberId, flags.name, flags.namespace)
+        success ? this.log(`Task type deleted`) : this.log(`Task type NOT deleted`)
       } else {
-        this.log(`Must have env variable ADMIN_TOKEN set`)
+        this.log(`Task type NOT deleted`)
       }
     } catch (err) {
       debug(err)
@@ -65,4 +56,3 @@ export default class TaskTypesDeleteCommand extends Command {
     }
   }
 }
-

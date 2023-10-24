@@ -28,7 +28,6 @@ const debug = debugFn(`api-client`)
 export namespace APIClient {
   export interface Options extends HTTPRequestOptions {
     retryAuth?: boolean
-    admin?: boolean
   }
 }
 
@@ -99,7 +98,7 @@ export class APIClient {
         // opts.headers[requestIdHeader] = RequestId.create() && RequestId.headerValue
 
         if (!Object.keys(opts.headers).find(h => h.toLowerCase() === `authorization`)) {
-          opts.headers.authorization = `Bearer ${opts.admin ? process.env.RELAY_ADMIN_TOKEN : self.auth}`
+          opts.headers.authorization = `Bearer ${self.auth}`
         }
         retries--
         try {
@@ -110,9 +109,9 @@ export class APIClient {
           if (!(err instanceof deps.HTTP.HTTPError)) throw err
           if (retries > 0) {
             if (opts.retryAuth !== false && err.http.statusCode === 401) {
-              debug(`Token expired`)
+              debug(`Token not authorized`)
               if (process.env.RELAY_API_KEY) {
-                throw new Error(`The token provided to ${opts.admin ? `RELAY_ADMIN_TOKEN` : `RELAY_API_KEY`} is invalid. Please double-check that you have the correct token${opts.admin ? `.` : `, or run 'relay login' without RELAY_API_KEY set.`}`)
+                throw new Error(`The token provided to RELAY_API_KEY is invalid. Please double-heck that you have the correct token, or run 'relay login' without RELAY_API_KEY set.`)
               }
               const tokens = getToken()
               if (tokens?.refresh_token) {
@@ -603,18 +602,32 @@ export class APIClient {
     return true
   }
 
+  requireAdminToken(): APIClient.Options {
+    if (!isEmpty(process.env.RELAY_ADMIN_TOKEN)) {
+      this.auth = process.env.RELAY_ADMIN_TOKEN
+      return {
+        retryAuth: false,
+      }
+    } else {
+      const err = new Error()
+      err.name = `admin-token-required`
+      err.message = `Must have env variable ADMIN_TOKEN set`
+      throw err
+    }
+  }
+
   async addTaskType(subscriberId: string, taskType: TaskType, namespace: string): Promise<boolean> {
-    await this.post(`/relaypro/api/v1/task_types/${namespace}?subscriber_id=${subscriberId}`, {
+    const opts = {
       body: taskType,
-      admin: true
-    })
+      ...this.requireAdminToken()
+    }
+    await this.post(`/relaypro/api/v1/task_types/${namespace}?subscriber_id=${subscriberId}`, opts)
     return true
   }
 
   async deleteTaskType(subscriberId: string, name: string, namespace: string): Promise<boolean> {
-    await this.delete(`/relaypro/api/v1/task_types/${namespace}/${name}?subscriber_id=${subscriberId}`, {
-      admin: true
-    })
+    const opts = this.requireAdminToken()
+    await this.delete(`/relaypro/api/v1/task_types/${namespace}/${name}?subscriber_id=${subscriberId}`, opts)
     return true
   }
 
@@ -657,18 +670,20 @@ export class APIClient {
   }
 
   async createMajor(subscriberId: string, name: string, namespace: string, major: NewMajor): Promise<boolean> {
-    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}/majors?subscriber_id=${subscriberId}`, {
+    const opts = {
       body: major,
-      admin: true
-    })
+      ...this.requireAdminToken(),
+    }
+    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}/majors?subscriber_id=${subscriberId}`, opts)
     return true
   }
 
   async createMinor(subscriberId: string, name: string, namespace: string, major: number, minor: Minor): Promise<boolean> {
-    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`, {
+    const opts = {
       body: minor,
-      admin: true
-    })
+      ...this.requireAdminToken(),
+    }
+    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`, opts)
     return true
   }
 
