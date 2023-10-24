@@ -422,9 +422,13 @@ export class Login {
 
     const options = { headers, body: encode(body) }
 
-    debug(`refreshOAuthToken`, options)
+    debug(`Disabling configured debug namespaces to protect tokens in http tracing`)
+    const debugNamespaces = debugFn.disable()
 
     const { body: auth } = await HTTP.post<Tokens>(`${vars.tokenEndpoint}`, options)
+
+    debug(`Enabling configured namespaces`)
+    debugFn.enable(debugNamespaces)
 
     return {
       ...tokens,
