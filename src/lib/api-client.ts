@@ -611,7 +611,7 @@ export class APIClient {
     } else {
       const err = new Error()
       err.name = `admin-token-required`
-      err.message = `Must have env variable ADMIN_TOKEN set`
+      err.message = `Must have env variable RELAY_ADMIN_TOKEN set`
       throw err
     }
   }

@@ -56,9 +56,83 @@ List task type configurations
 
 ```
 USAGE
+<<<<<<< HEAD
   $ relay task-types:list -s <value> -N account|system [--columns <value> | -x] [--sort <value>] [--filter <value>]
     [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ] [--major <value> |  | [--types | --type
     <value> | --majors | --minors]]
+=======
+  $ relay task-types:list:majors -s <value> -N account|system --type <value> [--columns <value> | -x] [--sort <value>]
+    [--filter <value>] [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
+
+FLAGS
+  -N, --namespace=<option>     (required) [default: account] Namespace of the task type
+                               <options: account|system>
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  --type=<value>               (required) Task type name
+  -x, --extended               show extra columns
+  --columns=<value>            only show provided columns (comma-separated)
+  --csv                        output is csv format [alias: --output=csv]
+  --filter=<value>             filter property by partial string matching, ex: name=foo
+  --no-header                  hide table header from output
+  --no-truncate                do not truncate output to fit screen
+  --output=<option>            output in a more machine friendly format
+                               <options: csv|json|yaml>
+  --sort=<value>               property to sort by (prepend '-' for descending)
+
+DESCRIPTION
+  List task type configurations
+```
+
+<<<<<<< HEAD
+_See code: [dist/commands/task-types/list/majors.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/task-types/list/majors.ts)_
+=======
+_See code: [dist/commands/task-types/list/majors.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/task-types/list/majors.ts)_
+>>>>>>> Rebase changes on latest
+
+## `relay task-types list minors`
+
+List task type configurations
+
+```
+USAGE
+  $ relay task-types:list:minors -s <value> -N account|system --type <value> --major <value> [--columns <value> | -x]
+    [--sort <value>] [--filter <value>] [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
+
+FLAGS
+  -N, --namespace=<option>     (required) [default: account] Namespace of the task type
+                               <options: account|system>
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  --major=<value>              (required) Major version
+  --type=<value>               (required) Task type name
+  -x, --extended               show extra columns
+  --columns=<value>            only show provided columns (comma-separated)
+  --csv                        output is csv format [alias: --output=csv]
+  --filter=<value>             filter property by partial string matching, ex: name=foo
+  --no-header                  hide table header from output
+  --no-truncate                do not truncate output to fit screen
+  --output=<option>            output in a more machine friendly format
+                               <options: csv|json|yaml>
+  --sort=<value>               property to sort by (prepend '-' for descending)
+
+DESCRIPTION
+  List task type configurations
+```
+
+<<<<<<< HEAD
+_See code: [dist/commands/task-types/list/minors.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/task-types/list/minors.ts)_
+=======
+_See code: [dist/commands/task-types/list/minors.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/task-types/list/minors.ts)_
+>>>>>>> Rebase changes on latest
+
+## `relay task-types list types`
+
+List task type configurations
+
+```
+USAGE
+  $ relay task-types:list:types -s <value> -N account|system [--columns <value> | -x] [--sort <value>] [--filter <value>]
+    [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
+>>>>>>> Rebase changes on latest
 
 FLAGS
   -N, --namespace=<option>     (required) [default: account] Namespace of the task type
@@ -83,7 +157,15 @@ DESCRIPTION
   List task type configurations
 ```
 
+<<<<<<< HEAD
 _See code: [dist/commands/task-types/list.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/task-types/list.ts)_
+=======
+<<<<<<< HEAD
+_See code: [dist/commands/task-types/list/types.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/task-types/list/types.ts)_
+=======
+_See code: [dist/commands/task-types/list/types.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/task-types/list/types.ts)_
+>>>>>>> Rebase changes on latest
+>>>>>>> Rebase changes on latest
 
 ## `relay task-types update`
 
