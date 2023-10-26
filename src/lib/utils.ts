@@ -302,7 +302,11 @@ export const printTaskTypes = (taskTypes: TaskType[], flags: unknown, namespace:
   }, options)
 }
 
+<<<<<<< HEAD
 export const printMajors = (majors: Major[], flags: unknown, type: string, namespace: string): void => {
+=======
+export const printMajors = (majors: Major[], flags: unknown, type: string): void => {
+>>>>>>> Remove fetch majors command
   const options = { ...(flags as Record<string, unknown>) }
   CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
   CliUx.ux.table(majors, {
