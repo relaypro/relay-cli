@@ -26,11 +26,13 @@ export default class TaskTypesListMinorsCommand extends Command {
       description: `Namespace of the task type`
     }),
     type: flags.string({
+      char: `t`,
       required: true,
       multiple: false,
       description: `Task type name`
     }),
     major: flags.integer({
+      char: `m`,
       required: true,
       multiple: false,
       description: `Major version`
@@ -45,7 +47,7 @@ export default class TaskTypesListMinorsCommand extends Command {
 
       debug(`minors`, minors)
 
-      printMinors(minors, flags, flags.type)
+      printMinors(minors, flags, flags.type, false)
 
     } catch (err) {
       debug(err)

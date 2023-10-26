@@ -302,21 +302,23 @@ export const printTaskTypes = (taskTypes: TaskType[], flags: unknown): void => {
   }, options)
 }
 
-export const printMajors = (majors: Major[], flags: unknown, type: string): void => {
+export const printMajors = (majors: Major[], flags: unknown, type: string, latest: boolean): void => {
   const options = { ...(flags as Record<string, unknown>) }
   CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type}`)
   CliUx.ux.table(majors, {
     major: {
-      get: row => row.major
+      header: `${latest ? `Latest ` : ``}Major`,
     }
   }, options)
 }
 
-export const printMinors = (minors: Minor[], flags: unknown, type: string): void => {
+export const printMinors = (minors: Minor[], flags: unknown, type: string, latest: boolean): void => {
   const options = { ...(flags as Record<string, unknown>) }
   CliUx.ux.styledHeader(`Minor${minors.length > 1 ? `s` : ``} for ${type}`)
   CliUx.ux.table(minors, {
-    minor: {},
+    minor: {
+      header: `${latest ? `Latest ` : ``}Minor`,
+    },
     source: {
       get: row => row.capsule_source
     },

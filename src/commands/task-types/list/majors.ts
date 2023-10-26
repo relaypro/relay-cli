@@ -4,8 +4,7 @@ import { CliUx } from '@oclif/core'
 
 import { Command } from '../../../lib/command'
 import * as flags from '../../../lib/flags'
-import { isEmpty } from 'lodash'
-import { printTaskTypes, printMajors, printMinors } from '../../../lib/utils'
+import {  printMajors } from '../../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
@@ -27,6 +26,7 @@ export default class TaskTypesListMajorsCommand extends Command {
       description: `Namespace of the task type`
     }),
     type: flags.string({
+      char: `t`,
       required: true,
       multiple: false,
       description: `Task type name`
@@ -41,7 +41,7 @@ export default class TaskTypesListMajorsCommand extends Command {
 
       debug(`majors`, majors)
 
-      printMajors(majors, flags, flags.type)
+      printMajors(majors, flags, flags.type, false)
 
     } catch (err) {
       debug(err)

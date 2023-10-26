@@ -649,9 +649,9 @@ export class APIClient {
     return response.body.results
   }
 
-  async fetchMajor(subscriberId: string, namespace: string, name: string, major: number, latest: boolean): Promise<Major> {
+  async fetchMajor(subscriberId: string, namespace: string, name: string, major: string): Promise<Major> {
     let response
-    if (latest){
+    if (major === `latest`){
       response = await this.get<Major>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/latest?subscriber_id=${subscriberId}`)
     } else {
       response = await this.get<Major>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}?subscriber_id=${subscriberId}`)
@@ -659,12 +659,12 @@ export class APIClient {
     return response.body
   }
 
-  async fetchMinor(subscriberId: string, namespace: string, name: string, major: number, minor: number, latest: boolean): Promise<Minor> {
+  async fetchMinor(subscriberId: string, namespace: string, name: string, major: string, minor: string): Promise<Minor> {
     let response
-    if (latest){
+    if (minor === `latest`){
       response = await this.get<Minor>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors/latest?subscriber_id=${subscriberId}`)
     } else {
-      response = await this.get<Minor>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors${minor}?subscriber_id=${subscriberId}`)
+      response = await this.get<Minor>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors/${minor}?subscriber_id=${subscriberId}`)
     }
     return response.body
   }
