@@ -302,12 +302,12 @@ export const printTaskTypes = (taskTypes: TaskType[], flags: unknown): void => {
   }, options)
 }
 
-export const printMajors = (majors: Major[], flags: unknown, type: string, latest: boolean): void => {
+export const printMajors = (majors: Major[], flags: unknown, type: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
   CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type}`)
   CliUx.ux.table(majors, {
     major: {
-      header: `${latest ? `Latest ` : ``}Major`,
+      header: `Major`,
     }
   }, options)
 }

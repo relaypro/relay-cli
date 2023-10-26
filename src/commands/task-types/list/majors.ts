@@ -41,7 +41,7 @@ export default class TaskTypesListMajorsCommand extends Command {
 
       debug(`majors`, majors)
 
-      printMajors(majors, flags, flags.type, false)
+      printMajors(majors, flags, flags.type)
 
     } catch (err) {
       debug(err)
