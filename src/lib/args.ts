@@ -72,6 +72,7 @@ const taskStartArgs = [
   }
 ]
 
+<<<<<<< HEAD
 const taskGroupCreateArgs = [
   {
     name: `namespace`,
@@ -115,4 +116,12 @@ export {
   createStartArgs,
   createScheduleArgs,
   createTaskGroupArgs
+=======
+export {
+  taskStartArgs,
+  StartArgs,
+  ScheduleArgs,
+  createStartArgs,
+  createScheduleArgs
+>>>>>>> Convert all required flags from tasks/task-types into positional args, fix update command, cleanup
 }

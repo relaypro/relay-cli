@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { NewScheduledTask, NewTask, NewTaskGroup, TaskArgs, TaskGroupMembers } from './api'
 import { CreateTaskGroupArgs, ScheduleArgs, StartArgs } from './args'
+=======
+import { NewScheduledTask, NewTask, TaskArgs } from './api'
+import { ScheduleArgs, StartArgs } from './args'
+>>>>>>> Convert all required flags from tasks/task-types into positional args, fix update command, cleanup
 import { ScheduledTaskFlags } from './flags'
 
 export const deviceUri = (deviceName: string): string => {
