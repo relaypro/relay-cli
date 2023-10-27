@@ -270,13 +270,13 @@ export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): voi
     },
     timezone: {},
     frequency: {
-      get: row => `${row.frequency ?? ``}`
+      get: row => `${row.frequency ?? `N/A`}`
     },
     until: {
-      get: row => `${row.until ?? ``}`
+      get: row => `${row.until ?? `N/A`}`
     },
     count: {
-      get: row => `${row.count ?? ``}`
+      get: row => `${row.count ?? `N/A`}`
     },
     assign_to: {
       header: `Assignee`,

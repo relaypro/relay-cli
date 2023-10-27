@@ -7,45 +7,55 @@ import * as flags from '../../../lib/flags'
 import { printMinors } from '../../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
+import { isEmpty } from 'lodash'
 
 const debug = debugFn(`task-types:list`)
 
 export default class TaskTypesListMinorsCommand extends Command {
   static description = `List task type configurations`
+  static strict = false
+
   // static hidden = true
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
-    namespace: flags.string({
-      char: `N`,
-      required: true,
-      multiple: false,
-      default: `account`,
-      options: [`account`, `system`],
-      description: `Namespace of the task type`
-    }),
-    type: flags.string({
-      char: `t`,
-      required: true,
-      multiple: false,
-      description: `Task type name`
-    }),
-    major: flags.integer({
-      char: `m`,
-      required: true,
-      multiple: false,
-      description: `Major version`
-    })
+    ...CliUx.ux.table.flags()
   }
+
+  static args = [
+    {
+      name: `namespace`,
+      required: true,
+      description: `Namespace of the task type`,
+      options: [`account`, `system`],
+    },
+    {
+      name: `type`,
+      required: true,
+      description: `Task type name`,
+    },
+    {
+      name: `major`,
+      required: true,
+      description: `Major version`,
+    }
+  ]
+
   async run(): Promise<void> {
-    const { flags } = await this.parse(TaskTypesListMinorsCommand)
+    const { flags, argv } = await this.parse(TaskTypesListMinorsCommand)
     const subscriberId = flags[`subscriber-id`]
+    const namespace = argv[0] as string
+    const type = argv[1] as string
+    const major = argv[2] as string
 
     try {
-      const minors = await this.relay.fetchMinors(subscriberId, flags.namespace, flags.type, flags.major)
+      const minors = await this.relay.fetchMinors(subscriberId, namespace, type, major)
 
       debug(`minors`, minors)
+
+      if (isEmpty(minors)) {
+        this.error(`No minors found. Check namespace, type and major args.`)
+      }
 
       printMinors(minors, flags, flags.type, false)
 

@@ -1,28 +1,28 @@
 // Copyright © 2023 Relay Inc.
 
-import * as flags from '../../lib/flags'
+import * as flags from '../../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-import { createTaskType } from '../../lib/task-types'
-import { TaskType } from '../../lib/api'
-import { Command } from '../../lib/command'
+import { updateMajor } from '../../../lib/task-types'
+import { NewMajor } from '../../../lib/api'
+import { Command } from '../../../lib/command'
 import { readFileSync } from 'fs'
 
 import util from 'node:util'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const exec = util.promisify(require(`node:child_process`).exec)
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const debug = debugFn(`task-types:create`)
+const debug = debugFn(`task-types:update:major`)
 
 async function execute (command: string): Promise<string> {
   const { stdout } = (await exec(command))
   return stdout.toString().trimEnd()
 }
 
-export default class TaskTypesCreateCommand extends Command {
+export default class TaskTypesUpdateMajorCommand extends Command {
 
-  static description = `Create a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command.`
+  static description = `Update a task type's major. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command.`
   static strict = false
 
   // static hidden = true
@@ -35,7 +35,7 @@ export default class TaskTypesCreateCommand extends Command {
       multiple: false,
       description: `Git version of source file`,
       helpValue: `<branch>@<commit hash>`
-    })
+    }),
   }
 
   static args = [
@@ -58,12 +58,11 @@ export default class TaskTypesCreateCommand extends Command {
   ]
 
   async run(): Promise<void> {
-    const { flags,argv } = await this.parse(TaskTypesCreateCommand)
+    const { flags, argv } = await this.parse(TaskTypesUpdateMajorCommand)
     const subscriberId = flags[`subscriber-id`]
     const namespace = argv[0] as string
     const name = argv[1] as string
     let source = argv[2] as string
-
     try {
       if (!flags.key) {
         const scriptDir = (await execute(`dirname ${source}`))
@@ -71,17 +70,14 @@ export default class TaskTypesCreateCommand extends Command {
         const gitCommit = (await execute(`cd ${scriptDir} && git rev-parse HEAD`))
         flags.key = `${gitBranch}@${gitCommit}`
       }
+
       source = readFileSync(source, `utf-8`)
-      const taskType: TaskType = await createTaskType(flags, source, name) as TaskType
-
-      debug(taskType)
-
-      const success = await this.relay.addTaskType(subscriberId, taskType, namespace)
-
+      const major: NewMajor = await updateMajor(flags, source) as NewMajor
+      const success = await this.relay.createMajor(subscriberId, name, namespace, major)
       if (success) {
-        this.log(`Successfully created task type`)
+        this.log(`Successfully updated major`)
       } else {
-        this.log(`Could not create task type`)
+        this.log(`Could not update major`)
       }
     } catch (err) {
       debug(err)

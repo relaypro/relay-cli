@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor } from './api'
 
 import { normalize } from './utils'
 import { createReadStream } from 'fs'
@@ -644,7 +644,7 @@ export class APIClient {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async fetchMinors(subscriberId: string, namespace: string, name: string, major: number): Promise<Minor[]> {
+  async fetchMinors(subscriberId: string, namespace: string, name: string, major: string): Promise<Minor[]> {
     const response =  await this.get<MinorResults>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`)
     return response.body.results
   }
@@ -668,7 +668,7 @@ export class APIClient {
     return true
   }
 
-  async createMinor(subscriberId: string, name: string, namespace: string, major: number, minor: Minor): Promise<boolean> {
+  async createMinor(subscriberId: string, name: string, namespace: string, major: string, minor: NewMinor): Promise<boolean> {
     const opts = {
       body: minor,
       ...this.requireAdminToken(),

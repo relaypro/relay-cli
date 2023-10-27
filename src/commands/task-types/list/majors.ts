@@ -7,41 +7,50 @@ import * as flags from '../../../lib/flags'
 import {  printMajors } from '../../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
+import { isEmpty } from 'lodash'
 
 const debug = debugFn(`task-types:list`)
 
 export default class TaskTypesListMajorsCommand extends Command {
   static description = `List task type configurations`
+  static strict = false
+
   // static hidden = true
 
   static flags = {
     ...flags.subscriber,
     ...CliUx.ux.table.flags(),
-    namespace: flags.string({
-      char: `N`,
-      required: true,
-      multiple: false,
-      default: `account`,
-      options: [`account`, `system`],
-      description: `Namespace of the task type`
-    }),
-    type: flags.string({
-      char: `t`,
-      required: true,
-      multiple: false,
-      description: `Task type name`
-    })
   }
+
+  static args = [
+    {
+      name: `namespace`,
+      required: true,
+      description: `Namespace of the task type`,
+      options: [`account`, `system`],
+    },
+    {
+      name: `type`,
+      required: true,
+      description: `Task type name`,
+    }
+  ]
   async run(): Promise<void> {
-    const { flags } = await this.parse(TaskTypesListMajorsCommand)
+    const { flags, argv } = await this.parse(TaskTypesListMajorsCommand)
     const subscriberId = flags[`subscriber-id`]
+    const namespace = argv[0] as string
+    const type = argv[1] as string
 
     try {
-      const majors = await this.relay.fetchMajors(subscriberId, flags.namespace, flags.type)
+      const majors = await this.relay.fetchMajors(subscriberId, namespace, type)
 
       debug(`majors`, majors)
 
-      printMajors(majors, flags, flags.type)
+      if (isEmpty(majors)) {
+        this.error(`No majors found: Check namespace and type args.`)
+      }
+
+      printMajors(majors, flags, type)
 
     } catch (err) {
       debug(err)

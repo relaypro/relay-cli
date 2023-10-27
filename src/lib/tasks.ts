@@ -1,5 +1,6 @@
-import { NewScheduledTask, NewTask } from './api'
-import { ScheduledTaskFlags, TaskFlags } from './flags'
+import { NewScheduledTask, NewTask, TaskArgs } from './api'
+import { ScheduleArgs, StartArgs } from './args'
+import { ScheduledTaskFlags } from './flags'
 
 export const deviceUri = (deviceName: string): string => {
   let deviceUri = deviceName
@@ -9,32 +10,31 @@ export const deviceUri = (deviceName: string): string => {
   return deviceUri
 }
 
-export const createTask = async (flags: TaskFlags): Promise<NewTask> => {
-
-  const task = {
-    task_type_name: flags.type,
-    task_type_major: flags.major,
-    task_name: flags.name,
-    assign_to: [deviceUri(flags[`assign-to`])],
-    task_type_namespace: flags.namespace,
-    args: flags.args,
+export const createTask = async (startArgs: StartArgs): Promise<NewTask> => {
+  const task: NewTask = {
+    task_type_name: startArgs.type,
+    task_type_major: +startArgs.major,
+    task_name: startArgs.name,
+    assign_to: [deviceUri(startArgs.assignTo)],
+    task_type_namespace: startArgs.namespace,
+    args: startArgs.args as TaskArgs,
   }
   return task
 }
 
-export const createScheduledTask = async (flags: ScheduledTaskFlags): Promise<NewScheduledTask> => {
+export const createScheduledTask = async (flags: ScheduledTaskFlags, scheduleArgs: ScheduleArgs): Promise<NewScheduledTask> => {
   const scheduledTask: NewScheduledTask = {
-    task_type_name: flags.type,
-    task_type_major: flags.major,
-    task_name: flags.name,
-    assign_to: [deviceUri(flags[`assign-to`])],
-    task_type_namespace: flags.namespace,
-    args: flags.args,
+    task_type_name: scheduleArgs.type,
+    task_type_major: +scheduleArgs.major,
+    task_name: scheduleArgs.name,
+    assign_to: [deviceUri(scheduleArgs.assignTo)],
+    task_type_namespace: scheduleArgs.namespace,
+    args: scheduleArgs.args as TaskArgs,
     frequency: flags.frequency,
     count: flags.count,
     until: flags.until,
-    start_time: flags.start,
-    timezone: flags.timezone
+    start_time: scheduleArgs.start,
+    timezone: scheduleArgs.timezone
   }
   return scheduledTask
 }

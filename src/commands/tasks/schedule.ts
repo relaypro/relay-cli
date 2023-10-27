@@ -2,6 +2,7 @@
 
 import * as fs from 'fs'
 import * as flags from '../../lib/flags'
+import { taskStartArgs, ScheduleArgs, createScheduleArgs  } from '../../lib/args'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
@@ -14,31 +15,15 @@ const debug = debugFn(`tasks:schedule`)
 export default class TasksScheduleCommand extends Command {
 
   static description = `Schedule a task with the given configuration`
+  static strict = false
   // static hidden = true
 
   static flags = {
     ...flags.subscriber,
-    ...flags.taskStartFlags,
-    start: flags.string({
-      char: `S`,
-      required: true,
-      multiple: false,
-      description: `Start time in ISO format in specified timezone`
-    }),
-    timezone: flags.string ({
-      char: `T`,
-      required: true,
-      multiple: false,
-      options: [
-        `America/Anchorage`,
-        `America/Chicago`,
-        `America/Denver`,
-        `America/Los_Angeles`,
-        `America/New_York`,
-        `America/Phoenix`,
-        `Pacific/Honolulu`
-      ],
-      description: `Timezone of start time`
+    tag: flags.string({
+      required: false,
+      multiple: true,
+      description: `Optional tag to tie to your task`
     }),
     frequency: flags.string({
       char: `f`,
@@ -65,26 +50,45 @@ export default class TasksScheduleCommand extends Command {
     })
   }
 
-  async run(): Promise<void> {
-    const { flags } = await this.parse(TasksScheduleCommand)
-    const subscriberId = flags[`subscriber-id`]
+  static args = [
+    ...taskStartArgs,
+    {
+      name: `start`,
+      required: true,
+      description: `Start time in ISO format in specified timezone`
+    },
+    {
+      name: `timezone`,
+      required: true,
+      options: [
+        `America/Anchorage`,
+        `America/Chicago`,
+        `America/Denver`,
+        `America/Los_Angeles`,
+        `America/New_York`,
+        `America/Phoenix`,
+        `Pacific/Honolulu`
+      ],
+      description: `Timezone of start time`
+    }
+  ]
 
-    let encoded_string = flags.args
+  async run(): Promise<void> {
+    const { flags, argv } = await this.parse(TasksScheduleCommand)
+    const subscriberId = flags[`subscriber-id`]
+    const scheduledArgs: ScheduleArgs = createScheduleArgs(argv)
+
+    let encoded_string = scheduledArgs.args as string
     if (encoded_string.charAt(0) == `@`) {
       encoded_string = fs.readFileSync(encoded_string.substring(1, encoded_string.length),{ encoding: `utf8`, flag: `r` }).toString()
     }
 
     const args = JSON.parse(encoded_string)
-    args.tags = [flags.type, ...(flags.tag ?? [])]
-    flags.args = args
-
-    const newTask = {
-      ...flags,
-      args,
-    }
+    args.tags = [scheduledArgs.type, ...(flags.tag ?? [])]
+    scheduledArgs.args = args
 
     try {
-      const task = await createScheduledTask(newTask)
+      const task = await createScheduledTask(flags, scheduledArgs)
       const success = await this.relay.scheduleTask(subscriberId, task)
 
       if (success) {

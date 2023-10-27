@@ -13,33 +13,38 @@ const debug = debugFn(`task-types:list`)
 
 export default class TaskTypesListTypesCommand extends Command {
   static description = `List task type configurations`
+  static strict = false
+
   // static hidden = true
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
-    namespace: flags.string({
-      char: `N`,
-      required: true,
-      multiple: false,
-      default: `account`,
-      options: [`account`, `system`],
-      description: `Namespace of the task type`
-    }),
+    ...CliUx.ux.table.flags()
   }
+
+  static args = [
+    {
+      name: `namespace`,
+      required: true,
+      description: `Namespace of the task type`,
+      options: [`account`, `system`],
+      default: `account`,
+    },
+  ]
   async run(): Promise<void> {
-    const { flags } = await this.parse(TaskTypesListTypesCommand)
+    const { flags, argv } = await this.parse(TaskTypesListTypesCommand)
     const subscriberId = flags[`subscriber-id`]
+    const namespace = argv[0] as string
 
     try {
-      const taskTypes = await this.relay.fetchTaskTypes(subscriberId, flags.namespace)
+      const taskTypes = await this.relay.fetchTaskTypes(subscriberId, namespace)
 
       debug(`task types`, taskTypes)
 
-      if (!isEmpty(taskTypes)) {
-        printTaskTypes(taskTypes, flags)
-      } else {
+      if (isEmpty(taskTypes)) {
         this.log(`No task types have been created yet`)
+      } else {
+        printTaskTypes(taskTypes, flags)
       }
     } catch (err) {
       debug(err)

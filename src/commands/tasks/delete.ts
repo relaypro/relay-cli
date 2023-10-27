@@ -41,6 +41,10 @@ export default class TaskDeleteCommand extends Command {
     const taskId = flags[`task-id`]
     const subscriberId = flags[`subscriber-id`]
 
+    if (!taskId && !flags.tag) {
+      this.error(`Must specify either a task id or tag to delete`)
+    }
+
     let taskEndpoint
     if (flags.scheduled) {
       taskEndpoint = `scheduled_task`
@@ -61,7 +65,7 @@ export default class TaskDeleteCommand extends Command {
       if (answer) {
         if (taskId) {
           const success = await this.relay.deleteTask(subscriberId, taskEndpoint, taskId)
-          success ? this.log(`Task deleted`) : this.log(`Task NOT deleted`)
+          success ? this.log(`Task deleted`) : this.error(`Task NOT deleted, make sure task exists (relay tasks list)`)
         }
         else if (flags.tag) {
           let tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
