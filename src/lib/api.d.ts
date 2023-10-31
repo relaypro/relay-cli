@@ -351,6 +351,10 @@ export type TaskType = {
   major: NewMajor
 }
 
+export type TaskGroup = { // ?
+  name: string
+}
+
 export type TaskTypeResults = {
   results: TaskType[]
 }
@@ -361,6 +365,10 @@ export type MajorResults = {
 
 export type MinorResults = {
   results: Minor[]
+}
+
+export type TaskGroupResults = {
+  results: TaskGroup[]
 }
 
 export type ResourceEntity = {

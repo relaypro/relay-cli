@@ -50,7 +50,7 @@ export default class TaskTypesListMajorsCommand extends Command {
         this.error(`No majors found: Check namespace and type args.`)
       }
 
-      printMajors(majors, flags, type)
+      printMajors(majors, flags, type, namespace)
 
     } catch (err) {
       debug(err)

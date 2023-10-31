@@ -59,7 +59,7 @@ export default class TaskTypesFetchCommand extends Command {
 
       debug(`minor`, minor)
 
-      flags.minor === `latest` ? printMinors(minor, flags, flags.type, true) : printMinors(minor, flags, flags.type, false)
+      flags.minor === `latest` ? printMinors(minor, flags, type, true, namespace) : printMinors(minor, flags, type, false, namespace)
     } catch (err) {
       debug(err)
       this.safeError(err)

@@ -57,7 +57,7 @@ export default class TaskTypesListMinorsCommand extends Command {
         this.error(`No minors found. Check namespace, type and major args.`)
       }
 
-      printMinors(minors, flags, flags.type, false)
+      printMinors(minors, flags, type, false, namespace)
 
     } catch (err) {
       debug(err)

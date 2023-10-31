@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults } from './api'
 
 import { normalize } from './utils'
 import { createReadStream } from 'fs'
@@ -680,5 +680,16 @@ export class APIClient {
   async fetchResourceGroups(subscriberId: string): Promise<ResourceResults> {
     const { body: response } = await this.get<ResourceResults>(`/ibot/resource/tags/user?subscriber_id=${subscriberId}`)
     return response
+  }
+
+  async fetchTaskGroups(subscriberId: string): Promise<TaskGroup[]> {
+    const response = await this.get<TaskGroupResults>(`/relaypro/api/v1/task_groups?subscriber_id=${subscriberId}`)
+    return response.body.results
+  }
+  // string.format('https://%s/relaypro/api/v1/task_groups/%s', self.ibot, task_group_id),
+
+  async deleteTaskGroups(subscriberId: string, taskGroupId: string): Promise<boolean> {
+    await this.delete(`/relaypro/api/v1/task_groups/${taskGroupId}?subscriber_id=${subscriberId}`)
+    return true
   }
 }
