@@ -17,7 +17,7 @@ USAGE
   $ relay tasks:delete -s <value> [--scheduled] [-i <value> | --tag <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 8efb6648-c26c-4147-bee8-fa4c6811fd03] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -i, --task-id=<value>        Task identifier to delete
   --scheduled                  Delete a scheduled task
   --tag=<value>...             Delete all tasks with the specified tag
@@ -26,7 +26,7 @@ DESCRIPTION
   Delete a running or scheduled task
 ```
 
-_See code: [dist/commands/tasks/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/tasks/delete.ts)_
+_See code: [dist/commands/tasks/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/tasks/delete.ts)_
 
 ## `relay tasks list`
 
@@ -38,7 +38,7 @@ USAGE
     csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ] [--scheduled] [--tag <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 8efb6648-c26c-4147-bee8-fa4c6811fd03] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
   --csv                        output is csv format [alias: --output=csv]
@@ -55,7 +55,7 @@ DESCRIPTION
   List task configurations
 ```
 
-_See code: [dist/commands/tasks/list.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/tasks/list.ts)_
+_See code: [dist/commands/tasks/list.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/tasks/list.ts)_
 
 ## `relay tasks schedule`
 
@@ -78,7 +78,7 @@ FLAGS
   -a, --args=<value>           (required) Encoded JSON or @filename
   -m, --major=<value>          (required) [default: 1] Major version of the task type
   -n, --name=<value>           (required) Name of the task
-  -s, --subscriber-id=<value>  (required) [default: 8efb6648-c26c-4147-bee8-fa4c6811fd03] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -t, --type=<value>           (required) Name of the task type for this task
   -c, --count=<value>          Number of times to repeat
   -f, --frequency=<option>     Repeat frequency
@@ -90,7 +90,7 @@ DESCRIPTION
   Schedule a task with the given configuration
 ```
 
-_See code: [dist/commands/tasks/schedule.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/tasks/schedule.ts)_
+_See code: [dist/commands/tasks/schedule.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/tasks/schedule.ts)_
 
 ## `relay tasks start`
 
@@ -108,7 +108,7 @@ FLAGS
   -a, --args=<value>           (required) Encoded JSON or @filename
   -m, --major=<value>          (required) [default: 1] Major version of the task type
   -n, --name=<value>           (required) Name of the task
-  -s, --subscriber-id=<value>  (required) [default: 8efb6648-c26c-4147-bee8-fa4c6811fd03] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -t, --type=<value>           (required) Name of the task type for this task
   --tag=<value>...             Optional tag to tie to your task
 
@@ -116,4 +116,4 @@ DESCRIPTION
   Start a task with the given configuration
 ```
 
-_See code: [dist/commands/tasks/start.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/tasks/start.ts)_
+_See code: [dist/commands/tasks/start.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/tasks/start.ts)_

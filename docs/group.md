@@ -1,17 +1,17 @@
-`relay venues`
-==============
+`relay group`
+=============
 
-list all venues
+Lists all groups.
 
-* [`relay venues`](#relay-venues)
+* [`relay group list`](#relay-group-list)
 
-## `relay venues`
+## `relay group list`
 
-list all venues
+Lists all groups.
 
 ```
 USAGE
-  $ relay venues -s <value> [--json] [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output
+  $ relay group:list -s <value> [--json] [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output
     csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
@@ -30,7 +30,7 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  list all venues
+  Lists all groups.
 ```
 
-_See code: [dist/commands/venues.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/venues.ts)_
+_See code: [dist/commands/group/list.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/group/list.ts)_

@@ -11,7 +11,10 @@ displays the configured environment
 
 ```
 USAGE
-  $ relay env [--json]
+  $ relay env [--json] [-P]
+
+FLAGS
+  -P, --process  Include shell process environment variables
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -29,4 +32,4 @@ EXAMPLES
   RELAY_HOST=all-main-qa-ibot.relaysvr.com
 ```
 
-_See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/env.ts)_
+_See code: [dist/commands/env.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/env.ts)_

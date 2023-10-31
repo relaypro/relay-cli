@@ -19,7 +19,7 @@ DESCRIPTION
   show default subscriber
 ```
 
-_See code: [dist/commands/subscriber/get.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/subscriber/get.ts)_
+_See code: [dist/commands/subscriber/get.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/subscriber/get.ts)_
 
 ## `relay subscriber list`
 
@@ -39,7 +39,7 @@ DESCRIPTION
   list subscribers
 ```
 
-_See code: [dist/commands/subscriber/list.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/subscriber/list.ts)_
+_See code: [dist/commands/subscriber/list.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/subscriber/list.ts)_
 
 ## `relay subscriber set`
 
@@ -57,4 +57,4 @@ DESCRIPTION
   set the default subscriber
 ```
 
-_See code: [dist/commands/subscriber/set.ts](https://github.com/relaypro/relay-cli/blob/v1.7.0/dist/commands/subscriber/set.ts)_
+_See code: [dist/commands/subscriber/set.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/subscriber/set.ts)_
