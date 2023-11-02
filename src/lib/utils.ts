@@ -326,11 +326,36 @@ export const printMinors = (minors: Minor[], flags: unknown, type: string, lates
   }, options)
 }
 
+// [{"timestamp":"2023-11-02T20:28:12Z","assign_to":["urn:relay-resource:name:device:frog"],"task_type_namespace":"system","task_type_major":1,"subscriber_id":"8efb6648-c26c-4147-bee8-fa4c6811fd03","task_type_name":"delivery","group_name":"test","task_group_id":"Nriw1Vp5dysN9ANhdAvDulB"}]
+
+
 export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
   CliUx.ux.styledHeader(`Task Groups`)
   CliUx.ux.table(groups, {
-    name: {}
+    group_name: {
+      header: `Group Name`,
+    },
+    task_group_id: {
+      header: `Task Group ID`
+    },
+    timestamp: {},
+    assign_to: {
+      header: `Assignee`
+    },
+    task_type_namespace: {
+      header: `Namespace`,
+    },
+    task_type_major: {
+      header: `Major`
+    },
+    subscriber_id: {
+      header: `Subscriber ID`
+    },
+    task_type_name: {
+      header: `Task Type Name`
+    },
+
   }, options)
 }
 

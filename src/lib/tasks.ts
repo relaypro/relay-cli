@@ -1,5 +1,5 @@
-import { NewScheduledTask, NewTask, TaskArgs } from './api'
-import { ScheduleArgs, StartArgs } from './args'
+import { NewScheduledTask, NewTask, NewTaskGroup, TaskArgs, TaskGroupMembers } from './api'
+import { CreateTaskGroupArgs, ScheduleArgs, StartArgs } from './args'
 import { ScheduledTaskFlags } from './flags'
 
 export const deviceUri = (deviceName: string): string => {
@@ -37,4 +37,16 @@ export const createScheduledTask = async (flags: ScheduledTaskFlags, scheduleArg
     timezone: scheduleArgs.timezone
   }
   return scheduledTask
+}
+
+export const createTaskGroup = async (createGroupArgs: CreateTaskGroupArgs): Promise<NewTaskGroup> => {
+  const taskGroup: NewTaskGroup = {
+    group_name: createGroupArgs.name,
+    task_type_namespace: createGroupArgs.namespace,
+    task_type_name: createGroupArgs.type,
+    task_type_major: +createGroupArgs.major,
+    assign_to: [deviceUri(createGroupArgs.assignTo)],
+    members: createGroupArgs.members as TaskGroupMembers
+  }
+  return taskGroup
 }

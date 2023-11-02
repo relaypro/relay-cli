@@ -292,6 +292,8 @@ export type TaskResults = {
 
 export type TaskArgs = Record<string, unknown> & Record<`tags`, string[]>
 
+export type TaskGroupMembers = Record<string, unknown>
+
 export type NewTask = {
   task_name: string,
   task_type_name: string,
@@ -351,8 +353,24 @@ export type TaskType = {
   major: NewMajor
 }
 
-export type TaskGroup = { // ?
-  name: string
+export type TaskGroup = {
+  timestamp: string,
+  assign_to: string[],
+  task_type_namespace: string,
+  task_type_major: integer,
+  subscriber_id: string,
+  task_type_name: string,
+  group_name: string,
+  task_group_id: string
+}
+
+export type NewTaskGroup = {
+  group_name: string,
+  task_type_namespace: string,
+  task_type_name: string,
+  task_type_major: integer,
+  assign_to: string[],
+  members: TaskGroupMembers
 }
 
 export type TaskTypeResults = {

@@ -1,6 +1,6 @@
 // Copyright © 2022 Relay Inc.
 
-import { TaskArgs } from "./api"
+import { TaskArgs, TaskGroupMembers } from "./api"
 
 type StartArgs = {
   namespace: string,
@@ -16,7 +16,15 @@ type ScheduleArgs = StartArgs & {
   timezone: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CreateTaskGroupArgs = {
+  namespace: string,
+  name: string,
+  type: string,
+  major: string,
+  assignTo: string,
+  members: string | TaskGroupMembers
+}
+
 const createScheduleArgs = (args: string[]): ScheduleArgs => {
   const scheduleArgs = {
     namespace: args[0] as string,
@@ -31,7 +39,6 @@ const createScheduleArgs = (args: string[]): ScheduleArgs => {
   return scheduleArgs
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createStartArgs = (args: string[]): StartArgs => {
   const startArgs = {
     namespace: args[0] as string,
@@ -42,6 +49,18 @@ const createStartArgs = (args: string[]): StartArgs => {
     args: args[5] as string,
   }
   return startArgs
+}
+
+const createTaskGroupArgs= (args: string[]): CreateTaskGroupArgs => {
+  const createGroupArgs = {
+    namespace: args[0] as string,
+    name: args[1] as string,
+    type: args[2] as string,
+    major: args[3] as string,
+    assignTo: args[4] as string,
+    members: args[5] as string,
+  }
+  return createGroupArgs
 }
 
 const taskStartArgs = [
@@ -78,10 +97,47 @@ const taskStartArgs = [
   }
 ]
 
+const taskGroupCreateArgs = [
+  {
+    name: `namespace`,
+    required: true,
+    description: `Namespace of the task type`,
+    options: [`account`, `system`]
+  },
+  {
+    name: `name`,
+    required: true,
+    description: `Group name`
+  },
+  {
+    name: `type`,
+    required: true,
+    description: `Task type`
+  },
+  {
+    name: `major`,
+    required: true,
+    description: `Major version`
+  },
+  {
+    name: `assign-to`,
+    required: true,
+    description: `Device name`
+  },
+  {
+    name: `members`,
+    required: true,
+    description: `Encoded JSON or @filename`
+  }
+]
+
 export {
   taskStartArgs,
+  taskGroupCreateArgs,
   StartArgs,
   ScheduleArgs,
+  CreateTaskGroupArgs,
   createStartArgs,
-  createScheduleArgs
+  createScheduleArgs,
+  createTaskGroupArgs
 }
