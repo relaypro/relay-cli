@@ -2,11 +2,7 @@
 
 import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-<<<<<<< HEAD
 import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup, TaskTypeDump } from './api'
-=======
-import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup } from './api'
->>>>>>> Add task-groups commands, integrate other feedback/bug fixes
 
 import { ALL, RESOURCE_PREFIX } from './constants'
 
@@ -306,15 +302,7 @@ export const printTaskTypes = (taskTypes: TaskType[], flags: unknown, namespace:
   }, options)
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 export const printMajors = (majors: Major[], flags: unknown, type: string, namespace: string): void => {
-=======
-export const printMajors = (majors: Major[], flags: unknown, type: string): void => {
->>>>>>> Remove fetch majors command
-=======
-export const printMajors = (majors: Major[], flags: unknown, type: string, namespace: string): void => {
->>>>>>> Add task-groups commands, integrate other feedback/bug fixes
   const options = { ...(flags as Record<string, unknown>) }
   CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
   CliUx.ux.table(majors, {
@@ -338,7 +326,6 @@ export const printMinors = (minors: Minor[], flags: unknown, type: string, lates
   }, options)
 }
 
-<<<<<<< HEAD
 export const printDump = (taskTypes: TaskTypeDump[], flags: unknown,namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
   CliUx.ux.styledHeader(`Latest versions of task types on ${namespace}`)
@@ -352,14 +339,10 @@ export const printDump = (taskTypes: TaskTypeDump[], flags: unknown,namespace: s
 
 // [{"timestamp":"2023-11-02T20:28:12Z","assign_to":["urn:relay-resource:name:device:frog"],"task_type_namespace":"system","task_type_major":1,"subscriber_id":"8efb6648-c26c-4147-bee8-fa4c6811fd03","task_type_name":"delivery","group_name":"test","task_group_id":"Nriw1Vp5dysN9ANhdAvDulB"}]
 
-
-=======
->>>>>>> Add task-groups commands, integrate other feedback/bug fixes
 export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
   CliUx.ux.styledHeader(`Task Groups`)
   CliUx.ux.table(groups, {
-<<<<<<< HEAD
     group_name: {
       header: `Group Name`,
     },
@@ -382,10 +365,6 @@ export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
     task_type_name: {
       header: `Task Type Name`
     },
-
-=======
-    name: {}
->>>>>>> Add task-groups commands, integrate other feedback/bug fixes
   }, options)
 }
 

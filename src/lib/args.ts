@@ -38,6 +38,18 @@ const createTaskGroupArgs = (args: string[]): CreateTaskGroupArgs => {
   return zipObject([`namespace`, `name`,`type`, `major`, `assignTo`, `members`], args) as CreateTaskGroupArgs
 }
 
+const createTaskGroupArgs= (args: string[]): CreateTaskGroupArgs => {
+  const createGroupArgs = {
+    namespace: args[0] as string,
+    name: args[1] as string,
+    type: args[2] as string,
+    major: args[3] as string,
+    assignTo: args[4] as string,
+    members: args[5] as string,
+  }
+  return createGroupArgs
+}
+
 const taskStartArgs = [
   {
     name: `namespace`,
