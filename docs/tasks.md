@@ -26,7 +26,7 @@ DESCRIPTION
   Delete a running or scheduled task
 ```
 
-_See code: [dist/commands/tasks/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/tasks/delete.ts)_
+_See code: [dist/commands/tasks/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tasks/delete.ts)_
 
 ## `relay tasks list`
 
@@ -55,7 +55,7 @@ DESCRIPTION
   List task configurations
 ```
 
-_See code: [dist/commands/tasks/list.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/tasks/list.ts)_
+_See code: [dist/commands/tasks/list.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tasks/list.ts)_
 
 ## `relay tasks schedule`
 
@@ -90,7 +90,7 @@ DESCRIPTION
   Schedule a task with the given configuration
 ```
 
-_See code: [dist/commands/tasks/schedule.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/tasks/schedule.ts)_
+_See code: [dist/commands/tasks/schedule.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tasks/schedule.ts)_
 
 ## `relay tasks start`
 
@@ -116,4 +116,4 @@ DESCRIPTION
   Start a task with the given configuration
 ```
 
-_See code: [dist/commands/tasks/start.ts](https://github.com/relaypro/relay-cli/blob/v1.8.0/dist/commands/tasks/start.ts)_
+_See code: [dist/commands/tasks/start.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tasks/start.ts)_
