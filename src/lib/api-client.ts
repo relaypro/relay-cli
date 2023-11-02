@@ -7,7 +7,7 @@ import * as url from 'url'
 
 import deps from './deps'
 import { Login } from './login'
-import { RequestId, requestIdHeader } from './request-id'
+// import { RequestId, requestIdHeader } from './request-id'
 import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
@@ -86,17 +86,17 @@ export class APIClient {
       },
     }
     this.http = class APIHTTPClient<T> extends deps.HTTP.HTTP.create(opts)<T> {
-      static trackRequestIds<T>(response: HTTP<T>) {
-        const responseRequestIdHeader = response.headers[requestIdHeader]
-        if (responseRequestIdHeader) {
-          const requestIds = Array.isArray(responseRequestIdHeader) ? responseRequestIdHeader : responseRequestIdHeader.split(`,`)
-          RequestId.track(...requestIds)
-        }
-      }
+      // static trackRequestIds<T>(response: HTTP<T>) {
+      //   const responseRequestIdHeader = response.headers[requestIdHeader]
+      //   if (responseRequestIdHeader) {
+      //     const requestIds = Array.isArray(responseRequestIdHeader) ? responseRequestIdHeader : responseRequestIdHeader.split(`,`)
+      //     RequestId.track(...requestIds)
+      //   }
+      // }
 
       static async request<T>(url: string, opts: APIClient.Options = {}, retries = 3): Promise<APIHTTPClient<T>> {
         opts.headers = opts.headers || {}
-        opts.headers[requestIdHeader] = RequestId.create() && RequestId.headerValue
+        // opts.headers[requestIdHeader] = RequestId.create() && RequestId.headerValue
 
         if (!Object.keys(opts.headers).find(h => h.toLowerCase() === `authorization`)) {
           opts.headers.authorization = `Bearer ${opts.admin ? process.env.ADMIN_TOKEN : self.auth}`
@@ -104,7 +104,7 @@ export class APIClient {
         retries--
         try {
           const response = await super.request<T>(url, opts)
-          this.trackRequestIds<T>(response)
+          // this.trackRequestIds<T>(response)
           return response
         } catch(err) {
           if (!(err instanceof deps.HTTP.HTTPError)) throw err
