@@ -1,4 +1,4 @@
-import { NewMinor, TaskType, NewMajor } from './api'
+import { NewMinor, TaskType, NewMajor, TaskTypeDump } from './api'
 import { TaskTypeFlags, UpdateFlags } from './flags'
 
 export const createTaskType = async (flags: TaskTypeFlags, source: string, name: string): Promise<TaskType> => {
@@ -14,6 +14,17 @@ export const createTaskType = async (flags: TaskTypeFlags, source: string, name:
     major: major
   }
   return taskType
+}
+
+
+export const createTaskTypeDump = async (type: string, major: number, minor: number, comment: string): Promise<TaskTypeDump> => {
+  const taskTypeDump: TaskTypeDump = {
+    type: type,
+    major: major,
+    minor: minor,
+    comment: comment
+  }
+  return taskTypeDump
 }
 
 export const updateMajor = async (flags: UpdateFlags, source: string): Promise<NewMajor> => {

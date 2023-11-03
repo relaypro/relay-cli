@@ -364,6 +364,14 @@ export type TaskGroup = {
   task_group_id: string
 }
 
+
+export type TaskTypeDump = {
+  type: string,
+  major: number,
+  minor: number,
+  comment: string
+}
+
 export type NewTaskGroup = {
   group_name: string,
   task_type_namespace: string,

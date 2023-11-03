@@ -7,25 +7,10 @@ import * as flags from '../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 import { printDump } from '../../lib/utils'
+import { TaskTypeDump } from '../../lib/api'
+import { createTaskTypeDump } from '../../lib/task-types'
 
 const debug = debugFn(`task-types:dump`)
-
-export type TaskTypeDump = {
-  type: string,
-  major: number,
-  minor: number,
-  comment: string
-}
-
-async function createTaskTypeDump (type: string, major: number, minor: number, comment: string): Promise<TaskTypeDump> {
-  const taskTypeDump: TaskTypeDump = {
-    type: type,
-    major: major,
-    minor: minor,
-    comment: comment
-  }
-  return taskTypeDump
-}
 
 export default class TaskTypesDumpCommand extends Command {
   static description = `Dumps task types along with their latest minor, major, and comment`
