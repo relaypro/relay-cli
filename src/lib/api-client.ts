@@ -574,8 +574,8 @@ export class APIClient {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-  async fetchTasks(subscriberId: string, taskEndpoint: string): Promise<Task[]> {
-    const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}`)
+  async fetchTasks(subscriberId: string, groupId: string, taskEndpoint: string): Promise<Task[]> {
+    const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}${groupId && groupId.length > 0 ? `&task_group_id=${groupId}` : ``}`)
     return response.body.results
   }
 
@@ -647,6 +647,16 @@ export class APIClient {
   async fetchMinors(subscriberId: string, namespace: string, name: string, major: string): Promise<Minor[]> {
     const response =  await this.get<MinorResults>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`)
     return response.body.results
+  }
+
+  async fetchMajor(subscriberId: string, namespace: string, name: string, major: string): Promise<Major> {
+    let response
+    if (major === `latest`){
+      response = await this.get<Major>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/latest?subscriber_id=${subscriberId}`)
+    } else {
+      response = await this.get<Major>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}?subscriber_id=${subscriberId}`)
+    }
+    return response.body
   }
 
   async fetchMinor(subscriberId: string, namespace: string, name: string, major: string, minor: string): Promise<Minor> {

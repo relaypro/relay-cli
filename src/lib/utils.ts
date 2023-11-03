@@ -5,6 +5,7 @@ import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, key
 import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup } from './api'
 
 import { ALL, RESOURCE_PREFIX } from './constants'
+import { TaskTypeDump } from '../commands/task-types/dump'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const formatWorkflowArgs = (workflow: any, json=false): string => { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -322,6 +323,17 @@ export const printMinors = (minors: Minor[], flags: unknown, type: string, lates
     source: {
       get: row => row.capsule_source
     },
+    comment: {}
+  }, options)
+}
+
+export const printDump = (taskTypes: TaskTypeDump[], flags: unknown,namespace: string): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Latest versions of task types on ${namespace}`)
+  CliUx.ux.table(taskTypes, {
+    type: {},
+    major: {},
+    minor: {},
     comment: {}
   }, options)
 }

@@ -27,12 +27,20 @@ export default class TaskListCommand extends Command {
     tag: flags.string({
       required: false,
       multiple: true,
-      description: `Optional tag to tie to your task`
+      char: `t`,
+      description: `Tag`
+    }),
+    [`group-id`]: flags.string({
+      required: false,
+      multiple: false,
+      char: `g`,
+      description: `Group ID`
     })
   }
   async run(): Promise<void> {
     const { flags } = await this.parse(TaskListCommand)
     const subscriberId = flags[`subscriber-id`]
+    const groupId = flags[`group-id`]
 
     try {
       let taskEndpoint
@@ -42,7 +50,7 @@ export default class TaskListCommand extends Command {
         taskEndpoint = `task`
       }
 
-      let tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
+      let tasks = await this.relay.fetchTasks(subscriberId, groupId as string, taskEndpoint)
 
       debug(`tasks`, tasks)
 
@@ -56,7 +64,7 @@ export default class TaskListCommand extends Command {
           printTasks(tasks, flags)
         }
       } else {
-        this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet`)
+        this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet${groupId ? ` with group ID ${groupId}` : ``}`)
       }
     } catch (err) {
       debug(err)

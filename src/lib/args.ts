@@ -26,7 +26,7 @@ type CreateTaskGroupArgs = {
 }
 
 const createScheduleArgs = (args: string[]): ScheduleArgs => {
-  const scheduleArgs = {
+  const scheduleArgs: ScheduleArgs = {
     namespace: args[0] as string,
     type: args[1] as string,
     major: args[2] as string,
@@ -40,7 +40,7 @@ const createScheduleArgs = (args: string[]): ScheduleArgs => {
 }
 
 const createStartArgs = (args: string[]): StartArgs => {
-  const startArgs = {
+  const startArgs: StartArgs = {
     namespace: args[0] as string,
     type: args[1] as string,
     major: args[2] as string,
@@ -52,7 +52,7 @@ const createStartArgs = (args: string[]): StartArgs => {
 }
 
 const createTaskGroupArgs= (args: string[]): CreateTaskGroupArgs => {
-  const createGroupArgs = {
+  const createGroupArgs: CreateTaskGroupArgs = {
     namespace: args[0] as string,
     name: args[1] as string,
     type: args[2] as string,
