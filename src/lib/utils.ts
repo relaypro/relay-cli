@@ -5,7 +5,6 @@ import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, key
 import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup, TaskTypeDump } from './api'
 
 import { ALL, RESOURCE_PREFIX } from './constants'
-import { TaskTypeDump } from '../commands/task-types/dump'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const formatWorkflowArgs = (workflow: any, json=false): string => { // eslint-disable-line @typescript-eslint/no-explicit-any
