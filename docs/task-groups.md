@@ -1,7 +1,7 @@
 `relay task-groups`
 ===================
 
-Create a task group
+Manage task group configurations
 
 * [`relay task-groups create NAMESPACE NAME TYPE MAJOR ASSIGN-TO MEMBERS`](#relay-task-groups-create-namespace-name-type-major-assign-to-members)
 * [`relay task-groups delete GROUP ID`](#relay-task-groups-delete-group-id)
