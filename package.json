@@ -113,6 +113,9 @@
       "task-types": {
         "description": "Manage task type configurations"
       },
+      "task-groups": {
+        "description": "Manage task group configurations"
+      },
       "workflow": {
         "description": "Manage workflow configurations"
       },

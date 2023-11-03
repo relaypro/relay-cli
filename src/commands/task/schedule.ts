@@ -80,6 +80,13 @@ export default class TasksScheduleCommand extends Command {
 
     let encoded_string = scheduledArgs.args as string
     if (encoded_string.charAt(0) == `@`) {
+
+      const stats = fs.statSync(encoded_string.substring(1, encoded_string.length))
+      const fileSizeInMegabytes = stats.size / (1024*1024)
+      if (fileSizeInMegabytes > 10) {
+        this.error(`args file is too large`)
+      }
+
       encoded_string = fs.readFileSync(encoded_string.substring(1, encoded_string.length),{ encoding: `utf8`, flag: `r` }).toString()
     }
 

@@ -2,13 +2,13 @@
 
 import { CliUx } from '@oclif/core'
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { Command } from '../../../lib/command'
+import * as flags from '../../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
-import { printDump } from '../../lib/utils'
-import { TaskTypeDump } from '../../lib/api'
-import { createTaskTypeDump } from '../../lib/task-types'
+import { printDump } from '../../../lib/utils'
+import { TaskTypeDump } from '../../../lib/api'
+import { createTaskTypeDump } from '../../../lib/task-types'
 
 const debug = debugFn(`task-types:dump`)
 

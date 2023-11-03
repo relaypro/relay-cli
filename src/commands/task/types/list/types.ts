@@ -2,10 +2,10 @@
 
 import { CliUx } from '@oclif/core'
 
-import { Command } from '../../../lib/command'
-import * as flags from '../../../lib/flags'
+import { Command } from '../../../../lib/command'
+import * as flags from '../../../../lib/flags'
 import { isEmpty } from 'lodash'
-import { printTaskTypes } from '../../../lib/utils'
+import { printTaskTypes } from '../../../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 

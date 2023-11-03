@@ -1,5 +1,6 @@
 // Copyright © 2022 Relay Inc.
 
+import { zipObject } from "lodash"
 import { TaskArgs, TaskGroupMembers } from "./api"
 
 type StartArgs = {
@@ -26,41 +27,15 @@ type CreateTaskGroupArgs = {
 }
 
 const createScheduleArgs = (args: string[]): ScheduleArgs => {
-  const scheduleArgs: ScheduleArgs = {
-    namespace: args[0] as string,
-    type: args[1] as string,
-    major: args[2] as string,
-    name: args[3] as string,
-    assignTo: args[4] as string,
-    args: args[5] as string,
-    start: args[6] as string,
-    timezone: args[7] as string
-  }
-  return scheduleArgs
+  return zipObject([`namespace`, `type`, `major`, `name`, `assignTo`, `args`, `start`, `timezone`],args) as ScheduleArgs
 }
 
 const createStartArgs = (args: string[]): StartArgs => {
-  const startArgs: StartArgs = {
-    namespace: args[0] as string,
-    type: args[1] as string,
-    major: args[2] as string,
-    name: args[3] as string,
-    assignTo: args[4] as string,
-    args: args[5] as string,
-  }
-  return startArgs
+  return zipObject([`namespace`, `type`,`major`, `name`, `assignTo`, `args`], args) as StartArgs
 }
 
-const createTaskGroupArgs= (args: string[]): CreateTaskGroupArgs => {
-  const createGroupArgs: CreateTaskGroupArgs = {
-    namespace: args[0] as string,
-    name: args[1] as string,
-    type: args[2] as string,
-    major: args[3] as string,
-    assignTo: args[4] as string,
-    members: args[5] as string,
-  }
-  return createGroupArgs
+const createTaskGroupArgs = (args: string[]): CreateTaskGroupArgs => {
+  return zipObject([`namespace`, `name`,`type`, `major`, `assignTo`, `members`], args) as CreateTaskGroupArgs
 }
 
 const taskStartArgs = [

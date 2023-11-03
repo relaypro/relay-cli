@@ -1,10 +1,10 @@
 // Copyright © 2023 Relay Inc.
 
-import * as flags from '../../lib/flags'
+import * as flags from '../../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-import { Command } from '../../lib/command'
+import { Command } from '../../../lib/command'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes

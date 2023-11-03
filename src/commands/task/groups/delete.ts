@@ -2,8 +2,8 @@
 
 import { CliUx } from '@oclif/core'
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { Command } from '../../../lib/command'
+import * as flags from '../../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 

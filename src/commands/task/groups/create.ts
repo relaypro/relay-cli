@@ -2,12 +2,12 @@
 
 import * as fs from 'fs'
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { Command } from '../../../lib/command'
+import * as flags from '../../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
-import { taskGroupCreateArgs, CreateTaskGroupArgs, createTaskGroupArgs } from '../../lib/args'
-import { createTaskGroup } from '../../lib/tasks'
+import { taskGroupCreateArgs, CreateTaskGroupArgs, createTaskGroupArgs } from '../../../lib/args'
+import { createTaskGroup } from '../../../lib/tasks'
 
 const debug = debugFn(`task-groups:create`)
 
@@ -32,6 +32,13 @@ export default class TaskGroupsCreateCommand extends Command {
 
     let encoded_string = taskGroupArgs.members as string
     if (encoded_string.charAt(0) == `@`) {
+
+      const stats = fs.statSync(encoded_string.substring(1, encoded_string.length))
+      const fileSizeInMegabytes = stats.size / (1024*1024)
+      if (fileSizeInMegabytes > 10) {
+        this.error(`members file is too large`)
+      }
+
       encoded_string = fs.readFileSync(encoded_string.substring(1, encoded_string.length),{ encoding: `utf8`, flag: `r` }).toString()
     }
 

@@ -5,8 +5,8 @@ Manage task configurations
 
 * [`relay tasks delete`](#relay-tasks-delete)
 * [`relay tasks list`](#relay-tasks-list)
-* [`relay tasks schedule`](#relay-tasks-schedule)
-* [`relay tasks start`](#relay-tasks-start)
+* [`relay tasks schedule NAMESPACE TYPE MAJOR NAME ASSIGN-TO ARGS START TIMEZONE`](#relay-tasks-schedule-namespace-type-major-name-assign-to-args-start-timezone)
+* [`relay tasks start NAMESPACE TYPE MAJOR NAME ASSIGN-TO ARGS`](#relay-tasks-start-namespace-type-major-name-assign-to-args)
 
 ## `relay tasks delete`
 
@@ -35,10 +35,12 @@ List task configurations
 ```
 USAGE
   $ relay tasks:list -s <value> [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output
-    csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ] [--scheduled] [--tag <value>]
+    csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ] [--scheduled] [-t <value>] [-g <value>]
 
 FLAGS
   -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -g, --group-id=<value>       Group ID
+  -t, --tag=<value>...         Tag
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
   --csv                        output is csv format [alias: --output=csv]
@@ -49,7 +51,6 @@ FLAGS
                                <options: csv|json|yaml>
   --scheduled                  List scheduled tasks
   --sort=<value>               property to sort by (prepend '-' for descending)
-  --tag=<value>...             Optional tag to tie to your task
 
 DESCRIPTION
   List task configurations
@@ -57,29 +58,28 @@ DESCRIPTION
 
 _See code: [dist/commands/tasks/list.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tasks/list.ts)_
 
-## `relay tasks schedule`
+## `relay tasks schedule NAMESPACE TYPE MAJOR NAME ASSIGN-TO ARGS START TIMEZONE`
 
 Schedule a task with the given configuration
 
 ```
 USAGE
-  $ relay tasks:schedule -s <value> -N account|system -t <value> -m <value> -n <value> -A <value> -a <value> -S
-    <value> -T America/Anchorage|America/Chicago|America/Denver|America/Los_Angeles|America/New_York|America/Phoenix|Pac
-    ific/Honolulu [--tag <value>] [-c <value> -f monthly|weekly|daily|hourly|minutely] [-u <value> ]
+  $ relay tasks:schedule [NAMESPACE] [TYPE] [MAJOR] [NAME] [ASSIGN-TO] [ARGS] [START] [TIMEZONE] -s <value> [--tag
+    <value>] [-c <value> -f monthly|weekly|daily|hourly|minutely] [-u <value> ]
+
+ARGUMENTS
+  NAMESPACE  (account|system) Namespace of the task type
+  TYPE       Name of the task type for this task
+  MAJOR      Major version of the task type
+  NAME       Name of the task
+  ASSIGN-TO  Devices on which to start this task
+  ARGS       Encoded JSON or @filename
+  START      Start time in ISO format in specified timezone
+  TIMEZONE   (America/Anchorage|America/Chicago|America/Denver|America/Los_Angeles|America/New_York|America/Phoenix|Paci
+             fic/Honolulu) Timezone of start time
 
 FLAGS
-  -A, --assign-to=<value>      (required) Devices on which to start this task
-  -N, --namespace=<option>     (required) [default: account] Namespace of the task type
-                               <options: account|system>
-  -S, --start=<value>          (required) Start time in ISO format in specified timezone
-  -T, --timezone=<option>      (required) Timezone of start time
-                               <options: America/Anchorage|America/Chicago|America/Denver|America/Los_Angeles|America/Ne
-                               w_York|America/Phoenix|Pacific/Honolulu>
-  -a, --args=<value>           (required) Encoded JSON or @filename
-  -m, --major=<value>          (required) [default: 1] Major version of the task type
-  -n, --name=<value>           (required) Name of the task
   -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
-  -t, --type=<value>           (required) Name of the task type for this task
   -c, --count=<value>          Number of times to repeat
   -f, --frequency=<option>     Repeat frequency
                                <options: monthly|weekly|daily|hourly|minutely>
@@ -92,24 +92,24 @@ DESCRIPTION
 
 _See code: [dist/commands/tasks/schedule.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tasks/schedule.ts)_
 
-## `relay tasks start`
+## `relay tasks start NAMESPACE TYPE MAJOR NAME ASSIGN-TO ARGS`
 
 Start a task with the given configuration
 
 ```
 USAGE
-  $ relay tasks:start -s <value> -N account|system -t <value> -m <value> -n <value> -A <value> -a <value> [--tag
-    <value>]
+  $ relay tasks:start [NAMESPACE] [TYPE] [MAJOR] [NAME] [ASSIGN-TO] [ARGS] -s <value> [--tag <value>]
+
+ARGUMENTS
+  NAMESPACE  (account|system) Namespace of the task type
+  TYPE       Name of the task type for this task
+  MAJOR      Major version of the task type
+  NAME       Name of the task
+  ASSIGN-TO  Devices on which to start this task
+  ARGS       Encoded JSON or @filename
 
 FLAGS
-  -A, --assign-to=<value>      (required) Devices on which to start this task
-  -N, --namespace=<option>     (required) [default: account] Namespace of the task type
-                               <options: account|system>
-  -a, --args=<value>           (required) Encoded JSON or @filename
-  -m, --major=<value>          (required) [default: 1] Major version of the task type
-  -n, --name=<value>           (required) Name of the task
   -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
-  -t, --type=<value>           (required) Name of the task type for this task
   --tag=<value>...             Optional tag to tie to your task
 
 DESCRIPTION

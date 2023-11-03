@@ -4,8 +4,8 @@ import * as flags from '../../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-import { updateMinor } from '../../../lib/task-types'
-import { NewMinor } from '../../../lib/api'
+import { createTaskType } from '../../../lib/task-types'
+import { TaskType } from '../../../lib/api'
 import { Command } from '../../../lib/command'
 import { readFileSync } from 'fs'
 
@@ -13,16 +13,16 @@ import util from 'node:util'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const exec = util.promisify(require(`node:child_process`).exec)
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const debug = debugFn(`task-types:update:minor`)
+const debug = debugFn(`task-types:create`)
 
 async function execute (command: string): Promise<string> {
   const { stdout } = (await exec(command))
   return stdout.toString().trimEnd()
 }
 
-export default class TaskTypesUpdateMinorCommand extends Command {
+export default class TaskTypesCreateCommand extends Command {
 
-  static description = `Update a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command.`
+  static description = `Create a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command.`
   static strict = false
 
   // static hidden = true
@@ -51,24 +51,19 @@ export default class TaskTypesUpdateMinorCommand extends Command {
       description: `Task type name`,
     },
     {
-      name: `major`,
-      required: true,
-      description: `Major version`,
-    },
-    {
       name: `source`,
       required: true,
       description: `Capsule source file name`,
-    },
+    }
   ]
 
   async run(): Promise<void> {
-    const { flags, argv } = await this.parse(TaskTypesUpdateMinorCommand)
+    const { flags,argv } = await this.parse(TaskTypesCreateCommand)
     const subscriberId = flags[`subscriber-id`]
     const namespace = argv[0] as string
     const name = argv[1] as string
-    const major = argv[2] as string
-    let source = argv[3] as string
+    let source = argv[2] as string
+
     try {
       if (!flags.key) {
         const scriptDir = (await execute(`dirname ${source}`))
@@ -77,12 +72,16 @@ export default class TaskTypesUpdateMinorCommand extends Command {
         flags.key = `${gitBranch}@${gitCommit}`
       }
       source = readFileSync(source, `utf-8`)
-      const minor: NewMinor = await updateMinor(flags, source) as NewMinor
-      const success = await this.relay.createMinor(subscriberId, name, namespace, major, minor)
+      const taskType: TaskType = await createTaskType(flags, source, name) as TaskType
+
+      debug(taskType)
+
+      const success = await this.relay.addTaskType(subscriberId, taskType, namespace)
+
       if (success) {
-        this.log(`Successfully updated minor`)
+        this.log(`Successfully created task type`)
       } else {
-        this.log(`Could not update minor`)
+        this.log(`Could not create task type`)
       }
     } catch (err) {
       debug(err)
