@@ -41,9 +41,7 @@ USAGE
 * [`relay positions`](docs/positions.md) - list all positions by venue
 * [`relay subscriber`](docs/subscriber.md) - show default subscriber
 * [`relay tag`](docs/tag.md) - Manages configurations that can be associated with an NFC tag
-* [`relay task-groups`](docs/task-groups.md) - Manage task group configurations
-* [`relay task-types`](docs/task-types.md) - Manage task type configurations
-* [`relay tasks`](docs/tasks.md) - Manage task configurations
+* [`relay task`](docs/task.md) - Manage task configurations
 * [`relay token`](docs/token.md) - generate a token that can be used with the Relay SDK
 * [`relay update`](docs/update.md) - update the relay CLI
 * [`relay venues`](docs/venues.md) - list all venues
