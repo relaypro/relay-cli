@@ -40,7 +40,6 @@ export const createScheduledTask = async (flags: ScheduledTaskFlags, scheduleArg
 }
 
 export const createTaskGroup = async (createGroupArgs: CreateTaskGroupArgs): Promise<NewTaskGroup> => {
-  console.log(createGroupArgs.major)
   const taskGroup: NewTaskGroup = {
     group_name: createGroupArgs.name,
     task_type_namespace: createGroupArgs.namespace,

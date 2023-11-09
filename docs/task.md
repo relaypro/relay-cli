@@ -5,7 +5,7 @@ Manage task configurations
 
 * [`relay task delete`](#relay-task-delete)
 * [`relay task groups create NAMESPACE NAME TYPE MAJOR ASSIGN-TO MEMBERS`](#relay-task-groups-create-namespace-name-type-major-assign-to-members)
-* [`relay task groups delete GROUP ID`](#relay-task-groups-delete-group-id)
+* [`relay task groups delete GROUP NAME`](#relay-task-groups-delete-group-name)
 * [`relay task groups list`](#relay-task-groups-list)
 * [`relay task list`](#relay-task-list)
 * [`relay task schedule NAMESPACE TYPE MAJOR NAME ASSIGN-TO ARGS START TIMEZONE`](#relay-task-schedule-namespace-type-major-name-assign-to-args-start-timezone)
@@ -65,17 +65,17 @@ DESCRIPTION
 
 _See code: [dist/commands/task/groups/create.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/task/groups/create.ts)_
 
-## `relay task groups delete GROUP ID`
+## `relay task groups delete GROUP NAME`
 
 Delete a task group
 
 ```
 USAGE
-  $ relay task:groups:delete [GROUP ID] -s <value> [--columns <value> | -x] [--sort <value>] [--filter <value>]
+  $ relay task:groups:delete [GROUP NAME] -s <value> [--columns <value> | -x] [--sort <value>] [--filter <value>]
     [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 ARGUMENTS
-  GROUP ID  Task group ID
+  GROUP NAME  Task group name
 
 FLAGS
   -s, --subscriber-id=<value>  (required) [default: 8efb6648-c26c-4147-bee8-fa4c6811fd03] subscriber id
@@ -129,11 +129,11 @@ List task configurations
 ```
 USAGE
   $ relay task:list -s <value> [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output
-    csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ] [--scheduled] [-t <value>] [-g <value>]
+    csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ] [--scheduled] [-t <value> | -g <value>]
 
 FLAGS
   -s, --subscriber-id=<value>  (required) [default: 8efb6648-c26c-4147-bee8-fa4c6811fd03] subscriber id
-  -g, --group-id=<value>       Group ID
+  -g, --group-name=<value>     Group name
   -t, --tag=<value>...         Tag
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
