@@ -6,6 +6,7 @@ import { Command } from '../../../lib/command'
 import * as flags from '../../../lib/flags'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
+import { getTaskGroup } from '../../../lib/utils'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
@@ -25,28 +26,34 @@ export default class TaskGroupDeleteCommand extends Command {
 
   static args = [
     {
-      name: `group id`,
+      name: `group name`,
       required: true,
-      description: `Task group ID`,
+      description: `Task group name`,
     }
   ]
 
   async run(): Promise<void> {
     const { flags, argv } = await this.parse(TaskGroupDeleteCommand)
     const subscriberId = flags[`subscriber-id`]
-    const groupId = argv[0] as string
+    const groupName = argv[0] as string
 
     try {
       const prompt = new Confirm({
         name: `question`,
-        message: `Deleting ${groupId}. Are you sure?`
+        message: `Deleting ${groupName}. Are you sure?`
       })
       const answer = await prompt.run()
       if (answer) {
-        const success = await this.relay.deleteTaskGroups(subscriberId, groupId)
-        success ? this.log(`Successfully Deleted Task Group ID ${groupId}`) : this.error(`Could not delete ${groupId}. Check that you have the correct ID (relay task-groups list).`)
+        const groups = await this.relay.fetchTaskGroups(subscriberId)
+        const group = getTaskGroup(groups, groupName)
+        if (group) {
+          const success = await this.relay.deleteTaskGroups(subscriberId, group.task_group_id)
+          success ? this.log(`Successfully deleted task group ${groupName}`) : this.log(`Could NOT delete task group ${groupName}`)
+        } else {
+          this.log(`Task group does not exist: ${groupName}`)
+        }
       } else {
-        this.log(`Task group ID NOT deleted`)
+        this.log(`Task group NOT deleted`)
       }
 
     } catch (err) {

@@ -409,3 +409,12 @@ export const filterByTag = (tasks: Task[], tags: string[]): Task[] => {
   }
   return filteredTasks
 }
+
+export const getTaskGroup = (groups: TaskGroup[], name: string): TaskGroup | undefined => {
+  for (const group of groups) {
+    if (group.group_name == name) {
+      return group
+    }
+  }
+  return undefined
+}
