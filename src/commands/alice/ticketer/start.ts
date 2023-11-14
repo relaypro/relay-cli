@@ -9,63 +9,68 @@ import * as flags from '../../../lib/flags'
 import { NewWorkflow } from '../../../lib/api'
 import { createTicketingWorkflow } from '../../../lib/workflow'
 import { lowerCase, map } from 'lodash'
+import { aliceTicketerStartArgs, aliceWebhookStartArgs } from '../../../lib/args'
 
 const debug = debugFn(`alice:ticketer:start`)
 
 type PhraseWorkflow = NewWorkflow & { config: { trigger: { on_phrases: string[] }}}
 
 export default class AliceTicketerStartCommand extends CreateCommand {
-  static description = `something`
-
-  static enableJsonFlag = true
+  static description = `Start an Alice ticketing workflow with the given configuration`
+  static strict = false
 
   // static hidden = true
 
   static flags = {
     ...flags.subscriber,
-    ...flags.aliceStartFlags,
     ...flags.installFlags,
-    type: flags.string({
-      char: `t`,
+    name: flags.string({
+      char: `n`,
       required: true,
       multiple: false,
-      description: `Name of the task type`
+      default: `alice_webhook`,
+      description: `Task name`
+    }),
+    tag: flags.string({
+      required: false,
+      multiple: true,
+      description: `Tag to tie to webhook`
     }),
     phrases: flags.string({
-      char: `p`,
       required: true,
       multiple: true,
       description: `List of phrase strings`
-    }),
-    service_id: flags.string({
-      char: `I`,
-      required: true,
-      multiple: false,
-      description: `Tickets are created in this Alice service`
     })
   }
 
+  static args = [
+    ...aliceWebhookStartArgs,
+    ...aliceTicketerStartArgs
+  ]
+
   async run(): Promise<void> {
-    const { flags } = await this.parse(AliceTicketerStartCommand)
+    const { flags, argv } = await this.parse(AliceTicketerStartCommand)
+    const namespace = argv[0] as string
+    const major = argv[1] as string
+    let config = argv[2] as string
+    const type = argv[3] as string
+    const serviceId = argv[4] as string
+
     debug(flags)
 
-    flags.config = fs.readFileSync(flags.config,{ encoding: `utf8`, flag: `r` }).toString()
-    const config = JSON.parse(flags.config)
+    config = fs.readFileSync(config,{ encoding: `utf8`, flag: `r` }).toString()
+    const encodedConfig = JSON.parse(config)
 
-    // build workflow args
-    const wf_args: Record<string, unknown> = {
-      task_type: {namespace: flags.namespace, name: flags.type, major: flags.major},
+    const wfArgs: Record<string, unknown> = {
+      task_type: {namespace: namespace, name: type, major: major},
       task_name: flags.name,
-      task_args: {config, service_id: flags.service_id}
+      task_args: {encodedConfig, service_id: serviceId}
     }
 
-    // get source for the task-starting workflow
-    const wf_source = fs.readFileSync(`src/commands/alice/task_trigger.lua`, { encoding: `utf8`, flag: `r`}).toString()
-    // wf_source = JSON.stringify(wf_source)
+    const wfSource = fs.readFileSync(`src/commands/alice/task_trigger.lua`, { encoding: `utf8`, flag: `r`}).toString()
 
-    const workflow: PhraseWorkflow = await createTicketingWorkflow(flags, wf_source, wf_args) as PhraseWorkflow
+    const workflow: PhraseWorkflow = await createTicketingWorkflow(flags, wfSource, wfArgs) as PhraseWorkflow
     workflow.config.trigger.on_phrases = map(flags.phrases, lowerCase)
-
     await this.relay.saveAliceWorkflow(workflow)
   }
 }

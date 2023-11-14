@@ -7,33 +7,57 @@ import debugFn = require('debug')
 
 import * as flags from '../../../lib/flags'
 import { createArgs, createTask } from '../../../lib/tasks'
+import { aliceWebhookStartArgs } from '../../../lib/args'
 
 const debug = debugFn(`alice:webhook:start`)
 
 export default class AliceWebhookStartCommand extends Command {
   static description = `Start an Alice webhook with the given configuration`
+  static strict = false
   // static hidden = true
 
   static flags = {
     ...flags.subscriber,
-    ...flags.aliceStartFlags
+    name: flags.string({
+      char: `n`,
+      required: true,
+      multiple: false,
+      default: `alice_webhook`,
+      description: `Task name`
+    }),
+    tag: flags.string({
+      required: false,
+      multiple: true,
+      description: `Tag to tie to webhook`
+    }),
   }
 
+  static args = [
+    ...aliceWebhookStartArgs
+  ]
   async run(): Promise<void> {
-    const { flags } = await this.parse(AliceWebhookStartCommand)
+    const { flags, argv } = await this.parse(AliceWebhookStartCommand)
     const subscriberId = flags[`subscriber-id`]
+    const namespace = argv[0] as string
+    const major = argv[1] as string
+    let config = argv[2] as string
 
     debug(flags)
 
-    flags.config = fs.readFileSync(flags.config,{ encoding: `utf8`, flag: `r` }).toString()
-    const config = JSON.parse(flags.config)
+    config = fs.readFileSync(config,{ encoding: `utf8`, flag: `r` }).toString()
+    const encodedConfig = JSON.parse(config)
 
-    const args = await createArgs(config, flags)
+    const args = await createArgs(encodedConfig, flags, namespace, major)
+    if (flags.tag) {
+      args.tags.push(...flags.tag)
+    }
 
     const newTask = {
-      ...flags,
+      namespace: namespace,
       type: `alice_webhook`,
-      [`assign-to`]: config.assign_to,
+      major: major,
+      name: flags.name,
+      assignTo: encodedConfig.assign_to,
       args
     }
 

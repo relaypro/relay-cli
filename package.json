@@ -104,6 +104,9 @@
     },
     "topicSeparator": " ",
     "topics": {
+      "alice": {
+        "description": "Manage Alice integrations"
+      },
       "tag": {
         "description": "Manages configurations that can be associated with an NFC tag"
       },

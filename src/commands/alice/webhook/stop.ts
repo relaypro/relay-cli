@@ -5,24 +5,44 @@ import { Command } from '../../../lib/command'
 import debugFn = require('debug')
 
 import * as flags from '../../../lib/flags'
-import { Result, Ok } from 'ts-results'
 
 const debug = debugFn(`alice:ticketer:stop`)
 
 export default class AliceWebhookStopCommand extends Command {
-  static description = `something`
-
-  static enableJsonFlag = true
-
-  static hidden = true
+  static description = `Stop a running Alice webhook`
+  static strict = false
 
   static flags = {
-    ...flags.subscriber,
+    ...flags.subscriber
   }
 
-  async run(): Promise<Result<string, Error>> {
-    const { flags } = await this.parse(AliceWebhookStopCommand)
+  static args = [
+    {
+      name: `name`,
+      required: true,
+      description: `Task name`,
+      default: `alice_webhook`
+    }
+  ]
+
+  async run(): Promise<void> {
+    const { flags, argv } = await this.parse(AliceWebhookStopCommand)
+    const subscriberId = flags[`subscriber-id`]
+    const name = argv[0] as string
+
+    try {
+      const success = await this.relay.sendTaskEvent(subscriberId, `/alice/${name}.done`)
+      if (success) {
+        this.log(`Successfully stopped task`)
+      } else {
+        this.log(`Could not stop task`)
+      }
+    } catch (err) {
+      debug(err)
+      this.safeError(err)
+    }
+
+
     debug(flags)
-    return Ok(`not-implemented`)
   }
 }

@@ -31,6 +31,7 @@ USAGE
 <!-- commands -->
 # Command Topics
 
+* [`relay alice`](docs/alice.md) - Manage Alice integrations
 * [`relay analytics`](docs/analytics.md) - Display and filter analytics
 * [`relay audio`](docs/audio.md) - Create custom audio
 * [`relay devices`](docs/devices.md) - list all device ids

@@ -1,10 +1,9 @@
 import { NewScheduledTask, NewTask, NewTaskGroup, TaskArgs, TaskGroupMembers, WebhookConfig } from './api'
 import { CreateTaskGroupArgs, ScheduleArgs, StartArgs } from './args'
-import { ScheduledTaskFlags, WebhookStartFlags } from './flags'
+import { AliceStartFlags, ScheduledTaskFlags } from './flags'
 
 export const deviceUri = (deviceName: string): string => {
   let deviceUri = deviceName
-  console.log(deviceName)
   if (deviceName.substring(0,3) != `urn`) {
     deviceUri = `urn:relay-resource:name:device:` + encodeURI(deviceName.toLowerCase())
   }
@@ -51,18 +50,18 @@ export const createTaskGroup = async (createGroupArgs: CreateTaskGroupArgs): Pro
   }
   return taskGroup
 }
-export const createArgs = async (config: WebhookConfig, flags: WebhookStartFlags): Promise<TaskArgs> => {
+export const createArgs = async (config: WebhookConfig, flags: AliceStartFlags, namespace: string, major: string): Promise<TaskArgs> => {
   const args: TaskArgs = {
     alice_creds: config.alice_creds,
     ticket_routing: config.ticket_routing,
     request_path: `/alice`,
     done_path: `/_alice/` + flags.name + `.done`,
     task_types: {
-      alert: {namespace: flags.namespace, name: `alice_alert`, major: flags.major},
-      ticket: {namespace: flags.namespace, name: `alice_ticket`, major: flags.major},
+      alert: {namespace: namespace, name: `alice_alert`, major: major},
+      ticket: {namespace: namespace, name: `alice_ticket`, major: major},
       assign_to: [config.assign_to]
     },
-    tags: [...flags.tag, `alice_webhook`]
+    tags: [`alice_webhook`]
   }
   return args
 }
