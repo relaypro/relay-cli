@@ -1,15 +1,15 @@
 // Copyright © 2023 Relay Inc.
 
-import { Command } from '../../../lib/command'
+import { Command } from '../../lib/command'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-import * as flags from '../../../lib/flags'
+import * as flags from '../../lib/flags'
 
-const debug = debugFn(`alice:ticketer:stop`)
+const debug = debugFn(`hotsos:stop`)
 
-export default class AliceWebhookStopCommand extends Command {
-  static description = `Stop a running Alice webhook task`
+export default class HotSOSStopCommand extends Command {
+  static description = `Stop a running HotSOS poller task`
   static strict = false
 
   static flags = {
@@ -21,17 +21,17 @@ export default class AliceWebhookStopCommand extends Command {
       name: `name`,
       required: true,
       description: `Task name`,
-      default: `alice_webhook`
+      default: `hotsos_poller`
     }
   ]
 
   async run(): Promise<void> {
-    const { flags, argv } = await this.parse(AliceWebhookStopCommand)
+    const { flags, argv } = await this.parse(HotSOSStopCommand)
     const subscriberId = flags[`subscriber-id`]
     const name = argv[0] as string
 
     try {
-      const success = await this.relay.sendTaskEvent(subscriberId, `/_alice/${name}.done`)
+      const success = await this.relay.sendTaskEvent(subscriberId, `/_hotsos/${name}.done`)
       if (success) {
         this.log(`Successfully stopped task`)
       } else {

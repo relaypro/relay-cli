@@ -37,7 +37,7 @@ export type TaskTypeFlags = {
 
 export type UpdateFlags = Omit<TaskTypeFlags, `name` | `source`>
 
-export type AliceStartFlags = {
+export type IntegrationStartFlags = {
   install?: string[],
   [`install-all`]?: boolean,
   [`install-group`]?: string,

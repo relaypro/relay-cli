@@ -38,6 +38,7 @@ USAGE
 * [`relay env`](docs/env.md) - displays the configured environment
 * [`relay group`](docs/group.md) - Lists all groups.
 * [`relay help`](docs/help.md) - Display help for relay.
+* [`relay hotsos`](docs/hotsos.md) - Manage HotSOS integrations
 * [`relay login`](docs/login.md) - login with your Relay credentials
 * [`relay logout`](docs/logout.md) - logout and forget any tokens
 * [`relay positions`](docs/positions.md) - list all positions by venue

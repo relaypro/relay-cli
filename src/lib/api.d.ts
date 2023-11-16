@@ -396,7 +396,7 @@ export type MinorResults = {
 export type TaskGroupResults = {
   results: TaskGroup[]
 }
-export type WebhookConfig = Record<string, unknown>
+export type IntegrationConfig = Record<string, unknown>
 
 export type ResourceEntity = {
   entity_attributes: {

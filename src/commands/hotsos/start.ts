@@ -1,18 +1,18 @@
 // Copyright © 2023 Relay Inc.
 
 import * as fs from 'fs'
-import { Command } from '../../../lib/command'
+import { Command } from '../../lib/command'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-import * as flags from '../../../lib/flags'
-import { createAliceArgs, createTask } from '../../../lib/tasks'
-import { integrationStartArgs } from '../../../lib/args'
+import * as flags from '../../lib/flags'
+import { createHotSOSArgs, createTask } from '../../lib/tasks'
+import { integrationStartArgs } from '../../lib/args'
 
-const debug = debugFn(`alice:webhook:start`)
+const debug = debugFn(`hotsos:start`)
 
-export default class AliceWebhookStartCommand extends Command {
-  static description = `Start an Alice webhook task with the given configuration`
+export default class HosSOSStartCommand extends Command {
+  static description = `Start a HotSOS poller with the given configuration`
   static strict = false
   // static hidden = true
 
@@ -22,13 +22,13 @@ export default class AliceWebhookStartCommand extends Command {
       char: `n`,
       required: true,
       multiple: false,
-      default: `alice_webhook`,
+      default: `hotsos_poller`,
       description: `Task name`
     }),
     tag: flags.string({
       required: false,
       multiple: true,
-      description: `Tag to tie to webhook`
+      description: `Tag to tie to poller`
     }),
   }
 
@@ -36,7 +36,7 @@ export default class AliceWebhookStartCommand extends Command {
     ...integrationStartArgs
   ]
   async run(): Promise<void> {
-    const { flags, argv } = await this.parse(AliceWebhookStartCommand)
+    const { flags, argv } = await this.parse(HosSOSStartCommand)
     const subscriberId = flags[`subscriber-id`]
     const namespace = argv[0] as string
     const major = argv[1] as string
@@ -47,14 +47,14 @@ export default class AliceWebhookStartCommand extends Command {
     config = fs.readFileSync(config,{ encoding: `utf8`, flag: `r` }).toString()
     const encodedConfig = JSON.parse(config)
 
-    const args = await createAliceArgs(encodedConfig, flags, namespace, major)
+    const args = await createHotSOSArgs(encodedConfig, flags, namespace, major)
     if (flags.tag) {
       args.tags.push(...flags.tag)
     }
 
     const newTask = {
       namespace: namespace,
-      type: `alice_webhook`,
+      type: `hotsos_poller`,
       major: major,
       name: flags.name,
       assignTo: encodedConfig.assign_to,

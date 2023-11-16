@@ -1,6 +1,6 @@
-import { NewScheduledTask, NewTask, NewTaskGroup, TaskArgs, TaskGroupMembers, WebhookConfig } from './api'
+import { IntegrationConfig, NewScheduledTask, NewTask, NewTaskGroup, TaskArgs, TaskGroupMembers } from './api'
 import { CreateTaskGroupArgs, ScheduleArgs, StartArgs } from './args'
-import { AliceStartFlags, ScheduledTaskFlags } from './flags'
+import { IntegrationStartFlags, ScheduledTaskFlags } from './flags'
 
 export const deviceUri = (deviceName: string): string => {
   let deviceUri = deviceName
@@ -50,7 +50,7 @@ export const createTaskGroup = async (createGroupArgs: CreateTaskGroupArgs): Pro
   }
   return taskGroup
 }
-export const createArgs = async (config: WebhookConfig, flags: AliceStartFlags, namespace: string, major: string): Promise<TaskArgs> => {
+export const createAliceArgs = async (config: IntegrationConfig, flags: IntegrationStartFlags, namespace: string, major: string): Promise<TaskArgs> => {
   const args: TaskArgs = {
     alice_creds: config.alice_creds,
     ticket_routing: config.ticket_routing,
@@ -62,6 +62,19 @@ export const createArgs = async (config: WebhookConfig, flags: AliceStartFlags, 
       assign_to: [config.assign_to]
     },
     tags: [`alice_webhook`]
+  }
+  return args
+}
+
+export const createHotSOSArgs = async (config: IntegrationConfig, flags: IntegrationStartFlags, namespace: string, major: string): Promise<TaskArgs> => {
+  const args: TaskArgs = {
+    hotsos_creds: config.hotsos_creds,
+    ticket_routing: config.ticket_routing,
+    done_path: `/_hotsos/` + flags.name + `.done`,
+    task_types: {
+      alert: {namespace: namespace, name: `hotsos_alert`, major: major},
+    },
+    tags: [`hotsos_poller`]
   }
   return args
 }

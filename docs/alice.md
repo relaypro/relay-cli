@@ -41,7 +41,7 @@ _See code: [dist/commands/alice/ticketer/start.ts](https://github.com/relaypro/r
 
 ## `relay alice webhook start NAMESPACE MAJOR CONFIG`
 
-Start an Alice webhook with the given configuration
+Start an Alice webhook task with the given configuration
 
 ```
 USAGE
@@ -58,14 +58,14 @@ FLAGS
   --tag=<value>...             Tag to tie to webhook
 
 DESCRIPTION
-  Start an Alice webhook with the given configuration
+  Start an Alice webhook task with the given configuration
 ```
 
 _See code: [dist/commands/alice/webhook/start.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/alice/webhook/start.ts)_
 
 ## `relay alice webhook stop NAME`
 
-Stop a running Alice webhook
+Stop a running Alice webhook task
 
 ```
 USAGE
@@ -78,7 +78,7 @@ FLAGS
   -s, --subscriber-id=<value>  (required) [default: 8efb6648-c26c-4147-bee8-fa4c6811fd03] subscriber id
 
 DESCRIPTION
-  Stop a running Alice webhook
+  Stop a running Alice webhook task
 ```
 
 _See code: [dist/commands/alice/webhook/stop.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/alice/webhook/stop.ts)_

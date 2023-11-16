@@ -106,7 +106,7 @@ const taskGroupCreateArgs = [
   }
 ]
 
-const aliceWebhookStartArgs = [
+const integrationStartArgs = [
   {
     name: `namespace`,
     required: true,
@@ -141,7 +141,7 @@ const aliceTicketerStartArgs = [
 export {
   taskStartArgs,
   taskGroupCreateArgs,
-  aliceWebhookStartArgs,
+  integrationStartArgs,
   aliceTicketerStartArgs,
   StartArgs,
   ScheduleArgs,

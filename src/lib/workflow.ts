@@ -6,7 +6,7 @@ import reduce from 'lodash/reduce'
 
 import type { Interfaces } from '@oclif/core'
 
-import { AliceStartFlags, booleanValue, numberValue, TimerFlags, TimerOptions, TimerWorkflow, WorkflowFlags } from './flags'
+import { IntegrationStartFlags, booleanValue, numberValue, TimerFlags, TimerOptions, TimerWorkflow, WorkflowFlags } from './flags'
 import { parseArg } from './utils'
 import { NewWorkflow } from './api'
 import { getTimestampFarFuture, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
@@ -131,7 +131,7 @@ export const createTimerWorkflow = async (flags: TimerFlags, tokens: Interfaces.
   return workflow
 }
 
-export const createTicketingWorkflow = async (flags: AliceStartFlags, wf_source: string, wf_args: Record<string, unknown>): Promise<NewWorkflow> => {
+export const createTicketingWorkflow = async (flags: IntegrationStartFlags, wf_source: string, wf_args: Record<string, unknown>): Promise<NewWorkflow> => {
   const workflow: NewWorkflow = {
     name: flags.name,
     options: {

@@ -107,6 +107,9 @@
       "alice": {
         "description": "Manage Alice integrations"
       },
+        "hotsos": {
+          "description": "Manage HotSOS integrations"
+      },
       "tag": {
         "description": "Manages configurations that can be associated with an NFC tag"
       },

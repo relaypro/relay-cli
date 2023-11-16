@@ -9,7 +9,7 @@ import * as flags from '../../../lib/flags'
 import { NewWorkflow } from '../../../lib/api'
 import { createTicketingWorkflow } from '../../../lib/workflow'
 import { lowerCase, map } from 'lodash'
-import { aliceTicketerStartArgs, aliceWebhookStartArgs } from '../../../lib/args'
+import { aliceTicketerStartArgs, integrationStartArgs } from '../../../lib/args'
 
 const debug = debugFn(`alice:ticketer:start`)
 
@@ -44,12 +44,13 @@ export default class AliceTicketerStartCommand extends CreateCommand {
   }
 
   static args = [
-    ...aliceWebhookStartArgs,
+    ...integrationStartArgs,
     ...aliceTicketerStartArgs
   ]
 
   async run(): Promise<void> {
     const { flags, argv } = await this.parse(AliceTicketerStartCommand)
+    const subscriberId = flags[`subscriber-id`]
     const namespace = argv[0] as string
     const major = argv[1] as string
     let config = argv[2] as string
@@ -71,6 +72,6 @@ export default class AliceTicketerStartCommand extends CreateCommand {
 
     const workflow: PhraseWorkflow = await createTicketingWorkflow(flags, wfSource, wfArgs) as PhraseWorkflow
     workflow.config.trigger.on_phrases = map(flags.phrases, lowerCase)
-    await this.relay.saveAliceWorkflow(workflow)
+    await this.relay.saveAliceWorkflow(subscriberId, workflow)
   }
 }

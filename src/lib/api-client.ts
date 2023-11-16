@@ -700,9 +700,7 @@ export class APIClient {
     return true
   }
 
-  async saveAliceWorkflow(workflow: NewWorkflow): Promise<boolean> {
-    // TODO use parameterized subscriberId
-    const subscriberId = getDefaultSubscriberId()
+  async saveAliceWorkflow(subscriberId: string, workflow: NewWorkflow): Promise<boolean> {
     await this.post(`/relaypro/api/v1/workflow?subscriber_id=${subscriberId}`, {
       body: workflow,
     })
