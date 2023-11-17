@@ -107,11 +107,8 @@
       "tag": {
         "description": "Manages configurations that can be associated with an NFC tag"
       },
-      "tasks": {
+      "task": {
         "description": "Manage task configurations"
-      },
-      "task-types": {
-        "description": "Manage task type configurations"
       },
       "workflow": {
         "description": "Manage workflow configurations"

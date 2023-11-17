@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup } from './api'
 
 import { normalize } from './utils'
 import { createReadStream } from 'fs'
@@ -28,7 +28,6 @@ const debug = debugFn(`api-client`)
 export namespace APIClient {
   export interface Options extends HTTPRequestOptions {
     retryAuth?: boolean
-    admin?: boolean
   }
 }
 
@@ -99,7 +98,7 @@ export class APIClient {
         // opts.headers[requestIdHeader] = RequestId.create() && RequestId.headerValue
 
         if (!Object.keys(opts.headers).find(h => h.toLowerCase() === `authorization`)) {
-          opts.headers.authorization = `Bearer ${opts.admin ? process.env.ADMIN_TOKEN : self.auth}`
+          opts.headers.authorization = `Bearer ${self.auth}`
         }
         retries--
         try {
@@ -110,9 +109,9 @@ export class APIClient {
           if (!(err instanceof deps.HTTP.HTTPError)) throw err
           if (retries > 0) {
             if (opts.retryAuth !== false && err.http.statusCode === 401) {
-              debug(`Token expired`)
+              debug(`Token not authorized`)
               if (process.env.RELAY_API_KEY) {
-                throw new Error(`The token provided to ${opts.admin ? `ADMIN_TOKEN` : `RELAY_API_KEY`} is invalid. Please double-check that you have the correct token${opts.admin ? `.` : `, or run 'relay login' without RELAY_API_KEY set.`}`)
+                throw new Error(`The token provided to RELAY_API_KEY is invalid. Please double-heck that you have the correct token, or run 'relay login' without RELAY_API_KEY set.`)
               }
               const tokens = getToken()
               if (tokens?.refresh_token) {
@@ -575,8 +574,8 @@ export class APIClient {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-  async fetchTasks(subscriberId: string, taskEndpoint: string): Promise<Task[]> {
-    const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}`)
+  async fetchTasks(subscriberId: string, taskEndpoint: string, groupId=``): Promise<Task[]> {
+    const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}${groupId && groupId.length > 0 ? `&task_group_id=${groupId}` : ``}`)
     return response.body.results
   }
 
@@ -603,18 +602,32 @@ export class APIClient {
     return true
   }
 
+  requireAdminToken(): APIClient.Options {
+    if (!isEmpty(process.env.RELAY_ADMIN_TOKEN)) {
+      this.auth = process.env.RELAY_ADMIN_TOKEN
+      return {
+        retryAuth: false,
+      }
+    } else {
+      const err = new Error()
+      err.name = `admin-token-required`
+      err.message = `Must have env variable RELAY_ADMIN_TOKEN set`
+      throw err
+    }
+  }
+
   async addTaskType(subscriberId: string, taskType: TaskType, namespace: string): Promise<boolean> {
-    await this.post(`/relaypro/api/v1/task_types/${namespace}?subscriber_id=${subscriberId}`, {
+    const opts = {
       body: taskType,
-      admin: true
-    })
+      ...this.requireAdminToken()
+    }
+    await this.post(`/relaypro/api/v1/task_types/${namespace}?subscriber_id=${subscriberId}`, opts)
     return true
   }
 
   async deleteTaskType(subscriberId: string, name: string, namespace: string): Promise<boolean> {
-    await this.delete(`/relaypro/api/v1/task_types/${namespace}/${name}?subscriber_id=${subscriberId}`, {
-      admin: true
-    })
+    const opts = this.requireAdminToken()
+    await this.delete(`/relaypro/api/v1/task_types/${namespace}/${name}?subscriber_id=${subscriberId}`, opts)
     return true
   }
 
@@ -631,29 +644,59 @@ export class APIClient {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async fetchMinors(subscriberId: string, namespace: string, name: string, major: number): Promise<Minor[]> {
+  async fetchMinors(subscriberId: string, namespace: string, name: string, major: string): Promise<Minor[]> {
     const response =  await this.get<MinorResults>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`)
     return response.body.results
   }
 
+  async fetchMajor(subscriberId: string, namespace: string, name: string, major: string): Promise<Major> {
+    const response = await this.get<Major>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}?subscriber_id=${subscriberId}`)
+    return response.body
+  }
+
+  async fetchMinor(subscriberId: string, namespace: string, name: string, major: string, minor: string): Promise<Minor> {
+    const response = await this.get<Minor>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors/${minor}?subscriber_id=${subscriberId}`)
+    return response.body
+  }
+
   async createMajor(subscriberId: string, name: string, namespace: string, major: NewMajor): Promise<boolean> {
-    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}?subscriber_id=${subscriberId}`, {
+    const opts = {
       body: major,
-      admin: true
-    })
+      ...this.requireAdminToken(),
+    }
+    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}/majors?subscriber_id=${subscriberId}`, opts)
     return true
   }
 
-  async createMinor(subscriberId: string, name: string, namespace: string, major: number, minor: Minor): Promise<boolean> {
-    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`, {
+  async createMinor(subscriberId: string, name: string, namespace: string, major: string, minor: NewMinor): Promise<boolean> {
+    const opts = {
       body: minor,
-      admin: true
-    })
+      ...this.requireAdminToken(),
+    }
+    await this.post(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`, opts)
     return true
   }
 
   async fetchResourceGroups(subscriberId: string): Promise<ResourceResults> {
     const { body: response } = await this.get<ResourceResults>(`/ibot/resource/tags/user?subscriber_id=${subscriberId}`)
     return response
+  }
+
+  async createTaskGroup(subscriberId: string, group: NewTaskGroup): Promise<boolean> {
+    await this.post(`/relaypro/api/v1/task_groups?subscriber_id=${subscriberId}`, {
+      body: group,
+    })
+    return true
+  }
+
+  async fetchTaskGroups(subscriberId: string): Promise<TaskGroup[]> {
+    const response = await this.get<TaskGroupResults>(`/relaypro/api/v1/task_groups?subscriber_id=${subscriberId}`)
+    return response.body.results
+  }
+  // string.format('https://%s/relaypro/api/v1/task_groups/%s', self.ibot, task_group_id),
+
+  async deleteTaskGroups(subscriberId: string, taskGroupId: string): Promise<boolean> {
+    await this.delete(`/relaypro/api/v1/task_groups/${taskGroupId}?subscriber_id=${subscriberId}`)
+    return true
   }
 }

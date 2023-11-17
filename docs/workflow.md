@@ -3,7 +3,6 @@
 
 Manage workflow configurations
 
-* [`relay workflow analytics`](#relay-workflow-analytics)
 * [`relay workflow args get ARG`](#relay-workflow-args-get-arg)
 * [`relay workflow args list`](#relay-workflow-args-list)
 * [`relay workflow args set`](#relay-workflow-args-set)
@@ -25,43 +24,6 @@ Manage workflow configurations
 * [`relay workflow logs`](#relay-workflow-logs)
 * [`relay workflow trigger`](#relay-workflow-trigger)
 * [`relay workflow uninstall`](#relay-workflow-uninstall)
-
-## `relay workflow analytics`
-
-Display and filter workflow analytics
-
-```
-USAGE
-  $ relay workflow:analytics -s <value> [--json] [-w <value>] [-i <value>] [-u <value>] [-c <value>] [-t system|user]
-    [-p] [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |  | [--csv |
-    --no-truncate]] [--no-header | ]
-
-FLAGS
-  -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
-  -c, --category=<value>              analytic category
-  -i, --workflow-instance-id=<value>  workflow instance id
-  -p, --parse                         whether to parse/process the analytic content based on the 'content_type'
-  -t, --type=(system|user)            analytic type
-  -u, --user-id=<value>               user id
-  -w, --workflow-id=<value>           workflow id
-  -x, --extended                      show extra columns
-  --columns=<value>                   only show provided columns (comma-separated)
-  --csv                               output is csv format [alias: --output=csv]
-  --filter=<value>                    filter property by partial string matching, ex: name=foo
-  --no-header                         hide table header from output
-  --no-truncate                       do not truncate output to fit screen
-  --output=<option>                   output in a more machine friendly format
-                                      <options: csv|json|yaml>
-  --sort=<value>                      property to sort by (prepend '-' for descending)
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  Display and filter workflow analytics
-```
-
-_See code: [dist/commands/workflow/analytics.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/workflow/analytics.ts)_
 
 ## `relay workflow args get ARG`
 
@@ -464,7 +426,7 @@ FLAGS
       Number name/value pair workflow arg
 
   -s, --start=<value>
-      [default: 2023-11-02T10:00:00]
+      [default: 2023-11-10T13:00:00]
 
   -t, --[no-]transient
       Allow workflow to run in the background; otherwise terminate workflow

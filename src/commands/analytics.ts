@@ -1,20 +1,21 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../../lib/command'
+import { Command } from '../lib/command'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-import * as flags from '../../lib/flags'
+import * as flags from '../lib/flags'
 import { CliUx } from '@oclif/core'
-import { WorkflowEvent, WorkflowEventQuery, WorkflowEvents } from '../../lib/api'
+import { WorkflowEvent, WorkflowEventQuery, WorkflowEvents } from '../lib/api'
 import { isEmpty } from 'lodash'
 import { Result, Ok } from 'ts-results'
 // import { CliUx } from '@oclif/core'
 
-const debug = debugFn(`workflow:analytics`)
+const debug = debugFn(`analytics`)
 
-export default class WorkflowAnalytics extends Command {
-  static description = `Display and filter workflow analytics`
+export default class Analytics extends Command {
+  static description = `Display and filter analytics`
+  static strict = false
 
   static enableJsonFlag = true
 
@@ -42,13 +43,6 @@ export default class WorkflowAnalytics extends Command {
       hidden: false,
       multiple: false,
     }),
-    [`category`]: flags.string({
-      char: `c`,
-      description: `analytic category`,
-      required: false,
-      hidden: false,
-      multiple: false,
-    }),
     [`type`]: flags.enum({
       char: `t`,
       description: `analytic type`,
@@ -67,15 +61,23 @@ export default class WorkflowAnalytics extends Command {
     ...CliUx.ux.table.flags(),
   }
 
+  static args = [
+    {
+      name: `category`,
+      required: false,
+      description: `Can be workflow, tasks, or a custom category`,
+    }
+  ]
+
   async run(): Promise<Result<WorkflowEvents, Error>> {
-    const { flags } = await this.parse(WorkflowAnalytics)
+    const { flags, argv } = await this.parse(Analytics)
     const subscriberId = flags[`subscriber-id`]
     const workflowId = flags[`workflow-id`]
     const workflowInstanceId = flags[`workflow-instance-id`]
     const userId = flags[`user-id`]
-    const category = flags[`category`]
     const type = flags[`type`]
     const parse = flags[`parse`]
+    const category = argv[0]
 
     debug(`flags`, flags)
 
@@ -93,12 +95,12 @@ export default class WorkflowAnalytics extends Command {
       query.user_id = userId
     }
 
-    if (category) {
-      query.category = category
-    }
-
     if (type) {
       query.source_type = type
+    }
+
+    if (category) {
+      query.category = category
     }
 
     debug(`query`, query)
@@ -108,7 +110,6 @@ export default class WorkflowAnalytics extends Command {
     try {
 
       analytics = await this.relay.workflowEvents(subscriberId, query)
-
       if (!this.jsonEnabled()) {
         if (!isEmpty(analytics)) {
           CliUx.ux.log(`=> Showing ${analytics?.length} events`)
@@ -147,7 +148,7 @@ export default class WorkflowAnalytics extends Command {
           })
           CliUx.ux.log(`=> Showing ${analytics?.length} events`)
         } else {
-          this.log(`No analytic events`)
+          this.log(`No analytic events found from the provided criteria`)
         }
       }
     } catch (err) {
@@ -161,7 +162,7 @@ export default class WorkflowAnalytics extends Command {
 
 
 const parseContent = (row: WorkflowEvent): string => {
-  if (row.content_type === `application/json`) {
+  if (row.content_type === `application/json` || row.content_type == `application/vnd.relay.tasks.parameters.v2+json`) {
     return JSON.stringify(JSON.parse(row.content), null, 2)
   } else {
     return row.content

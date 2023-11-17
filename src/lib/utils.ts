@@ -2,7 +2,7 @@
 
 import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow } from './api'
+import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup, TaskTypeDump } from './api'
 
 import { ALL, RESOURCE_PREFIX } from './constants'
 
@@ -270,13 +270,13 @@ export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): voi
     },
     timezone: {},
     frequency: {
-      get: row => `${row.frequency ?? ``}`
+      get: row => `${row.frequency ?? `N/A`}`
     },
     until: {
-      get: row => `${row.until ?? ``}`
+      get: row => `${row.until ?? `N/A`}`
     },
     count: {
-      get: row => `${row.count ?? ``}`
+      get: row => `${row.count ?? `N/A`}`
     },
     assign_to: {
       header: `Assignee`,
@@ -294,32 +294,79 @@ export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): voi
   }, options)
 }
 
-export const printTaskTypes = (taskTypes: TaskType[], flags: unknown): void => {
+export const printTaskTypes = (taskTypes: TaskType[], flags: unknown, namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Installed Task Type${taskTypes.length > 1 ? `s` : ``}`)
+  CliUx.ux.styledHeader(`Installed Task Type${taskTypes.length > 1 ? `s` : ``} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
   CliUx.ux.table(taskTypes, {
     name: {}
   }, options)
 }
 
-export const printMajors = (majors: Major[], flags: unknown, type: string): void => {
+export const printMajors = (majors: Major[], flags: unknown, type: string, namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type}`)
+  CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
   CliUx.ux.table(majors, {
     major: {
-      get: row => row.major
+      header: `Major`,
     }
   }, options)
 }
 
-export const printMinors = (minors: Minor[], flags: unknown, type: string): void => {
+export const printMinors = (minors: Minor[], flags: unknown, type: string, latest: boolean, namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Minor${minors.length > 1 ? `s` : ``} for ${type}`)
+  CliUx.ux.styledHeader(`Minor${minors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
   CliUx.ux.table(minors, {
+    minor: {
+      header: `${latest ? `Latest ` : ``}Minor`,
+    },
     source: {
       get: row => row.capsule_source
     },
     comment: {}
+  }, options)
+}
+
+export const printDump = (taskTypes: TaskTypeDump[], flags: unknown,namespace: string): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Latest versions of task types on ${namespace}`)
+  CliUx.ux.table(taskTypes, {
+    type: {},
+    major: {},
+    minor: {},
+    comment: {}
+  }, options)
+}
+
+// [{"timestamp":"2023-11-02T20:28:12Z","assign_to":["urn:relay-resource:name:device:frog"],"task_type_namespace":"system","task_type_major":1,"subscriber_id":"8efb6648-c26c-4147-bee8-fa4c6811fd03","task_type_name":"delivery","group_name":"test","task_group_id":"Nriw1Vp5dysN9ANhdAvDulB"}]
+
+
+export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
+  const options = { ...(flags as Record<string, unknown>) }
+  CliUx.ux.styledHeader(`Task Groups`)
+  CliUx.ux.table(groups, {
+    group_name: {
+      header: `Group Name`,
+    },
+    task_group_id: {
+      header: `Task Group ID`
+    },
+    timestamp: {},
+    assign_to: {
+      header: `Assignee`
+    },
+    task_type_namespace: {
+      header: `Namespace`,
+    },
+    task_type_major: {
+      header: `Major`
+    },
+    subscriber_id: {
+      header: `Subscriber ID`
+    },
+    task_type_name: {
+      header: `Task Type Name`
+    },
+
   }, options)
 }
 
@@ -361,4 +408,13 @@ export const filterByTag = (tasks: Task[], tags: string[]): Task[] => {
     }
   }
   return filteredTasks
+}
+
+export const getTaskGroup = (groups: TaskGroup[], name: string): TaskGroup | undefined => {
+  for (const group of groups) {
+    if (group.group_name == name) {
+      return group
+    }
+  }
+  return undefined
 }

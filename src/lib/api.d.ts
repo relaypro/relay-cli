@@ -292,6 +292,8 @@ export type TaskResults = {
 
 export type TaskArgs = Record<string, unknown> & Record<`tags`, string[]>
 
+export type TaskGroupMembers = Record<string, unknown>
+
 export type NewTask = {
   task_name: string,
   task_type_name: string,
@@ -327,22 +329,56 @@ export type ScheduledTask = Task & {
   until?: string
 }
 
-export type Minor = {
+export type NewMinor = {
   capsule_source: string,
   comment: string
 }
 
+export type Minor = NewMinor & {
+  minor: integer
+}
+
 export type NewMajor = {
-  minor: Minor
+  minor: NewMinor
 }
 
 export type Major = {
-  major: integer
+  major: integer,
+  capsule_source: string,
+  comment: string
 }
 
 export type TaskType = {
   name: string,
   major: NewMajor
+}
+
+export type TaskGroup = {
+  timestamp: string,
+  assign_to: string[],
+  task_type_namespace: string,
+  task_type_major: integer,
+  subscriber_id: string,
+  task_type_name: string,
+  group_name: string,
+  task_group_id: string
+}
+
+
+export type TaskTypeDump = {
+  type: string,
+  major: number,
+  minor: number,
+  comment: string
+}
+
+export type NewTaskGroup = {
+  group_name: string,
+  task_type_namespace: string,
+  task_type_name: string,
+  task_type_major: integer,
+  assign_to: string[],
+  members: TaskGroupMembers
 }
 
 export type TaskTypeResults = {
@@ -355,6 +391,10 @@ export type MajorResults = {
 
 export type MinorResults = {
   results: Minor[]
+}
+
+export type TaskGroupResults = {
+  results: TaskGroup[]
 }
 
 export type ResourceEntity = {

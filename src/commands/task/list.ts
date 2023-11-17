@@ -15,7 +15,7 @@ const debug = debugFn(`tasks:list`)
 
 export default class TaskListCommand extends Command {
   static description = `List task configurations`
-  // static hidden = true
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,
@@ -27,12 +27,22 @@ export default class TaskListCommand extends Command {
     tag: flags.string({
       required: false,
       multiple: true,
-      description: `Optional tag to tie to your task`
+      char: `t`,
+      description: `Tag`,
+      exclusive: [`group-name`]
+    }),
+    [`group-name`]: flags.string({
+      required: false,
+      multiple: false,
+      char: `g`,
+      description: `Group name`,
+      exclusive: [`tag`]
     })
   }
   async run(): Promise<void> {
     const { flags } = await this.parse(TaskListCommand)
     const subscriberId = flags[`subscriber-id`]
+    const groupName = flags[`group-name`]
 
     try {
       let taskEndpoint
@@ -41,22 +51,27 @@ export default class TaskListCommand extends Command {
       } else {
         taskEndpoint = `task`
       }
+      let tasks
+      if (groupName) {
+        tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint, groupName)
+      } else {
+        tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
+      }
 
-      let tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
+      if (flags.tag) {
+        tasks = filterByTag(tasks, flags.tag)
+      }
 
       debug(`tasks`, tasks)
 
       if (!isEmpty(tasks)) {
-        if (flags.tag) {
-          tasks = filterByTag(tasks, flags.tag)
-        }
         if (flags.scheduled) {
           printScheduledTasks((tasks as ScheduledTask[]), flags)
         } else {
           printTasks(tasks, flags)
         }
       } else {
-        this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet`)
+        this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet${groupName ? ` with group ID ${groupName}` : ``}`)
       }
     } catch (err) {
       debug(err)
