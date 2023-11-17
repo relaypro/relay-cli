@@ -43,6 +43,7 @@ export default class TaskDeleteCommand extends Command {
 
     if (!taskId && !flags.tag) {
       this.error(`Must specify either a task id or tag to delete`)
+      return
     }
 
     let taskEndpoint
