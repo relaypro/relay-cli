@@ -51,15 +51,20 @@ export default class TaskListCommand extends Command {
       } else {
         taskEndpoint = `task`
       }
+      let tasks
+      if (groupName) {
+        tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint, groupName)
+      } else {
+        tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
+      }
 
-      let tasks = await this.relay.fetchTasks(subscriberId, groupName as string, taskEndpoint)
+      if (flags.tag) {
+        tasks = filterByTag(tasks, flags.tag)
+      }
 
       debug(`tasks`, tasks)
 
       if (!isEmpty(tasks)) {
-        if (flags.tag) {
-          tasks = filterByTag(tasks, flags.tag)
-        }
         if (flags.scheduled) {
           printScheduledTasks((tasks as ScheduledTask[]), flags)
         } else {

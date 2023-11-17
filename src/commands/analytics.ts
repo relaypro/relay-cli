@@ -13,7 +13,7 @@ import { Result, Ok } from 'ts-results'
 
 const debug = debugFn(`analytics`)
 
-export default class WorkflowAnalytics extends Command {
+export default class Analytics extends Command {
   static description = `Display and filter analytics`
   static strict = false
 
@@ -70,7 +70,7 @@ export default class WorkflowAnalytics extends Command {
   ]
 
   async run(): Promise<Result<WorkflowEvents, Error>> {
-    const { flags, argv } = await this.parse(WorkflowAnalytics)
+    const { flags, argv } = await this.parse(Analytics)
     const subscriberId = flags[`subscriber-id`]
     const workflowId = flags[`workflow-id`]
     const workflowInstanceId = flags[`workflow-instance-id`]

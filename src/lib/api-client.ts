@@ -574,7 +574,7 @@ export class APIClient {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-  async fetchTasks(subscriberId: string, groupId: string, taskEndpoint: string): Promise<Task[]> {
+  async fetchTasks(subscriberId: string, taskEndpoint: string, groupId=``): Promise<Task[]> {
     const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}${groupId && groupId.length > 0 ? `&task_group_id=${groupId}` : ``}`)
     return response.body.results
   }

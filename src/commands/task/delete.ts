@@ -68,7 +68,7 @@ export default class TaskDeleteCommand extends Command {
           success ? this.log(`Task deleted`) : this.error(`Task NOT deleted, make sure task exists (relay tasks list)`)
         }
         else if (flags.tag) {
-          let tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint, ``)
+          let tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
           tasks = filterByTag(tasks, flags.tag)
           if (tasks.length > 0) {
             for (const task of tasks) {
