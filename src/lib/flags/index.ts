@@ -287,5 +287,5 @@ export {
   workflowInstanceFlags,
   waitFlags,
   installFlags,
-  coordinate,
+  coordinate
 }

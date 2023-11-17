@@ -16,6 +16,7 @@ export const createTaskType = async (flags: TaskTypeFlags, source: string, name:
   return taskType
 }
 
+
 export const createTaskTypeDump = async (type: string, major: number, minor: number, comment: string): Promise<TaskTypeDump> => {
   const taskTypeDump: TaskTypeDump = {
     type: type,
@@ -25,7 +26,6 @@ export const createTaskTypeDump = async (type: string, major: number, minor: num
   }
   return taskTypeDump
 }
-
 
 export const updateMajor = async (flags: UpdateFlags, source: string): Promise<NewMajor> => {
   const minor: NewMinor = {
