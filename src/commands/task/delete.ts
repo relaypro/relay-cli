@@ -92,4 +92,3 @@ export default class TaskDeleteCommand extends Command {
     }
   }
 }
-

@@ -106,9 +106,43 @@ const taskGroupCreateArgs = [
   }
 ]
 
+const integrationStartArgs = [
+  {
+    name: `namespace`,
+    required: true,
+    description: `Namespace of the task type`,
+    options: [`account`, `system`]
+  },
+  {
+    name: `major`,
+    required: true,
+    description: `Major version`
+  },
+  {
+    name: `config`,
+    required: true,
+    description: `Subscriber config file name`,
+  }
+]
+
+const aliceTicketerStartArgs = [
+  {
+    name: `type`,
+    required: true,
+    description: `Name of task type`
+  },
+  {
+    name: `service-id`,
+    required: true,
+    description: `Tickets are created in this Alice service`
+  }
+]
+
 export {
   taskStartArgs,
   taskGroupCreateArgs,
+  integrationStartArgs,
+  aliceTicketerStartArgs,
   StartArgs,
   ScheduleArgs,
   CreateTaskGroupArgs,

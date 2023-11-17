@@ -37,6 +37,14 @@ export type TaskTypeFlags = {
 
 export type UpdateFlags = Omit<TaskTypeFlags, `name` | `source`>
 
+export type IntegrationStartFlags = {
+  install?: string[],
+  [`install-all`]?: boolean,
+  [`install-group`]?: string,
+  name: string,
+  tag: string[] | undefined,
+}
+
 export type TimerFlags = WorkflowFlags & {
   trigger: string,
   timezone: string,

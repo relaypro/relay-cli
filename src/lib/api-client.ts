@@ -699,4 +699,19 @@ export class APIClient {
     await this.delete(`/relaypro/api/v1/task_groups/${taskGroupId}?subscriber_id=${subscriberId}`)
     return true
   }
+
+  async saveAliceWorkflow(subscriberId: string, workflow: NewWorkflow): Promise<boolean> {
+    await this.post(`/relaypro/api/v1/workflow?subscriber_id=${subscriberId}`, {
+      body: workflow,
+    })
+    return true
+  }
+
+  async sendTaskEvent(subscriberId: string, donePath: string): Promise<boolean> {
+    await this.post(`/relaypro/api/v1/task_event/${donePath}?subscriber_id=${subscriberId}`, {
+      body: {},
+      ...this.requireAdminToken(),
+    })
+    return true
+  }
 }
