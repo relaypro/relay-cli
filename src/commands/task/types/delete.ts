@@ -17,7 +17,7 @@ export default class TaskTypesDeleteCommand extends Command {
   static description = `Delete a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command.`
   static strict = false
 
-  // static hidden = true
+  static hidden = true
 
   static flags = {
     ...flags.subscriber

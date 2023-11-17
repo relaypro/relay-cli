@@ -15,7 +15,7 @@ const debug = debugFn(`tasks:list`)
 
 export default class TaskListCommand extends Command {
   static description = `List task configurations`
-  // static hidden = true
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,

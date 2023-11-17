@@ -14,7 +14,7 @@ const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
 export default class TaskDeleteCommand extends Command {
   static description = `Delete a running or scheduled task`
-  // static hidden = true
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,

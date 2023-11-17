@@ -17,7 +17,7 @@ export default class TaskGroupDeleteCommand extends Command {
   static description = `Delete a task group`
   static strict = false
 
-  // static hidden = true
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,

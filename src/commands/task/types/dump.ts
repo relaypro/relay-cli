@@ -16,7 +16,7 @@ export default class TaskTypesDumpCommand extends Command {
   static description = `Dumps task types along with their latest minor, major, and comment`
   static strict = false
 
-  // static hidden = true
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,

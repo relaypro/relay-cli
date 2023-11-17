@@ -15,7 +15,7 @@ export default class TaskGroupsCreateCommand extends Command {
   static description = `Create a task group`
   static strict = false
 
-  // static hidden = true
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,

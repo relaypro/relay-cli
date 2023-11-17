@@ -15,7 +15,7 @@ export default class TaskTypesListMajorsCommand extends Command {
   static description = `List task type configurations`
   static strict = false
 
-  // static hidden = true
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,
