@@ -12,6 +12,8 @@ export default class HotSOSStopCommand extends Command {
   static description = `Stop a running HotSOS poller task`
   static strict = false
 
+  static hidden = true
+
   static flags = {
     ...flags.subscriber
   }

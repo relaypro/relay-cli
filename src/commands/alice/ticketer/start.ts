@@ -19,7 +19,7 @@ export default class AliceTicketerStartCommand extends CreateCommand {
   static description = `Start an Alice ticketing workflow with the given configuration`
   static strict = false
 
-  // static hidden = true
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,

@@ -14,7 +14,8 @@ const debug = debugFn(`hotsos:start`)
 export default class HosSOSStartCommand extends Command {
   static description = `Start a HotSOS poller with the given configuration`
   static strict = false
-  // static hidden = true
+
+  static hidden = true
 
   static flags = {
     ...flags.subscriber,
