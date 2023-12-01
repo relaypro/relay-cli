@@ -2,7 +2,7 @@
 
 import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup, TaskTypeDump } from './api'
+import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup, TaskTypeDump, WorkflowEvents, WorkflowEvent } from './api'
 
 import { ALL, RESOURCE_PREFIX } from './constants'
 
@@ -121,7 +121,7 @@ const displayInstall = (workflow: Workflow) => {
 
 export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Installed Workflow${workflows.length > 1 ? `s` : ``}`)
+  options.output ?? CliUx.ux.styledHeader(`Installed Workflow${workflows.length > 1 ? `s` : ``}`)
   CliUx.ux.table(workflows, {
     workflow_id: {
       header: `ID`,
@@ -148,7 +148,7 @@ export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
 
 export const printGeofences = (geofences: Geofence[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Configured geofence${geofences.length > 1 ? `s` : ``}`)
+  options.output ?? CliUx.ux.styledHeader(`Configured geofence${geofences.length > 1 ? `s` : ``}`)
   CliUx.ux.table(geofences, {
     geofence_id: {
       header: `ID`,
@@ -209,7 +209,7 @@ export const printWorkflowInstances = (instances: MergedWorkflowInstance[], flag
 
 export const printTasks = (tasks: Task[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
+  options.output ?? CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
   CliUx.ux.table(tasks, {
     workflow_instance_id: {
       header: `Workflow Instance ID`,
@@ -234,6 +234,7 @@ export const printTasks = (tasks: Task[], flags: unknown): void => {
     },
     assign_to: {
       header: `Assignee`,
+      get: row => row.assign_to
     },
     task_type_major: {
       header: `Major`,
@@ -242,15 +243,17 @@ export const printTasks = (tasks: Task[], flags: unknown): void => {
       header: `Subscriber ID`,
     },
     tags: {
-      get: row => `${row.args.tags ?? ``}`
+      get: row => row.args.tags
     },
-    args: {},
+    args: {
+      get: row => row.args
+    },
   }, options)
 }
 
 export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
+  options.output ?? CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
   CliUx.ux.table(tasks, {
     task_name: {
       header: `Task name`,
@@ -280,6 +283,7 @@ export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): voi
     },
     assign_to: {
       header: `Assignee`,
+      get: row => row.assign_to
     },
     task_type_major: {
       header: `Major`,
@@ -288,15 +292,17 @@ export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): voi
       header: `Subscriber ID`,
     },
     tags: {
-      get: row => `${row.args.tags ?? ``}`
+      get: row => row.args.tags
     },
-    args: {},
+    args: {
+      get: row => row.args
+    },
   }, options)
 }
 
 export const printTaskTypes = (taskTypes: TaskType[], flags: unknown, namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Installed Task Type${taskTypes.length > 1 ? `s` : ``} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
+  options.output ?? CliUx.ux.styledHeader(`Installed Task Type${taskTypes.length > 1 ? `s` : ``} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
   CliUx.ux.table(taskTypes, {
     name: {}
   }, options)
@@ -304,7 +310,7 @@ export const printTaskTypes = (taskTypes: TaskType[], flags: unknown, namespace:
 
 export const printMajors = (majors: Major[], flags: unknown, type: string, namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
+  options.output ?? CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
   CliUx.ux.table(majors, {
     major: {
       header: `Major`,
@@ -314,7 +320,7 @@ export const printMajors = (majors: Major[], flags: unknown, type: string, names
 
 export const printMinors = (minors: Minor[], flags: unknown, type: string, latest: boolean, namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Minor${minors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
+  options.output ?? CliUx.ux.styledHeader(`Minor${minors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
   CliUx.ux.table(minors, {
     minor: {
       header: `${latest ? `Latest ` : ``}Minor`,
@@ -328,7 +334,7 @@ export const printMinors = (minors: Minor[], flags: unknown, type: string, lates
 
 export const printDump = (taskTypes: TaskTypeDump[], flags: unknown,namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Latest versions of task types on ${namespace}`)
+  options.output ?? CliUx.ux.styledHeader(`Latest versions of task types on ${namespace}`)
   CliUx.ux.table(taskTypes, {
     type: {},
     major: {},
@@ -341,7 +347,7 @@ export const printDump = (taskTypes: TaskTypeDump[], flags: unknown,namespace: s
 
 export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Task Groups`)
+  options.output ?? CliUx.ux.styledHeader(`Task Groups`)
   CliUx.ux.table(groups, {
     group_name: {
       header: `Group Name`,
@@ -366,6 +372,53 @@ export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
       header: `Task Type Name`
     },
   }, options)
+}
+
+export const printAnalytics = (analytics: WorkflowEvents, flags: unknown, parse: boolean): void => {
+  const options = { ...(flags as Record<string, unknown>)}
+  options.output ?? CliUx.ux.log(`=> Showing ${analytics?.length} events`)
+  CliUx.ux.table(analytics, {
+    workflow_id: {
+      header: `Workflow ID`,
+    },
+    source_type: {
+      header: `Type`,
+    },
+    category: {},
+    workflow_instance_id: {
+      header: `Instance ID`,
+    },
+    id: {
+      header: `Analytic ID`,
+      extended: true
+    },
+    timestamp: {},
+    user_id: {
+      header: `User ID`,
+    },
+    content_type: {
+      header: `Content Type`,
+      extended: true,
+    },
+    content: {
+      get: row => {
+        if (parse) {
+          return parseContent(row)
+        } else {
+          return row.content
+        }
+      }
+    },
+  }, options)
+  options.output ?? CliUx.ux.log(`=> Showing ${analytics?.length} events`)
+}
+
+const parseContent = (row: WorkflowEvent): string => {
+  if (row.content_type === `application/json` || row.content_type == `application/vnd.relay.tasks.parameters.v2+json`) {
+    return JSON.stringify(JSON.parse(row.content), null, 2)
+  } else {
+    return row.content
+  }
 }
 
 const mappings = {

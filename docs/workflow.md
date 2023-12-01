@@ -70,7 +70,7 @@ USAGE
   $ relay workflow:args:set -w <value> -s <value> [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -w, --workflow-id=<value>           (required) workflow id
   -a, --arg=<value>...                String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
@@ -426,7 +426,7 @@ FLAGS
       Number name/value pair workflow arg
 
   -s, --start=<value>
-      [default: 2023-11-10T13:00:00]
+      [default: 2023-12-01T12:00:00]
 
   -t, --[no-]transient
       Allow workflow to run in the background; otherwise terminate workflow
@@ -514,7 +514,7 @@ List workflow configurations
 
 ```
 USAGE
-  $ relay workflow:list -s <value> [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output
+  $ relay workflow:list -s <value> [--json] [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output
     csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
@@ -528,6 +528,9 @@ FLAGS
   --output=<option>            output in a more machine friendly format
                                <options: csv|json|yaml>
   --sort=<value>               property to sort by (prepend '-' for descending)
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   List workflow configurations

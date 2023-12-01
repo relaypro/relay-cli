@@ -9,12 +9,15 @@ import debugFn = require('debug')
 import { printDump } from '../../../lib/utils'
 import { TaskTypeDump } from '../../../lib/api'
 import { createTaskTypeDump } from '../../../lib/task-types'
+import { Err, Ok, Result } from 'ts-results'
+import { isEmpty } from 'lodash'
 
 const debug = debugFn(`task-types:dump`)
 
 export default class TaskTypesDumpCommand extends Command {
   static description = `Dumps task types along with their latest minor, major, and comment`
   static strict = false
+  static enableJsonFlag = true
 
   static hidden = true
 
@@ -32,7 +35,7 @@ export default class TaskTypesDumpCommand extends Command {
       hidden: false
     }
   ]
-  async run(): Promise<void> {
+  async run(): Promise<Result<TaskTypeDump[], Error>> {
     const { flags, argv } = await this.parse(TaskTypesDumpCommand)
     const subscriberId = flags[`subscriber-id`]
     const namespace = argv[0] as string
@@ -47,12 +50,15 @@ export default class TaskTypesDumpCommand extends Command {
         const taskTypeDump = await createTaskTypeDump(type.name, major.major, minor.minor, minor.comment)
         latestTaskTypes.push(taskTypeDump)
       }
-
-      printDump(latestTaskTypes, flags, namespace)
-
+      if (isEmpty(latestTaskTypes)) {
+        this.log(`No task types have been created`)
+      } else if (!this.jsonEnabled()) {
+        printDump(latestTaskTypes, flags, namespace)
+      }
+      return Ok(latestTaskTypes)
     } catch (err) {
       debug(err)
-      this.safeError(err)
+      return Err(this.safeError(err))
     }
 
   }

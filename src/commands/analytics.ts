@@ -6,10 +6,10 @@ import debugFn = require('debug')
 
 import * as flags from '../lib/flags'
 import { CliUx } from '@oclif/core'
-import { WorkflowEvent, WorkflowEventQuery, WorkflowEvents } from '../lib/api'
+import { WorkflowEventQuery, WorkflowEvents } from '../lib/api'
 import { isEmpty } from 'lodash'
 import { Result, Ok } from 'ts-results'
-// import { CliUx } from '@oclif/core'
+import { printAnalytics } from '../lib/utils'
 
 const debug = debugFn(`analytics`)
 
@@ -108,63 +108,16 @@ export default class Analytics extends Command {
     let analytics: WorkflowEvents = []
 
     try {
-
       analytics = await this.relay.workflowEvents(subscriberId, query)
-      if (!this.jsonEnabled()) {
-        if (!isEmpty(analytics)) {
-          CliUx.ux.log(`=> Showing ${analytics?.length} events`)
-          CliUx.ux.table(analytics, {
-            workflow_id: {
-              header: `Workflow ID`,
-            },
-            source_type: {
-              header: `Type`,
-            },
-            category: {},
-            workflow_instance_id: {
-              header: `Instance ID`,
-            },
-            id: {
-              header: `Analytic ID`,
-              extended: true
-            },
-            timestamp: {},
-            user_id: {
-              header: `User ID`,
-            },
-            content_type: {
-              header: `Content Type`,
-              extended: true,
-            },
-            content: {
-              get: row => {
-                if (parse) {
-                  return parseContent(row)
-                } else {
-                  return row.content
-                }
-              }
-            },
-          })
-          CliUx.ux.log(`=> Showing ${analytics?.length} events`)
-        } else {
-          this.log(`No analytic events found from the provided criteria`)
-        }
+      if (isEmpty(analytics)) {
+        this.log(`No analytic events found from the provided criteria`)
+      } else if (!this.jsonEnabled()) {
+        printAnalytics(analytics, flags, parse)
       }
     } catch (err) {
       debug(err)
       this.safeError(err)
     }
-
     return Ok(analytics)
-  }
-}
-
-
-const parseContent = (row: WorkflowEvent): string => {
-  if (row.content_type === `application/json` || row.content_type == `application/vnd.relay.tasks.parameters.v2+json`) {
-    return JSON.stringify(JSON.parse(row.content), null, 2)
-  } else {
-    return row.content
   }
 }

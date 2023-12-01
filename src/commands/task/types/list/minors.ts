@@ -8,12 +8,15 @@ import { printMinors } from '../../../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 import { isEmpty } from 'lodash'
+import { Minor } from '../../../../lib/api'
+import { Err, Ok, Result } from 'ts-results'
 
 const debug = debugFn(`task-types:list`)
 
 export default class TaskTypesListMinorsCommand extends Command {
   static description = `List task type configurations`
   static strict = false
+  static enableJsonFlag = true
 
   static hidden = true
 
@@ -41,13 +44,12 @@ export default class TaskTypesListMinorsCommand extends Command {
     }
   ]
 
-  async run(): Promise<void> {
+  async run(): Promise<Result<Minor[], Error>> {
     const { flags, argv } = await this.parse(TaskTypesListMinorsCommand)
     const subscriberId = flags[`subscriber-id`]
     const namespace = argv[0] as string
     const type = argv[1] as string
     const major = argv[2] as string
-
     try {
       const minors = await this.relay.fetchMinors(subscriberId, namespace, type, major)
 
@@ -55,15 +57,14 @@ export default class TaskTypesListMinorsCommand extends Command {
 
       if (isEmpty(minors)) {
         this.error(`No minors found. Check namespace, type and major args.`)
+      } else if (!this.jsonEnabled()) {
+        printMinors(minors, flags, type, false, namespace)
       }
-
-      printMinors(minors, flags, type, false, namespace)
-
+      return Ok(minors)
     } catch (err) {
       debug(err)
-      this.safeError(err)
+      return Err(this.safeError(err))
     }
-
   }
 }
 

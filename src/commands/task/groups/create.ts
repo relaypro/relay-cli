@@ -47,9 +47,8 @@ export default class TaskGroupsCreateCommand extends Command {
     try {
       const group = await createTaskGroup(taskGroupArgs)
       const success = await this.relay.createTaskGroup(subscriberId, group)
-
       if (success) {
-        this.log(`Successfully started created task group`)
+        this.log(`Successfully created task group`)
       } else {
         this.log(`Could not create task group`)
       }
