@@ -5,16 +5,19 @@ import { CliUx } from '@oclif/core'
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
 import { isEmpty } from 'lodash'
-import { filterByTag, printScheduledTasks, printTasks } from '../../lib/utils'
+import { filterByTag, getTaskGroup, printScheduledTasks, printTasks } from '../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-import { ScheduledTask } from '../../lib/api'
+import { ScheduledTask, Task } from '../../lib/api'
+import { Err, Ok, Result } from 'ts-results'
 
 const debug = debugFn(`tasks:list`)
 
 export default class TaskListCommand extends Command {
   static description = `List task configurations`
+  static enableJsonFlag = true
+
   static hidden = true
 
   static flags = {
@@ -39,45 +42,52 @@ export default class TaskListCommand extends Command {
       exclusive: [`tag`]
     })
   }
-  async run(): Promise<void> {
+  async run(): Promise<Result<Task[], Error>> {
     const { flags } = await this.parse(TaskListCommand)
     const subscriberId = flags[`subscriber-id`]
     const groupName = flags[`group-name`]
-
+    const output = flags.output
     try {
       let taskEndpoint
+      let tasks
       if (flags.scheduled) {
         taskEndpoint = `scheduled_task`
       } else {
         taskEndpoint = `task`
       }
-      let tasks
       if (groupName) {
-        tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint, groupName)
+        const groups = await this.relay.fetchTaskGroups(subscriberId)
+        const group = getTaskGroup(groups, groupName)
+        if (group == undefined) {
+          this.error(`No group found with name ${groupName}`)
+        } else {
+          tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint, group?.task_group_id)
+        }
       } else {
         tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
       }
-
       if (flags.tag) {
         tasks = filterByTag(tasks, flags.tag)
       }
 
       debug(`tasks`, tasks)
 
-      if (!isEmpty(tasks)) {
-        if (flags.scheduled) {
+      if (isEmpty(tasks)) {
+        this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet${groupName ? ` with group name ${groupName}` : ``}`)
+      } else if (!this.jsonEnabled()) {
+        if (output == `json`) {
+          this.log(JSON.stringify(tasks)) // to make assign-to and args attributes proper json
+        } else if (flags.scheduled) {
           printScheduledTasks((tasks as ScheduledTask[]), flags)
         } else {
           printTasks(tasks, flags)
         }
-      } else {
-        this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet${groupName ? ` with group ID ${groupName}` : ``}`)
       }
+      return Ok(tasks)
     } catch (err) {
       debug(err)
-      this.safeError(err)
+      return Err(this.safeError(err))
     }
-
   }
 }
 
