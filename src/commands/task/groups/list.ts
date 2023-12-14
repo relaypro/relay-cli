@@ -38,7 +38,7 @@ export default class TaskGroupsListCommand extends Command {
         this.log(`No task groups have been created.`)
       } else if (!this.jsonEnabled()) {
         if (output == `json`) {
-          this.log(JSON.stringify(groups)) // to make assign-to proper json
+          this.log(JSON.stringify(groups))
         } else {
           printTaskGroups(groups, flags)
         }

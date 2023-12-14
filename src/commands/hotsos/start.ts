@@ -58,7 +58,6 @@ export default class HosSOSStartCommand extends Command {
       type: `hotsos_poller`,
       major: major,
       name: flags.name,
-      assignTo: encodedConfig.assign_to,
       args
     }
 

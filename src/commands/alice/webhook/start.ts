@@ -58,7 +58,6 @@ export default class AliceWebhookStartCommand extends Command {
       type: `alice_webhook`,
       major: major,
       name: flags.name,
-      assignTo: encodedConfig.assign_to,
       args
     }
 

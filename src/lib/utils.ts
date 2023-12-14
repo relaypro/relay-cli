@@ -232,10 +232,6 @@ export const printTasks = (tasks: Task[], flags: unknown): void => {
     task_type_namespace: {
       header: `Namespace`,
     },
-    assign_to: {
-      header: `Assignee`,
-      get: row => row.assign_to
-    },
     task_type_major: {
       header: `Major`,
     },
@@ -280,10 +276,6 @@ export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): voi
     },
     count: {
       get: row => `${row.count ?? `N/A`}`
-    },
-    assign_to: {
-      header: `Assignee`,
-      get: row => row.assign_to
     },
     task_type_major: {
       header: `Major`,
@@ -343,7 +335,7 @@ export const printDump = (taskTypes: TaskTypeDump[], flags: unknown,namespace: s
   }, options)
 }
 
-// [{"timestamp":"2023-11-02T20:28:12Z","assign_to":["urn:relay-resource:name:device:frog"],"task_type_namespace":"system","task_type_major":1,"subscriber_id":"8efb6648-c26c-4147-bee8-fa4c6811fd03","task_type_name":"delivery","group_name":"test","task_group_id":"Nriw1Vp5dysN9ANhdAvDulB"}]
+// [{"timestamp":"2023-11-02T20:28:12Z","task_type_namespace":"system","task_type_major":1,"subscriber_id":"8efb6648-c26c-4147-bee8-fa4c6811fd03","task_type_name":"delivery","group_name":"test","task_group_id":"Nriw1Vp5dysN9ANhdAvDulB"}]
 
 export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
@@ -356,9 +348,6 @@ export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
       header: `Task Group ID`
     },
     timestamp: {},
-    assign_to: {
-      header: `Assignee`
-    },
     task_type_namespace: {
       header: `Namespace`,
     },

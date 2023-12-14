@@ -298,7 +298,6 @@ export type NewTask = {
   task_name: string,
   task_type_name: string,
   task_type_namespace: string,
-  assign_to: string[],
   task_type_major: integer,
   args: TaskArgs,
 }
@@ -355,7 +354,6 @@ export type TaskType = {
 
 export type TaskGroup = {
   timestamp: string,
-  assign_to: string[],
   task_type_namespace: string,
   task_type_major: integer,
   subscriber_id: string,
@@ -377,7 +375,6 @@ export type NewTaskGroup = {
   task_type_namespace: string,
   task_type_name: string,
   task_type_major: integer,
-  assign_to: string[],
   members: TaskGroupMembers
 }
 
