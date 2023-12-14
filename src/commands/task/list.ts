@@ -76,7 +76,7 @@ export default class TaskListCommand extends Command {
         this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet${groupName ? ` with group name ${groupName}` : ``}`)
       } else if (!this.jsonEnabled()) {
         if (output == `json`) {
-          this.log(JSON.stringify(tasks)) // to make assign-to and args attributes proper json
+          this.log(JSON.stringify(tasks))
         } else if (flags.scheduled) {
           printScheduledTasks((tasks as ScheduledTask[]), flags)
         } else {

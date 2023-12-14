@@ -8,7 +8,6 @@ type StartArgs = {
   type: string,
   major: string,
   name: string,
-  assignTo: string,
   args: string | TaskArgs,
 }
 
@@ -22,20 +21,19 @@ type CreateTaskGroupArgs = {
   name: string,
   type: string,
   major: string,
-  assignTo: string,
   members: string | TaskGroupMembers
 }
 
 const createScheduleArgs = (args: string[]): ScheduleArgs => {
-  return zipObject([`namespace`, `type`, `major`, `name`, `assignTo`, `args`, `start`, `timezone`],args) as ScheduleArgs
+  return zipObject([`namespace`, `type`, `major`, `name`, `args`, `start`, `timezone`],args) as ScheduleArgs
 }
 
 const createStartArgs = (args: string[]): StartArgs => {
-  return zipObject([`namespace`, `type`,`major`, `name`, `assignTo`, `args`], args) as StartArgs
+  return zipObject([`namespace`, `type`,`major`, `name`, `args`], args) as StartArgs
 }
 
 const createTaskGroupArgs = (args: string[]): CreateTaskGroupArgs => {
-  return zipObject([`namespace`,`type`, `major`, `name`, `assignTo`, `members`], args) as CreateTaskGroupArgs
+  return zipObject([`namespace`,`type`, `major`, `name`, `members`], args) as CreateTaskGroupArgs
 }
 
 const taskStartArgs = [
@@ -59,11 +57,6 @@ const taskStartArgs = [
     name: `name`,
     required: true,
     description: `Name of the task`
-  },
-  {
-    name: `assign-to`,
-    required: true,
-    description: `Devices on which to start this task`
   },
   {
     name: `args`,
@@ -93,11 +86,6 @@ const taskGroupCreateArgs = [
     name: `name`,
     required: true,
     description: `Group name`
-  },
-  {
-    name: `assign-to`,
-    required: true,
-    description: `Device name`
   },
   {
     name: `members`,

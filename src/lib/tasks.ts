@@ -15,7 +15,6 @@ export const createTask = async (startArgs: StartArgs): Promise<NewTask> => {
     task_type_name: startArgs.type,
     task_type_major: +startArgs.major,
     task_name: startArgs.name,
-    assign_to: [deviceUri(startArgs.assignTo)],
     task_type_namespace: startArgs.namespace,
     args: startArgs.args as TaskArgs,
   }
@@ -27,7 +26,6 @@ export const createScheduledTask = async (flags: ScheduledTaskFlags, scheduleArg
     task_type_name: scheduleArgs.type,
     task_type_major: +scheduleArgs.major,
     task_name: scheduleArgs.name,
-    assign_to: [deviceUri(scheduleArgs.assignTo)],
     task_type_namespace: scheduleArgs.namespace,
     args: scheduleArgs.args as TaskArgs,
     frequency: flags.frequency,
@@ -45,7 +43,6 @@ export const createTaskGroup = async (createGroupArgs: CreateTaskGroupArgs): Pro
     task_type_namespace: createGroupArgs.namespace,
     task_type_name: createGroupArgs.type,
     task_type_major: +createGroupArgs.major,
-    assign_to: [deviceUri(createGroupArgs.assignTo)],
     members: createGroupArgs.members as TaskGroupMembers
   }
   return taskGroup
@@ -59,8 +56,7 @@ export const createAliceArgs = async (config: IntegrationConfig, flags: Integrat
     done_path: `/_alice/` + flags.name + `.done`,
     task_types: {
       alert: {namespace: namespace, name: `alice_alert`, major: major},
-      ticket: {namespace: namespace, name: `alice_ticket`, major: major},
-      assign_to: [config.assign_to]
+      ticket: {namespace: namespace, name: `alice_ticket`, major: major}
     },
     tags: [`alice_webhook`]
   }
