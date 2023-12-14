@@ -12,8 +12,8 @@ Display and filter analytics
 ```
 USAGE
   $ relay analytics [CATEGORY] -s <value> [--json] [-w <value>] [-i <value>] [-u <value>] [-t system|user] [-p]
-    [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |  | [--csv | --no-truncate]]
-    [--no-header | ]
+    [-l <value>] [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |  | [--csv |
+    --no-truncate]] [--no-header | ]
 
 ARGUMENTS
   CATEGORY  Can be workflow, tasks, or a custom category
@@ -21,6 +21,7 @@ ARGUMENTS
 FLAGS
   -s, --subscriber-id=<value>         (required) [default: 8efb6648-c26c-4147-bee8-fa4c6811fd03] subscriber id
   -i, --workflow-instance-id=<value>  workflow instance id
+  -l, --limit=<value>                 [default: 20] limit the number of events to retrieve
   -p, --parse                         whether to parse/process the analytic content based on the 'content_type'
   -t, --type=(system|user)            analytic type
   -u, --user-id=<value>               user id

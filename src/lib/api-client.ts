@@ -368,7 +368,6 @@ export class APIClient {
 
     let cursor = ``
     let events: WorkflowEvents = []
-
     do {
 
       if (isEmpty(cursor)) {
@@ -376,11 +375,9 @@ export class APIClient {
       } else {
         params.set(`cursor`, cursor)
       }
-
       const url = `/ibot/workflow_analytics_events?${params.toString()}`
 
       const response = await this.get<WorkflowEventResults>(url)
-
       debug(`cursor => ${response?.body?.cursor}`)
       debug(`length => ${response?.body?.data?.length}`)
 
@@ -390,6 +387,9 @@ export class APIClient {
         ...event,
         jsonContent: event.content_type === `application/json` ? JSON.parse(event.content) : undefined
       }))]
+      if (query.limit) {
+        return events
+      }
 
     } while (!isEmpty(cursor))
 
