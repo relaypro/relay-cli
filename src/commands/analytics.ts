@@ -113,7 +113,7 @@ export default class Analytics extends Command {
     if (limit) {
       query.limit = limit
     }
-    query.limit = limit
+
     debug(`query`, query)
 
     let analytics: WorkflowEvents = []
