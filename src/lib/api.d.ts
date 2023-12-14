@@ -120,7 +120,7 @@ export type WorkflowEventQuery = {
   latest?: number,
   oldest?: number,
   cursor?: string,
-  limit?: number,
+  limit?: integer,
 }
 
 export type WorkflowLog = {

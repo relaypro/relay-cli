@@ -58,6 +58,12 @@ export default class Analytics extends Command {
       required: false,
       hidden: false,
     }),
+    [`limit`]: flags.integer({
+      char: `l`,
+      description: `limit the number of events to retrieve`,
+      default: 20,
+      required: false,
+    }),
     ...CliUx.ux.table.flags(),
   }
 
@@ -77,6 +83,7 @@ export default class Analytics extends Command {
     const userId = flags[`user-id`]
     const type = flags[`type`]
     const parse = flags[`parse`]
+    const limit = flags[`limit`]
     const category = argv[0]
 
     debug(`flags`, flags)
@@ -103,6 +110,10 @@ export default class Analytics extends Command {
       query.category = category
     }
 
+    if (limit) {
+      query.limit = limit
+    }
+
     debug(`query`, query)
 
     let analytics: WorkflowEvents = []
@@ -114,6 +125,7 @@ export default class Analytics extends Command {
       } else if (!this.jsonEnabled()) {
         printAnalytics(analytics, flags, parse)
       }
+
     } catch (err) {
       debug(err)
       this.safeError(err)
