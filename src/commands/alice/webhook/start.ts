@@ -15,8 +15,6 @@ export default class AliceWebhookStartCommand extends Command {
   static description = `Start an Alice webhook task with the given configuration`
   static strict = false
 
-  static hidden = true
-
   static flags = {
     ...flags.subscriber,
     name: flags.string({

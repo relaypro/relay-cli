@@ -20,10 +20,44 @@ export default class RelayHelp extends Help {
     super.showHelp(args)
   }
 
+  protected async customShowRootHelp(): Promise<void> {
+    let rootTopics = super.sortedTopics
+    let rootCommands = super.sortedCommands
+
+    const state = this.config.pjson?.oclif?.state
+    if (state) {
+      super.log(state === `deprecated` ? `${super.config.bin} is deprecated` : `${super.config.bin} is in ${state}.\n`)
+    }
+
+    super.log(super.formatRoot())
+    super.log(``)
+
+    // take out top level help for capsule commands
+    rootTopics = rootTopics.filter((t) => !t.name.includes(`task`))
+    rootTopics = rootTopics.filter((t) => !t.name.includes(`alice`))
+    rootTopics = rootTopics.filter((t) => !t.name.includes(`hotsos`))
+
+    if (!this.opts.all) {
+      rootTopics = rootTopics.filter((t) => !t.name.includes(`:`))
+      rootCommands = rootCommands.filter((c) => !c.id.includes(`:`))
+    }
+
+    if (rootTopics.length > 0) {
+      super.log(super.formatTopics(rootTopics))
+      super.log(``)
+    }
+
+    if (rootCommands.length > 0) {
+      rootCommands = rootCommands.filter((c) => c.id)
+      super.log(super.formatCommands(rootCommands))
+      super.log(``)
+    }
+  }
+
   // display the root help of a CLI
   async showRootHelp(): Promise<void> {
     CliUx.ux.log(RELAY)
-    super.showRootHelp()
+    this.customShowRootHelp()
   }
 
   // display help for a topic
