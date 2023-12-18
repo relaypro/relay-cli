@@ -14,8 +14,6 @@ export default class TaskTypesFetchCommand extends Command {
   static description = `Fetch a specific minor`
   static strict = false
 
-  static hidden = true
-
   static flags = {
     ...flags.subscriber,
     ...CliUx.ux.table.flags()

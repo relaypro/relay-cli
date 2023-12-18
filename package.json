@@ -105,16 +105,31 @@
     "topicSeparator": " ",
     "topics": {
       "alice": {
-        "description": "Manage Alice integrations"
+        "description": "Manage Alice integrations",
+        "hidden": true
       },
-        "hotsos": {
-          "description": "Manage HotSOS integrations"
+      "alice:ticketer": {
+        "description": "Manage Alice ticketer task"
+      },
+      "alice:webhook": {
+        "description": "Manage Alice webhook task"
+      },
+      "hotsos": {
+        "description": "Manage HotSOS integrations",
+        "hidden": true
       },
       "tag": {
         "description": "Manages configurations that can be associated with an NFC tag"
       },
       "task": {
-        "description": "Manage task configurations"
+        "description": "Manage task configurations",
+        "hidden": true
+      },
+      "task:groups": {
+        "description": "Manage task groups"
+      },
+      "task:types": {
+        "description": "Manage task types"
       },
       "workflow": {
         "description": "Manage workflow configurations"

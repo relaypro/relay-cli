@@ -18,8 +18,6 @@ export default class TaskGroupsListCommand extends Command {
   static strict = false
   static enableJsonFlag = true
 
-  static hidden = true
-
   static flags = {
     ...flags.subscriber,
     ...CliUx.ux.table.flags(),

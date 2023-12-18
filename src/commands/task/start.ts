@@ -16,7 +16,6 @@ export default class TasksStartCommand extends Command {
 
   static description = `Start a task with the given configuration`
   static strict = false
-  static hidden = true
 
   static flags = {
     ...flags.subscriber,

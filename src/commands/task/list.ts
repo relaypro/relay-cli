@@ -18,7 +18,6 @@ export default class TaskListCommand extends Command {
   static description = `List task configurations`
   static enableJsonFlag = true
 
-  static hidden = true
 
   static flags = {
     ...flags.subscriber,
