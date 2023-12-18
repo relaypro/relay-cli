@@ -10,7 +10,6 @@ import { RELAY } from './art'
 // const debug = debugFn(`cli`)
 
 
-
 export default class RelayHelp extends Help {
   // acts as a "router"
   // and based on the args it receives
@@ -24,6 +23,10 @@ export default class RelayHelp extends Help {
   async showRootHelp(): Promise<void> {
     CliUx.ux.log(RELAY)
     super.showRootHelp()
+  }
+
+  protected get sortedTopics(): Interfaces.Topic[] {
+    return super.sortedTopics.filter(t => !(t as RelayTopic).hidden)
   }
 
   // display help for a topic
@@ -69,6 +72,10 @@ export default class RelayHelp extends Help {
     const help = new RelayCommandHelp(command, this.config, this.opts)
     return help.generate()
   }
+}
+
+interface RelayTopic extends Interfaces.Topic {
+  hidden?: boolean
 }
 
 class RelayCommandHelp extends CommandHelp {

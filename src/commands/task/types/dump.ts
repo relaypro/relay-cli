@@ -19,7 +19,6 @@ export default class TaskTypesDumpCommand extends Command {
   static strict = false
   static enableJsonFlag = true
 
-  static hidden = true
 
   static flags = {
     ...flags.subscriber,

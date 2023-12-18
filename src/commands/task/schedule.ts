@@ -16,7 +16,6 @@ export default class TasksScheduleCommand extends Command {
 
   static description = `Schedule a task with the given configuration`
   static strict = false
-  static hidden = true
 
   static flags = {
     ...flags.subscriber,

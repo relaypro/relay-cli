@@ -12,8 +12,6 @@ export default class AliceWebhookStopCommand extends Command {
   static description = `Stop a running Alice webhook task`
   static strict = false
 
-  static hidden = true
-
   static flags = {
     ...flags.subscriber
   }
