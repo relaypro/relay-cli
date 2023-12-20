@@ -12,7 +12,7 @@ const debug = debugFn(`devices`)
 
 export class DevicesCommand extends Command {
 
-  static description = `list all device ids`
+  static description = `List all device ids`
 
   static flags = {
     ...flags.subscriber

@@ -13,7 +13,7 @@ const debug = debugFn(`venues`)
 
 export class VenuesCommand extends Command {
 
-  static description = `list all venues`
+  static description = `List all venues`
 
   static enableJsonFlag = true
 

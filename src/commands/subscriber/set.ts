@@ -16,7 +16,7 @@ import * as flags from '../../lib/flags'
 const debug = debugFn(`subscriber`)
 
 export default class SubscriberSet extends Command {
-  static description = `set the default subscriber`
+  static description = `Set the default subscriber`
 
   static flags = {
     [`subscriber-id`]: flags.string({

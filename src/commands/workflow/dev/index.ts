@@ -9,7 +9,7 @@ import debugFn = require('debug')
 const debug = debugFn(`dev`)
 
 export default class Dev extends Command {
-  static description = `workflow development`
+  static description = `Workflow development`
 
   static hidden = true
 

@@ -21,7 +21,7 @@ export class UnsetArgsCommand extends Command {
 
   static strict = false
 
-  static description = `display arguments for a workflow`
+  static description = `Display arguments for a workflow`
 
   static flags = {
     [`workflow-id`]: flags.workflowId,

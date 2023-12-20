@@ -1,13 +1,13 @@
 `relay venues`
 ==============
 
-list all venues
+List all venues
 
 * [`relay venues`](#relay-venues)
 
 ## `relay venues`
 
-list all venues
+List all venues
 
 ```
 USAGE
@@ -30,7 +30,7 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  list all venues
+  List all venues
 ```
 
 _See code: [dist/commands/venues.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/venues.ts)_

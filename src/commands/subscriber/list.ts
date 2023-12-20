@@ -12,7 +12,7 @@ import { SubscriberQuery } from '../../lib/session'
 const debug = debugFn(`subscriber`)
 
 export default class SubscriberList extends Command {
-  static description = `list subscribers`
+  static description = `List subscribers`
 
   static flags = {
     name: flags.string({

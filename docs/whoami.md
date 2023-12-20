@@ -1,13 +1,13 @@
 `relay whoami`
 ==============
 
-display the current logged in user
+Display the current logged in user
 
 * [`relay whoami`](#relay-whoami)
 
 ## `relay whoami`
 
-display the current logged in user
+Display the current logged in user
 
 ```
 USAGE
@@ -17,7 +17,7 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  display the current logged in user
+  Display the current logged in user
 ```
 
 _See code: [dist/commands/whoami.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/whoami.ts)_

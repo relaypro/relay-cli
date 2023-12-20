@@ -17,7 +17,7 @@ export class SetArgsCommand extends Command {
 
   static strict = false
 
-  static description = `set one or more workflow arguments`
+  static description = `Set one or more workflow arguments`
 
   static flags = {
     [`workflow-id`]: flags.workflowId,

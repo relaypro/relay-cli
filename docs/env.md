@@ -1,13 +1,13 @@
 `relay env`
 ===========
 
-displays the configured environment
+Displays the configured environment
 
 * [`relay env`](#relay-env)
 
 ## `relay env`
 
-displays the configured environment
+Displays the configured environment
 
 ```
 USAGE
@@ -20,7 +20,7 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  displays the configured environment
+  Displays the configured environment
 
 EXAMPLES
   Define API and Auth Hosts using shell environment variables:

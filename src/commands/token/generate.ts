@@ -7,7 +7,7 @@ import { vars } from '../../lib/vars'
 import * as flags from '../../lib/flags'
 
 export default class GenerateToken extends Command {
-  static description = `generate a token that can be used with the Relay SDK`
+  static description = `Generate a token that can be used with the Relay SDK`
 
   static flags = {
     [`jwt`]: flags.boolean({

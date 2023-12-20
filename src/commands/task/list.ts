@@ -23,6 +23,7 @@ export default class TaskListCommand extends Command {
     ...flags.subscriber,
     ...CliUx.ux.table.flags(),
     scheduled: flags.boolean({
+      char: `S`,
       description: `List scheduled tasks`,
       required: false,
     }),

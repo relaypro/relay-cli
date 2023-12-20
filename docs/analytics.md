@@ -19,7 +19,7 @@ ARGUMENTS
   CATEGORY  Can be workflow, tasks, or a custom category
 
 FLAGS
-  -s, --subscriber-id=<value>         (required) [default: 8efb6648-c26c-4147-bee8-fa4c6811fd03] subscriber id
+  -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -i, --workflow-instance-id=<value>  workflow instance id
   -l, --limit=<value>                 [default: 20] limit the number of events to retrieve
   -p, --parse                         whether to parse/process the analytic content based on the 'content_type'
