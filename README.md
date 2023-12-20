@@ -33,20 +33,20 @@ USAGE
 
 * [`relay analytics`](docs/analytics.md) - Display and filter analytics
 * [`relay audio`](docs/audio.md) - Create custom audio
-* [`relay devices`](docs/devices.md) - list all device ids
-* [`relay env`](docs/env.md) - displays the configured environment
+* [`relay devices`](docs/devices.md) - List all device ids
+* [`relay env`](docs/env.md) - Displays the configured environment
 * [`relay group`](docs/group.md) - Lists all groups.
 * [`relay help`](docs/help.md) - Display help for relay.
-* [`relay login`](docs/login.md) - login with your Relay credentials
-* [`relay logout`](docs/logout.md) - logout and forget any tokens
-* [`relay positions`](docs/positions.md) - list all positions by venue
-* [`relay subscriber`](docs/subscriber.md) - show default subscriber
+* [`relay login`](docs/login.md) - Login with your Relay credentials
+* [`relay logout`](docs/logout.md) - Logout and forget any tokens
+* [`relay positions`](docs/positions.md) - List all positions by venue
+* [`relay subscriber`](docs/subscriber.md) - Show default subscriber
 * [`relay tag`](docs/tag.md) - Manages configurations that can be associated with an NFC tag
-* [`relay token`](docs/token.md) - generate a token that can be used with the Relay SDK
+* [`relay token`](docs/token.md) - Generate a token that can be used with the Relay SDK
 * [`relay update`](docs/update.md) - update the relay CLI
-* [`relay venues`](docs/venues.md) - list all venues
+* [`relay venues`](docs/venues.md) - List all venues
 * [`relay version`](docs/version.md)
-* [`relay whoami`](docs/whoami.md) - display the current logged in user
+* [`relay whoami`](docs/whoami.md) - Display the current logged in user
 * [`relay workflow`](docs/workflow.md) - Manage workflow configurations
 
 <!-- commandsstop -->

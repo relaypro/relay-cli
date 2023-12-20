@@ -8,7 +8,7 @@ import debugFn = require('debug') // eslint-disable-line quotes
 const debug = debugFn(`whoami`)
 
 export default class AuthWhoami extends Command {
-  static description = `display the current logged in user`
+  static description = `Display the current logged in user`
   static enableJsonFlag = true
 
   async run(): Promise<Record<string, unknown>> {

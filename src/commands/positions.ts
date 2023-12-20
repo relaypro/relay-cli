@@ -14,7 +14,7 @@ const debug = debugFn(`positions`)
 
 export class PositionsCommand extends Command {
 
-  static description = `list all positions by venue`
+  static description = `List all positions by venue`
 
   static enableJsonFlag = true
 

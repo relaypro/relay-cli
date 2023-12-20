@@ -19,6 +19,7 @@ export default class TaskDeleteCommand extends Command {
     ...flags.subscriber,
     ...flags.confirmFlags,
     scheduled: flags.boolean({
+      char: `S`,
       required: false,
       description: `Delete a scheduled task`,
     }),

@@ -19,7 +19,7 @@ const PREFIX = `RELAY_`
 
 export default class Env extends Command {
   static enableJsonFlag = true
-  static description = `displays the configured environment`
+  static description = `Displays the configured environment`
   static examples = [`
 Define API and Auth Hosts using shell environment variables:
 

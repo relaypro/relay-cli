@@ -1,13 +1,13 @@
 `relay positions`
 =================
 
-list all positions by venue
+List all positions by venue
 
 * [`relay positions`](#relay-positions)
 
 ## `relay positions`
 
-list all positions by venue
+List all positions by venue
 
 ```
 USAGE
@@ -31,7 +31,7 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  list all positions by venue
+  List all positions by venue
 ```
 
 _See code: [dist/commands/positions.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/positions.ts)_

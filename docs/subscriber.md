@@ -1,7 +1,7 @@
 `relay subscriber`
 ==================
 
-show default subscriber
+Show default subscriber
 
 * [`relay subscriber get`](#relay-subscriber-get)
 * [`relay subscriber list`](#relay-subscriber-list)
@@ -9,21 +9,21 @@ show default subscriber
 
 ## `relay subscriber get`
 
-show default subscriber
+Show default subscriber
 
 ```
 USAGE
   $ relay subscriber:get
 
 DESCRIPTION
-  show default subscriber
+  Show default subscriber
 ```
 
 _See code: [dist/commands/subscriber/get.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/subscriber/get.ts)_
 
 ## `relay subscriber list`
 
-list subscribers
+List subscribers
 
 ```
 USAGE
@@ -36,14 +36,14 @@ FLAGS
   -s, --size=<value>   [default: 100] size of the page of results
 
 DESCRIPTION
-  list subscribers
+  List subscribers
 ```
 
 _See code: [dist/commands/subscriber/list.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/subscriber/list.ts)_
 
 ## `relay subscriber set`
 
-set the default subscriber
+Set the default subscriber
 
 ```
 USAGE
@@ -54,7 +54,7 @@ FLAGS
   -s, --subscriber-id=<value>  subscriber id
 
 DESCRIPTION
-  set the default subscriber
+  Set the default subscriber
 ```
 
 _See code: [dist/commands/subscriber/set.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/subscriber/set.ts)_

@@ -20,6 +20,7 @@ export default class TasksStartCommand extends Command {
   static flags = {
     ...flags.subscriber,
     tag: flags.string({
+      char: `t`,
       required: false,
       multiple: true,
       description: `Optional tag to tie to your task`

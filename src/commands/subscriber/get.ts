@@ -8,7 +8,7 @@ import { getDefaultSubscriber } from '../../lib/session'
 
 
 export default class SubscriberGet extends Command {
-  static description = `show default subscriber`
+  static description = `Show default subscriber`
 
   async run(): Promise<void> {
     const subscriber = getDefaultSubscriber()

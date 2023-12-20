@@ -27,7 +27,7 @@ Manage workflow configurations
 
 ## `relay workflow args get ARG`
 
-display arguments for a workflow
+Display arguments for a workflow
 
 ```
 USAGE
@@ -38,7 +38,7 @@ FLAGS
   -w, --workflow-id=<value>    (required) workflow id
 
 DESCRIPTION
-  display arguments for a workflow
+  Display arguments for a workflow
 ```
 
 _See code: [dist/commands/workflow/args/get.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/workflow/args/get.ts)_
@@ -63,28 +63,28 @@ _See code: [dist/commands/workflow/args/list.ts](https://github.com/relaypro/rel
 
 ## `relay workflow args set`
 
-set one or more workflow arguments
+Set one or more workflow arguments
 
 ```
 USAGE
   $ relay workflow:args:set -w <value> -s <value> [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -w, --workflow-id=<value>           (required) workflow id
   -a, --arg=<value>...                String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
   -r, --number=arg1=100.0...          Number name/value pair workflow arg
 
 DESCRIPTION
-  set one or more workflow arguments
+  Set one or more workflow arguments
 ```
 
 _See code: [dist/commands/workflow/args/set.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/workflow/args/set.ts)_
 
 ## `relay workflow args unset`
 
-unset one or more workflow arguments
+Unset one or more workflow arguments
 
 ```
 USAGE
@@ -95,7 +95,7 @@ FLAGS
   -w, --workflow-id=<value>    (required) workflow id
 
 DESCRIPTION
-  unset one or more workflow arguments
+  Unset one or more workflow arguments
 ```
 
 _See code: [dist/commands/workflow/args/unset.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/workflow/args/unset.ts)_
@@ -426,7 +426,7 @@ FLAGS
       Number name/value pair workflow arg
 
   -s, --start=<value>
-      [default: 2023-12-01T12:00:00]
+      [default: 2023-12-20T17:00:00]
 
   -t, --[no-]transient
       Allow workflow to run in the background; otherwise terminate workflow
