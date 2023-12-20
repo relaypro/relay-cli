@@ -58,7 +58,7 @@ export default class TaskListCommand extends Command {
         const groups = await this.relay.fetchTaskGroups(subscriberId)
         const group = getTaskGroup(groups, groupName)
         if (group == undefined) {
-          this.error(`No group found with name ${groupName}`)
+          tasks = [] as Task[]
         } else {
           tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint, group?.task_group_id)
         }
