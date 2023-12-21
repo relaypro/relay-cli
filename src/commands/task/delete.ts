@@ -7,7 +7,7 @@ import { filterByTag } from '../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-const debug = debugFn(`tasks:delete`)
+const debug = debugFn(`task:delete`)
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes

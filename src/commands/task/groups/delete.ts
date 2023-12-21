@@ -11,7 +11,7 @@ import { getTaskGroup } from '../../../lib/utils'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
-const debug = debugFn(`task-groups:delete`)
+const debug = debugFn(`task:groups:delete`)
 
 export default class TaskGroupDeleteCommand extends Command {
   static description = `Delete a task group`

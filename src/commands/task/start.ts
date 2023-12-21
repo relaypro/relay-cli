@@ -10,7 +10,7 @@ import { createTask } from '../../lib/tasks'
 import { Command } from '../../lib/command'
 import { StartArgs, createStartArgs, taskStartArgs } from '../../lib/args'
 
-const debug = debugFn(`tasks:start`)
+const debug = debugFn(`task:start`)
 
 export default class TasksStartCommand extends Command {
 

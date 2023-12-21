@@ -11,7 +11,7 @@ import debugFn = require('debug')
 import { TaskType } from '../../../../lib/api'
 import { Err, Ok, Result } from 'ts-results'
 
-const debug = debugFn(`task-types:list`)
+const debug = debugFn(`task:types:list:types`)
 
 export default class TaskTypesListTypesCommand extends Command {
   static description = `List task type configurations`
