@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash'
 import { Err, Ok, Result } from 'ts-results'
 import { Major } from '../../../../lib/api'
 
-const debug = debugFn(`task-types:list`)
+const debug = debugFn(`task:types:list:majors`)
 
 export default class TaskTypesListMajorsCommand extends Command {
   static description = `List task type configurations`
@@ -47,7 +47,7 @@ export default class TaskTypesListMajorsCommand extends Command {
       debug(`majors`, majors)
 
       if (isEmpty(majors)) {
-        this.error(`No majors found: Check namespace and type args.`)
+        this.error(`No majors found: Check namespace and type args`)
       } else if (!this.jsonEnabled()) {
         printMajors(majors, flags, type, namespace)
       }

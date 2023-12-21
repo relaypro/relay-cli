@@ -10,11 +10,11 @@ import { Command } from '../../../lib/command'
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const debug = debugFn(`task-types:delete`)
+const debug = debugFn(`task:types:delete`)
 
 export default class TaskTypesDeleteCommand extends Command {
 
-  static description = `Delete a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command.`
+  static description = `Delete a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command`
   static strict = false
 
 

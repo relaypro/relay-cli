@@ -13,7 +13,7 @@ import util from 'node:util'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const exec = util.promisify(require(`node:child_process`).exec)
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const debug = debugFn(`task-types:create`)
+const debug = debugFn(`task:types:create`)
 
 async function execute (command: string): Promise<string> {
   const { stdout } = (await exec(command))
@@ -22,7 +22,7 @@ async function execute (command: string): Promise<string> {
 
 export default class TaskTypesCreateCommand extends Command {
 
-  static description = `Create a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command.`
+  static description = `Create a task type. Must have admin priviledges and RELAY_ADMIN_TOKEN env variable set to run this command`
   static strict = false
 
 

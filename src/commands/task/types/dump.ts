@@ -12,7 +12,7 @@ import { createTaskTypeDump } from '../../../lib/task-types'
 import { Err, Ok, Result } from 'ts-results'
 import { isEmpty } from 'lodash'
 
-const debug = debugFn(`task-types:dump`)
+const debug = debugFn(`task:types:dump`)
 
 export default class TaskTypesDumpCommand extends Command {
   static description = `Dumps task types along with their latest minor, major, and comment`

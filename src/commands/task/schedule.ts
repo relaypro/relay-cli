@@ -10,7 +10,7 @@ import { createScheduledTask } from '../../lib/tasks'
 
 import { Command } from '../../lib/command'
 
-const debug = debugFn(`tasks:schedule`)
+const debug = debugFn(`task:schedule`)
 
 export default class TasksScheduleCommand extends Command {
 

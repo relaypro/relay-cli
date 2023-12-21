@@ -9,7 +9,7 @@ import debugFn = require('debug')
 import { taskGroupCreateArgs, CreateTaskGroupArgs, createTaskGroupArgs } from '../../../lib/args'
 import { createTaskGroup } from '../../../lib/tasks'
 
-const debug = debugFn(`task-groups:create`)
+const debug = debugFn(`task:groups:create`)
 
 export default class TaskGroupsCreateCommand extends Command {
   static description = `Create a task group`

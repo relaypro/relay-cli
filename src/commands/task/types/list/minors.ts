@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash'
 import { Minor } from '../../../../lib/api'
 import { Err, Ok, Result } from 'ts-results'
 
-const debug = debugFn(`task-types:list`)
+const debug = debugFn(`task:types:list:minors`)
 
 export default class TaskTypesListMinorsCommand extends Command {
   static description = `List task type configurations`
@@ -54,7 +54,7 @@ export default class TaskTypesListMinorsCommand extends Command {
       debug(`minors`, minors)
 
       if (isEmpty(minors)) {
-        this.error(`No minors found. Check namespace, type and major args.`)
+        this.error(`No minors found. Check namespace, type and major args`)
       } else if (!this.jsonEnabled()) {
         printMinors(minors, flags, type, false, namespace)
       }

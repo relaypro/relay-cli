@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash'
 import { Err, Ok, Result } from 'ts-results'
 import { TaskGroup } from '../../../lib/api'
 
-const debug = debugFn(`task-groups:list`)
+const debug = debugFn(`task:groups:list`)
 
 export default class TaskGroupsListCommand extends Command {
   static description = `List task groups`
@@ -33,7 +33,7 @@ export default class TaskGroupsListCommand extends Command {
       debug(`groups`, groups)
 
       if (isEmpty(groups)) {
-        this.log(`No task groups have been created.`)
+        this.log(`No task groups have been created`)
       } else if (!this.jsonEnabled()) {
         if (output == `json`) {
           this.log(JSON.stringify(groups))

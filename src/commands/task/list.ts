@@ -12,7 +12,7 @@ import debugFn = require('debug')
 import { ScheduledTask, Task } from '../../lib/api'
 import { Err, Ok, Result } from 'ts-results'
 
-const debug = debugFn(`tasks:list`)
+const debug = debugFn(`task:list`)
 
 export default class TaskListCommand extends Command {
   static description = `List task configurations`

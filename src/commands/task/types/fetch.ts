@@ -8,7 +8,7 @@ import { printMinors } from '../../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-const debug = debugFn(`task-types:list`)
+const debug = debugFn(`task:types:fetch`)
 
 export default class TaskTypesFetchCommand extends Command {
   static description = `Fetch a specific minor`
