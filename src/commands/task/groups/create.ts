@@ -28,19 +28,19 @@ export default class TaskGroupsCreateCommand extends Command {
     const subscriberId = flags[`subscriber-id`]
     const taskGroupArgs: CreateTaskGroupArgs = createTaskGroupArgs(argv)
 
-    let encoded_string = taskGroupArgs.members as string
-    if (encoded_string.charAt(0) == `@`) {
+    let encodedString = taskGroupArgs.members as string
+    if (encodedString.charAt(0) == `@`) {
 
-      const stats = fs.statSync(encoded_string.substring(1, encoded_string.length))
+      const stats = fs.statSync(encodedString.substring(1, encodedString.length))
       const fileSizeInMegabytes = stats.size / (1024*1024)
       if (fileSizeInMegabytes > 10) {
         this.error(`members file is too large`)
       }
 
-      encoded_string = fs.readFileSync(encoded_string.substring(1, encoded_string.length),{ encoding: `utf8`, flag: `r` }).toString()
+      encodedString = fs.readFileSync(encodedString.substring(1, encodedString.length),{ encoding: `utf8`, flag: `r` }).toString()
     }
 
-    taskGroupArgs.members = JSON.parse(encoded_string)
+    taskGroupArgs.members = JSON.parse(encodedString)
 
     try {
       const group = await createTaskGroup(taskGroupArgs)
