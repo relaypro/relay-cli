@@ -19,6 +19,7 @@ export default class TaskGroupDeleteCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
+    ...flags.confirmFlags,
     ...CliUx.ux.table.flags(),
   }
 
@@ -38,17 +39,17 @@ export default class TaskGroupDeleteCommand extends Command {
     try {
       const prompt = new Confirm({
         name: `question`,
-        message: `Deleting ${groupName}. Are you sure?`
+        message: `Deleting "${groupName}". Are you sure?`
       })
-      const answer = await prompt.run()
+      const answer = flags.confirm ? true : await prompt.run()
       if (answer) {
         const groups = await this.relay.fetchTaskGroups(subscriberId)
         const group = getTaskGroup(groups, groupName)
         if (group) {
           const success = await this.relay.deleteTaskGroups(subscriberId, group.task_group_id)
-          success ? this.log(`Successfully deleted task group ${groupName}`) : this.log(`Could NOT delete task group ${groupName}`)
+          success ? this.log(`Successfully deleted task group "${groupName}"`) : this.log(`Could NOT delete task group "${groupName}"`)
         } else {
-          this.log(`Task group does not exist: ${groupName}`)
+          this.log(`Task group does not exist: "${groupName}"`)
         }
       } else {
         this.log(`Task group NOT deleted`)
