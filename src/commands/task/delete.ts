@@ -17,6 +17,7 @@ export default class TaskDeleteCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
+    ...flags.confirmFlags,
     scheduled: flags.boolean({
       required: false,
       description: `Delete a scheduled task`,
@@ -31,6 +32,7 @@ export default class TaskDeleteCommand extends Command {
     tag: flags.string({
       required: false,
       multiple: true,
+      char: `t`,
       exclusive: [`task-id`],
       description: `Delete all tasks with the specified tag`
     })
@@ -60,7 +62,7 @@ export default class TaskDeleteCommand extends Command {
         message: `Deleting ${taskId ?? flags.tag}. Are you sure?`
       })
 
-      const answer = await prompt.run()
+      const answer = flags.confirm ? true : await prompt.run()
 
       if (answer) {
         if (taskId) {
