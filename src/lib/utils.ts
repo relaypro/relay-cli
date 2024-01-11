@@ -433,7 +433,7 @@ export const normalize = (endpoint: string, args: Record<string, string>) => {
 
 export const isTagMatch= (args: TaskArgs, tags: string[]): boolean => {
   for (const t of tags) {
-    if (!args.tags.includes(t)) {
+    if (!args.tags?.includes(t)) {
       return false
     }
   }
