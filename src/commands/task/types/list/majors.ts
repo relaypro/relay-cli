@@ -46,10 +46,12 @@ export default class TaskTypesListMajorsCommand extends Command {
 
       debug(`majors`, majors)
 
-      if (isEmpty(majors)) {
-        this.error(`No majors found: Check namespace and type args.`)
-      } else if (!this.jsonEnabled()) {
-        printMajors(majors, flags, type, namespace)
+      if (!this.jsonEnabled()) {
+        if (isEmpty(majors) && !flags.output) {
+          this.error(`No majors found: Check namespace and type args.`)
+        } else {
+          printMajors(majors, flags, type, namespace)
+        }
       }
       return Ok(majors)
     } catch (err) {

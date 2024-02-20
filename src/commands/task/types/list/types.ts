@@ -41,10 +41,12 @@ export default class TaskTypesListTypesCommand extends Command {
 
       debug(`task types`, taskTypes)
 
-      if (isEmpty(taskTypes)) {
-        this.log(`No task types have been created yet`)
-      } else if (!this.jsonEnabled()) {
-        printTaskTypes(taskTypes, flags, namespace)
+      if (!this.jsonEnabled()) {
+        if (isEmpty(taskTypes) && !flags.output) {
+          this.log(`No task types have been created yet`)
+        } else {
+          printTaskTypes(taskTypes, flags, namespace)
+        }
       }
       return Ok(taskTypes)
     } catch (err) {
