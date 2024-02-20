@@ -45,7 +45,6 @@ export default class TaskListCommand extends Command {
     const { flags } = await this.parse(TaskListCommand)
     const subscriberId = flags[`subscriber-id`]
     const groupName = flags[`group-name`]
-    const output = flags.output
     try {
       let taskEndpoint
       let tasks
@@ -71,11 +70,9 @@ export default class TaskListCommand extends Command {
 
       debug(`tasks`, tasks)
 
-      if (isEmpty(tasks)) {
-        this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet${groupName ? ` with group name ${groupName}` : ``}`)
-      } else if (!this.jsonEnabled()) {
-        if (output == `json`) {
-          this.log(JSON.stringify(tasks))
+      if (!this.jsonEnabled()) {
+        if (isEmpty(tasks) && !flags.output) {
+          this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet${groupName ? ` with group name ${groupName}` : ``}`)
         } else if (flags.scheduled) {
           printScheduledTasks((tasks as ScheduledTask[]), flags)
         } else {
@@ -89,4 +86,3 @@ export default class TaskListCommand extends Command {
     }
   }
 }
-

@@ -53,10 +53,12 @@ export default class TaskTypesListMinorsCommand extends Command {
 
       debug(`minors`, minors)
 
-      if (isEmpty(minors)) {
-        this.error(`No minors found. Check namespace, type and major args.`)
-      } else if (!this.jsonEnabled()) {
-        printMinors(minors, flags, type, false, namespace)
+      if (!this.jsonEnabled()) {
+        if (isEmpty(minors) && !flags.output) {
+          this.error(`No minors found. Check namespace, type and major args.`)
+        } else {
+          printMinors(minors, flags, type, false, namespace)
+        }
       }
       return Ok(minors)
     } catch (err) {
@@ -65,6 +67,3 @@ export default class TaskTypesListMinorsCommand extends Command {
     }
   }
 }
-
-
-
