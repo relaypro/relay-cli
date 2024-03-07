@@ -50,7 +50,7 @@ export const createTaskGroup = async (createGroupArgs: CreateTaskGroupArgs): Pro
 
 export const createAliceArgs = async (config: IntegrationConfig, flags: IntegrationStartFlags, namespace: string, major: string): Promise<TaskArgs> => {
   const args: TaskArgs = {
-    alice_creds: config.alice_creds,
+    alice: config.alice,
     ticket_routing: config.ticket_routing,
     request_path: `/alice`,
     done_path: `/_alice/` + flags.name + `.done`,
