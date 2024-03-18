@@ -710,7 +710,6 @@ export class APIClient {
   async sendTaskEvent(subscriberId: string, donePath: string): Promise<boolean> {
     await this.post(`/relaypro/api/v1/task_event/${donePath}?subscriber_id=${subscriberId}`, {
       body: {},
-      ...this.requireAdminToken(),
     })
     return true
   }
