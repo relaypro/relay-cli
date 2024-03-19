@@ -1,7 +1,7 @@
 // Copyright © 2022 Relay Inc.
 
 import { CreateCommand } from '../../../lib/command'
-import { enum as enumFlag, integer, workflowFlags } from '../../../lib/flags'
+import { enum as enumFlag, integer, subscriber, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -22,6 +22,7 @@ export class BatteryWorkflowCommand extends CreateCommand {
   static strict = false
 
   static flags = {
+    ...subscriber,
     ...workflowFlags,
     trigger: enumFlag({
       required: true,
@@ -53,7 +54,7 @@ export class BatteryWorkflowCommand extends CreateCommand {
         workflow.config.trigger[mapTap(flags.trigger)] = flags.threshold
       }
 
-      await this.saveWorkflow(workflow, flags[`dry-run`])
+      await this.saveWorkflow(flags[`subscriber-id`], workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

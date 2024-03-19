@@ -62,7 +62,7 @@ export class UninstallWorkflowCommand extends CreateCommand {
           workflow.install_rule = undefined
         }
 
-        await this.saveWorkflow(workflow, dryRun)
+        await this.saveWorkflow(subscriberId, workflow, dryRun)
 
       } else {
         this.log(`Workflow ID does not exist: ${workflowId}`)

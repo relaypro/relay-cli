@@ -40,7 +40,7 @@ export class UnsetArgsCommand extends Command {
         workflow.config.trigger.start.workflow.args,
         argv,
       )
-      await this.relay.saveWorkflow(workflow)
+      await this.relay.saveWorkflow(subscriberId, workflow)
       CliUx.ux.action.stop(`success`)
       CliUx.ux.styledHeader(`New Workflow arguments`)
       CliUx.ux.styledJSON(workflow.config.trigger.start.workflow.args)
