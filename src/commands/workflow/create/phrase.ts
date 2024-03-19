@@ -1,7 +1,7 @@
 // Copyright © 2022 Relay Inc.
 
 import { CreateCommand } from '../../../lib/command'
-import { string, workflowFlags } from '../../../lib/flags'
+import { string, subscriber, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -20,6 +20,7 @@ export class PhraseWorkflowCommand extends CreateCommand {
   static strict = false
 
   static flags = {
+    ...subscriber,
     ...workflowFlags,
     trigger: string({
       required: true,
@@ -42,7 +43,7 @@ export class PhraseWorkflowCommand extends CreateCommand {
         throw new Error(`Trigger type phrase requires specifying a phrase. For instance '--phrase hello'`)
       }
 
-      await this.saveWorkflow(workflow, flags[`dry-run`])
+      await this.saveWorkflow(flags[`subscriber-id`], workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

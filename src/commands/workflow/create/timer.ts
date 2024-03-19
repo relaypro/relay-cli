@@ -1,7 +1,7 @@
 // Copyright © 2022 Relay Inc.
 
 import { CreateCommand } from '../../../lib/command'
-import { workflowFlags, timerFlags } from '../../../lib/flags'
+import { subscriber, workflowFlags, timerFlags } from '../../../lib/flags'
 
 import { createTimerWorkflow } from '../../../lib/workflow'
 
@@ -17,6 +17,7 @@ export class TimerWorkflowCommand extends CreateCommand {
   static strict = false
 
   static flags = {
+    ...subscriber,
     ...workflowFlags,
     ...timerFlags,
   }
@@ -28,7 +29,7 @@ export class TimerWorkflowCommand extends CreateCommand {
 
       const workflow = await createTimerWorkflow(flags, raw)
 
-      await this.saveWorkflow(workflow, flags[`dry-run`])
+      await this.saveWorkflow(flags[`subscriber_id`], workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

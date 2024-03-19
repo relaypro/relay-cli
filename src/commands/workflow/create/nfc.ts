@@ -30,6 +30,7 @@ export class NfcWorkflowCommand extends CreateCommand {
   static strict = false
 
   static flags = {
+    ...Flags.subscriber,
     ...Flags.workflowFlags,
     matcher: Flags.string({
       char: `m`,
@@ -98,7 +99,7 @@ export class NfcWorkflowCommand extends CreateCommand {
 
       debug(`nfc workflow => ${JSON.stringify(workflow, null, 2)}`)
 
-      await this.saveWorkflow(workflow, flags[`dry-run`])
+      await this.saveWorkflow(flags[`subscriber-id`], workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

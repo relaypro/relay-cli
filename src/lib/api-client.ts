@@ -11,7 +11,7 @@ import { Login } from './login'
 import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
-import { clearConfig, clearSubscribers, getDefaultSubscriber, getDefaultSubscriberId, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
+import { clearConfig, clearSubscribers, getDefaultSubscriber, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
 import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup } from './api'
 
 import { normalize } from './utils'
@@ -409,9 +409,7 @@ export class APIClient {
     const workflows = await this.workflows(subscriberId)
     return find(workflows, ({ workflow_id }) => includes(workflow_id, id))
   }
-  async saveWorkflow(workflow: NewWorkflow): Promise<Workflow[]> {
-    // TODO use parameterized subscriberId
-    const subscriberId = getDefaultSubscriberId()
+  async saveWorkflow(subscriberId: string, workflow: NewWorkflow): Promise<Workflow[]> {
     const { body } = await this.post<Workflow[]>(`/ibot/workflow?subscriber_id=${subscriberId}`, {
       body: workflow,
     })

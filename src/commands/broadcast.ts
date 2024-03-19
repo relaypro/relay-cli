@@ -128,7 +128,7 @@ export default class Broadcast extends Command {
     })
 
     if (await prompt.run()) {
-      await this.relay.saveWorkflow(workflow)
+      await this.relay.saveWorkflow(subscriber_id, workflow)
       this.log(`Broadcast saved!`)
     } else {
       this.log(`Broadcast cancelled!`)

@@ -50,10 +50,10 @@ export abstract class Command extends Base {
 
 export abstract class CreateCommand extends Command {
 
-  async saveWorkflow(workflow: NewWorkflow, dryRun: boolean): Promise<void> {
+  async saveWorkflow(subscriberId: string, workflow: NewWorkflow, dryRun: boolean): Promise<void> {
     if (!dryRun) {
       debug(workflow)
-      const workflows = await this.relay.saveWorkflow(workflow)
+      const workflows = await this.relay.saveWorkflow(subscriberId, workflow)
       printWorkflows(workflows, { extended: true })
     } else {
       this.log(`Workflow dry-run:\n${JSON.stringify(workflow, null, 2)}`)

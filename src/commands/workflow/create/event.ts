@@ -1,7 +1,7 @@
 // Copyright © 2022 Relay Inc.
 
 import { CreateCommand } from '../../../lib/command'
-import { enum as enumFlag, workflowFlags } from '../../../lib/flags'
+import { enum as enumFlag, subscriber, workflowFlags } from '../../../lib/flags'
 
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
@@ -22,6 +22,7 @@ export class EventWorkflowCommand extends CreateCommand {
   static strict = false
 
   static flags = {
+    ...subscriber,
     ...workflowFlags,
     trigger: enumFlag({
       required: true,
@@ -45,7 +46,7 @@ export class EventWorkflowCommand extends CreateCommand {
         throw new Error(`Trigger type event requires specifying a device event. For instance '--trigger emergency'`)
       }
 
-      await this.saveWorkflow(workflow, flags[`dry-run`])
+      await this.saveWorkflow(flags[`subscriber-id`], workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

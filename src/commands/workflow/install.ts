@@ -61,7 +61,7 @@ export class InstallWorkflowCommand extends CreateCommand {
           workflow.install_rule = flags[`install-group`]
         }
 
-        await this.saveWorkflow(workflow, dryRun)
+        await this.saveWorkflow(subscriberId, workflow, dryRun)
 
       } else {
         this.log(`Workflow ID does not exist: ${workflowId}`)
