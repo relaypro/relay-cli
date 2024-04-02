@@ -15,7 +15,7 @@ USAGE
     [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -v, --venue-id=<value>       (required) venue id
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)

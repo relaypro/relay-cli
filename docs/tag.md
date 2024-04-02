@@ -19,7 +19,7 @@ USAGE
 FLAGS
   -c, --category=<value>       (required) Sets the custom category; useful to group like tags in the same category
   -l, --label=<value>          (required) Sets the tag label; useful to differentiate individual tags
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
 
 DESCRIPTION
   Creates a tag configuration.
@@ -36,7 +36,7 @@ USAGE
   $ relay tag:delete -s <value> -t <value>
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -t, --tag-id=<value>         (required) Tag identifier to delete
 
 DESCRIPTION
@@ -55,7 +55,7 @@ USAGE
     csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ] [-c <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -c, --category=<value>       Show only tags of this category
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
@@ -87,7 +87,7 @@ USAGE
 FLAGS
   -c, --category=<value>       (required) Sets the custom category; useful to group like tags in the same category
   -l, --label=<value>          (required) Sets the tag label; useful to differentiate individual tags
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -t, --tag-id=<value>         (required) Tag identifier to update
 
 DESCRIPTION

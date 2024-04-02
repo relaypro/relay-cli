@@ -20,7 +20,7 @@ $ npm install -g @relaypro/cli
 $ relay COMMAND
 running command...
 $ relay (--version|-v)
-@relaypro/cli/1.8.1 darwin-arm64 node-v18.12.0
+@relaypro/cli/1.8.1 darwin-arm64 node-v20.11.0
 $ relay --help [COMMAND]
 USAGE
   $ relay COMMAND
@@ -108,11 +108,17 @@ Each has a distinct purpose:
   otherwise you will see errors or outdated, precompiled code will be
   used.
 
-```
-# slow, but accurate... will always compile code
-$ bin/dev COMMAND
+The following development-time invocation is slow, but accurate and will always
+compile code.
 
-# fast, but inaccurage... will use cached metadata and pre-compiled code
+```
+$ bin/dev COMMAND
+```
+
+The following development-time invocation is fast, but inaccurate... will use
+cached metadata and pre-compiled code.
+
+```
 $ bin/run COMMAND
 ```
 

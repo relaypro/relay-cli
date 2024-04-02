@@ -14,7 +14,7 @@ USAGE
   $ relay devices -s <value>
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
 
 DESCRIPTION
   list all device ids

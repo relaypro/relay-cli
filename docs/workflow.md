@@ -34,7 +34,7 @@ USAGE
   $ relay workflow:args:get [ARG] -w <value> -s <value>
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -w, --workflow-id=<value>    (required) workflow id
 
 DESCRIPTION
@@ -52,7 +52,7 @@ USAGE
   $ relay workflow:args:list -w <value> -s <value>
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -w, --workflow-id=<value>    (required) workflow id
 
 DESCRIPTION
@@ -70,7 +70,7 @@ USAGE
   $ relay workflow:args:set -w <value> -s <value> [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>         (required) subscriber id
   -w, --workflow-id=<value>           (required) workflow id
   -a, --arg=<value>...                String name/value pair workflow arg
   -b, --boolean=arg1=[true|false]...  Boolean name/value pair workflow arg
@@ -91,7 +91,7 @@ USAGE
   $ relay workflow:args:unset -w <value> -s <value>
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -w, --workflow-id=<value>    (required) workflow id
 
 DESCRIPTION
@@ -106,11 +106,12 @@ Create or update a workflow triggered by crossing a charging or discharging thre
 
 ```
 USAGE
-  $ relay workflow:create:battery -n <value> -u <value> --trigger charge|discharge --threshold <value> [-N] [-i <value> | -A
-    | -G <value>] [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
+  $ relay workflow:create:battery -s <value> -n <value> -u <value> --trigger charge|discharge --threshold <value> [-N] [-i
+    <value> | -A | -G <value>] [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
   -n, --name=<value>                  (required) Name of the workflow
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
   --threshold=<value>                 (required) [default: 25] Threshold percentage as an integer to trigger workflow
   --trigger=(charge|discharge)        (required) [default: discharge] Trigger whether threshold value is reached when
@@ -137,11 +138,12 @@ Create or update a workflow triggered by button taps
 
 ```
 USAGE
-  $ relay workflow:create:button -n <value> -u <value> --trigger single|double [-N] [-i <value> | -A | -G <value>] [-t] [-e]
-    [-a <value>] [-b <value>] [-r <value>]
+  $ relay workflow:create:button -s <value> -n <value> -u <value> --trigger single|double [-N] [-i <value> | -A | -G
+    <value>] [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
   -n, --name=<value>                  (required) Name of the workflow
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
   --trigger=(single|double)           (required) [default: single] Number of button taps to trigger this workflow
   -A, --install-all                   Enable rule to install workflow on all device and users on the account
@@ -166,11 +168,12 @@ Create or update a workflow triggered by inbound or outbound calling
 
 ```
 USAGE
-  $ relay workflow:create:call -n <value> -u <value> --trigger inbound|outbound [-N] [-i <value> | -A | -G <value>] [-t]
-    [-e] [-a <value>] [-b <value>] [-r <value>]
+  $ relay workflow:create:call -s <value> -n <value> -u <value> --trigger inbound|outbound [-N] [-i <value> | -A | -G
+    <value>] [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
   -n, --name=<value>                  (required) Name of the workflow
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
   --trigger=(inbound|outbound)        (required) [default: outbound] Trigger whether an inbound or outbound call is
                                       placed
@@ -196,11 +199,12 @@ Create or update a workflow triggered by event emitted by Relay device
 
 ```
 USAGE
-  $ relay workflow:create:event -n <value> -u <value> --trigger emergency [-N] [-i <value> | -A | -G <value>] [-t] [-e] [-a
-    <value>] [-b <value>] [-r <value>]
+  $ relay workflow:create:event -s <value> -n <value> -u <value> --trigger emergency [-N] [-i <value> | -A | -G <value>]
+    [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
   -n, --name=<value>                  (required) Name of the workflow
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
   --trigger=(emergency)               (required) [default: emergency] Relay device event to trigger this workflow
   -A, --install-all                   Enable rule to install workflow on all device and users on the account
@@ -225,11 +229,12 @@ Create or update a workflow triggered by geofence transition
 
 ```
 USAGE
-  $ relay workflow:create:geofence -n <value> -u <value> --trigger entry|exit --id <value> [-N] [-i <value> | -A | -G <value>]
-    [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
+  $ relay workflow:create:geofence -s <value> -n <value> -u <value> --trigger entry|exit --id <value> [-N] [-i <value> | -A |
+    -G <value>] [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
   -n, --name=<value>                  (required) Name of the workflow
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
   --id=<value>                        (required) Geofence ID
   --trigger=<option>                  (required) [default: entry] Transition trigger for the specified geofence
@@ -256,11 +261,12 @@ Create or update a workflow triggered by an HTTP request
 
 ```
 USAGE
-  $ relay workflow:create:http -n <value> -u <value> --trigger POST [-N] [-i <value> | -A | -G <value>] [-t] [-e] [-a
-    <value>] [-b <value>] [-r <value>]
+  $ relay workflow:create:http -s <value> -n <value> -u <value> --trigger POST [-N] [-i <value> | -A | -G <value>] [-t]
+    [-e] [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
   -n, --name=<value>                  (required) Name of the workflow
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
   --trigger=(POST)                    (required) [default: POST] HTTP method to trigger this workflow
   -A, --install-all                   Enable rule to install workflow on all device and users on the account
@@ -285,11 +291,12 @@ Create or update a workflow triggered by an NFC tap
 
 ```
 USAGE
-  $ relay workflow:create:nfc -n <value> -u <value> [-N] [-i <value> | -A | -G <value>] [-t] [-e] [-a <value>] [-b
-    <value>] [-r <value>] [-c <value>] [-l <value>]
+  $ relay workflow:create:nfc -s <value> -n <value> -u <value> [-N] [-i <value> | -A | -G <value>] [-t] [-e] [-a <value>]
+    [-b <value>] [-r <value>] [-c <value>] [-l <value>]
 
 FLAGS
   -n, --name=<value>                  (required) Name of the workflow
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
   -A, --install-all                   Enable rule to install workflow on all device and users on the account
   -G, --install-group=<value>         Enable rule to install workflow on a group of device and users
@@ -315,11 +322,12 @@ Create or update a workflow triggered by a spoken phrase
 
 ```
 USAGE
-  $ relay workflow:create:phrase -n <value> -u <value> --trigger <value> [-N] [-i <value> | -A | -G <value>] [-t] [-e] [-a
-    <value>] [-b <value>] [-r <value>]
+  $ relay workflow:create:phrase -s <value> -n <value> -u <value> --trigger <value> [-N] [-i <value> | -A | -G <value>] [-t]
+    [-e] [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
   -n, --name=<value>                  (required) Name of the workflow
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
   --trigger="hello world"...          (required) Phrase spoken to Relay Assistant to trigger this workflow
   -A, --install-all                   Enable rule to install workflow on all device and users on the account
@@ -344,12 +352,13 @@ Create or update a workflow triggered by a position transition
 
 ```
 USAGE
-  $ relay workflow:create:position -n <value> -u <value> --trigger entry|exit -v <value> -p <value> [-N] [-i <value> | -A | -G
-    <value>] [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
+  $ relay workflow:create:position -s <value> -n <value> -u <value> --trigger entry|exit -v <value> -p <value> [-N] [-i
+    <value> | -A | -G <value>] [-t] [-e] [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
   -n, --name=<value>                  (required) Name of the workflow
   -p, --position_id=<value>           (required) Position ID
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --uri=<value>                   (required) WebSocket URI workflow can be accessed
   -v, --venue_id=<value>              (required) Venue ID
   --trigger=<option>                  (required) [default: entry] Transition trigger for the specified position
@@ -376,7 +385,7 @@ Create or update a workflow triggered immediately or with a repeating rule
 
 ```
 USAGE
-  $ relay workflow:create:timer -n <value> -u <value> --trigger immediately|schedule|repeat -z
+  $ relay workflow:create:timer -s <value> -n <value> -u <value> --trigger immediately|schedule|repeat -z
     local|America/New_York|America/Chicago|America/Denver|America/Los_Angeles|America/Phoenix|Pacific/Honolulu [-N] [-i
     <value> | -A | -G <value>] [-t] [-e] [-a <value>] [-b <value>] [-r <value>] [-s <value>] [-l <value> | -c <value>]
     [-d <value>]
@@ -384,6 +393,9 @@ USAGE
 FLAGS
   -n, --name=<value>
       (required) Name of the workflow
+
+  -s, --subscriber-id=<value>
+      (required) subscriber id
 
   -u, --uri=<value>
       (required) WebSocket URI workflow can be accessed
@@ -426,7 +438,7 @@ FLAGS
       Number name/value pair workflow arg
 
   -s, --start=<value>
-      [default: 2024-02-12T10:00:00]
+      [default: 2024-04-02T10:00:00]
 
   -t, --[no-]transient
       Allow workflow to run in the background; otherwise terminate workflow
@@ -446,7 +458,7 @@ USAGE
   $ relay workflow:delete -w <value> -s <value>
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -w, --workflow-id=<value>    (required) workflow id
 
 DESCRIPTION
@@ -464,7 +476,7 @@ USAGE
   $ relay workflow:install [ID] -w <value> -s <value> [-N] [-i <value> | -A | -G <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -w, --workflow-id=<value>    (required) workflow id
   -A, --install-all            Enable rule to install workflow on all device and users on the account
   -G, --install-group=<value>  Enable rule to install workflow on a group of device and users
@@ -487,7 +499,7 @@ USAGE
     [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -H, --include-history
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
@@ -518,7 +530,7 @@ USAGE
     csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
   --csv                        output is csv format [alias: --output=csv]
@@ -547,7 +559,7 @@ USAGE
   $ relay workflow:logs -s <value> [-w <value>] [-u <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -u, --user-id=<value>        user id
   -w, --workflow-id=<value>    workflow id
 
@@ -566,7 +578,7 @@ USAGE
   $ relay workflow:trigger -w <value> -u <value> -s <value> [-a <value>] [-b <value>] [-r <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>         (required) subscriber id
   -u, --user-id=<value>               (required) Target user id on behalf of which to trigger a workflow
   -w, --workflow-id=<value>           (required) workflow id
   -a, --arg=<value>...                String name/value pair workflow arg
@@ -588,7 +600,7 @@ USAGE
   $ relay workflow:uninstall [ID] -w <value> -s <value> [-N] [-i <value> | -A | -G <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
+  -s, --subscriber-id=<value>  (required) subscriber id
   -w, --workflow-id=<value>    (required) workflow id
   -A, --install-all            Enable rule to install workflow on all device and users on the account
   -G, --install-group=<value>  Enable rule to install workflow on a group of device and users
