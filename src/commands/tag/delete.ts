@@ -1,13 +1,11 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Confirm } = require('enquirer') // eslint-disable-line quotes
+import confirm from '@inquirer/confirm'
 
+import debugFn from 'debug'
 const debug = debugFn(`tag`)
 
 export class TagDeleteCommand extends Command {
@@ -36,12 +34,9 @@ export class TagDeleteCommand extends Command {
       const tag = await this.relay.fetchNfcTag(subscriberId, tagId)
 
       if (tag) {
-        const prompt = new Confirm({
-          name: `question`,
+        const answer = await confirm({
           message: `Deleting ${tagId}. Are you sure?`
         })
-
-        const answer = await prompt.run()
 
         if (answer) {
           const success = await this.relay.deleteNfcTag(subscriberId, tagId)

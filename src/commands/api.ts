@@ -1,11 +1,11 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../lib/command'
-import * as flags from '../lib/flags'
+import { Args } from '@oclif/core'
+import { Command } from '../lib/command.js'
+import * as flags from '../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { toLower } from 'lodash'
+import debugFn from 'debug'
+import { toLower } from 'lodash-es'
 
 const debug = debugFn(`api`)
 
@@ -22,11 +22,13 @@ export class ApiCommand extends Command {
     ...flags.apiFlags,
   }
 
-  static args = [{
-    name: `endpoint`,
-    required: true,
-    description: `endpoint argument is the path of a Relay API endpoint`,
-  }]
+  static args = {
+    endpoint: Args.string({
+      name: `endpoint`,
+      required: true,
+      description: `endpoint argument is the path of a Relay API endpoint`,
+    })
+  }
 
   async run(): Promise<void> {
     const { flags, args } = await  this.parse(ApiCommand)

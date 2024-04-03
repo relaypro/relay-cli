@@ -1,14 +1,11 @@
 // Copyright © 2023 Relay Inc.
 
-import * as fs from 'fs'
-import { Command } from '../../../lib/command'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
+import { createAliceArgs, createTask } from '../../../lib/tasks.js'
+import { integrationStartArgs } from '../../../lib/args.js'
 
-import * as flags from '../../../lib/flags'
-import { createAliceArgs, createTask } from '../../../lib/tasks'
-import { integrationStartArgs } from '../../../lib/args'
-
+import debugFn from 'debug'
 const debug = debugFn(`alice:webhook:start`)
 
 export default class AliceWebhookStartCommand extends Command {
@@ -31,24 +28,20 @@ export default class AliceWebhookStartCommand extends Command {
     }),
   }
 
-  static args = [
+  static args = {
     ...integrationStartArgs
-  ]
+  }
   async run(): Promise<void> {
-    const { flags, argv } = await this.parse(AliceWebhookStartCommand)
+    const { flags, args } = await this.parse(AliceWebhookStartCommand)
     const subscriberId = flags[`subscriber-id`]
-    const namespace = argv[0] as string
-    const major = argv[1] as string
-    let config = argv[2] as string
+    const namespace = args.namespace
+    const major = args.major
 
-    debug(flags)
+    const config = JSON.parse(args.config)
 
-    config = fs.readFileSync(config,{ encoding: `utf8`, flag: `r` }).toString()
-    const encodedConfig = JSON.parse(config)
-
-    const args = await createAliceArgs(encodedConfig, flags, namespace, major)
+    const aliceArgs = await createAliceArgs(config, flags, namespace, major)
     if (flags.tag) {
-      args.tags.push(...flags.tag)
+      aliceArgs.tags.push(...flags.tag)
     }
 
     const newTask = {
@@ -56,7 +49,7 @@ export default class AliceWebhookStartCommand extends Command {
       type: `alice_webhook`,
       major: major,
       name: flags.name,
-      args
+      args: aliceArgs
     }
 
     try {

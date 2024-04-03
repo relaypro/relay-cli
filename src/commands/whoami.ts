@@ -1,10 +1,10 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 import { HTTPError } from 'http-call'
-import { Command } from '../lib/command'
+import { Command } from '../lib/command.js'
 
-import debugFn = require('debug') // eslint-disable-line quotes
+import debugFn from 'debug'
 const debug = debugFn(`whoami`)
 
 export default class AuthWhoami extends Command {
@@ -20,8 +20,8 @@ export default class AuthWhoami extends Command {
     try {
       const iam = await this.relay.whoami()
       if (!this.jsonEnabled()) {
-        CliUx.ux.styledHeader(`You are`)
-        CliUx.ux.styledObject(iam, [
+        ux.styledHeader(`You are`)
+        ux.styledObject(iam, [
           `Name`,
           `Email`,
           `Default Subscriber`,

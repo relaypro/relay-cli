@@ -1,11 +1,11 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { Command } from '../lib/command'
-import * as flags from '../lib/flags'
-import { ROOT_DOMAIN, vars } from '../lib/vars'
-import pickBy from 'lodash/pickBy'
-import { startsWith } from 'lodash'
+import { ux } from '@oclif/core'
+import { pickBy, startsWith } from 'lodash-es'
+
+import { Command } from '../lib/command.js'
+import * as flags from '../lib/flags/index.js'
+import { ROOT_DOMAIN, vars } from '../lib/vars.js'
 
 type EnvResult = {
   env: string,
@@ -60,10 +60,10 @@ RELAY_HOST=all-main-qa-ibot.${ROOT_DOMAIN}
     }
 
     if (!this.jsonEnabled()) {
-      CliUx.ux.styledHeader(`ENVIRONMENT`)
-      CliUx.ux.styledObject(result)
+      ux.styledHeader(`ENVIRONMENT`)
+      ux.styledObject(result)
       this.log(``)
-      CliUx.ux.styledHeader(`USAGE`)
+      ux.styledHeader(`USAGE`)
       Env.examples.forEach(e => this.log(e))
     }
     return result

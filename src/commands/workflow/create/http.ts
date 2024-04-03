@@ -1,13 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { CreateCommand } from '../../../lib/command'
-import { enum as enumFlag, subscriber, workflowFlags } from '../../../lib/flags'
+import { CreateCommand } from '../../../lib/command.js'
+import { string, subscriber, workflowFlags } from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow } from '../../../lib/workflow'
+import { NewWorkflow } from '../../../lib/api.js'
+import { createWorkflow } from '../../../lib/workflow.js'
 
+import debugFn from 'debug'
 const debug = debugFn(`workflow:create:http`)
 
 type HttpMethod = `POST`
@@ -19,12 +18,13 @@ export class HttpWorkflowCommand extends CreateCommand {
 
   static description = `Create or update a workflow triggered by an HTTP request`
 
+  // TODO: fix all strict cases that are no longer necessary
   static strict = false
 
   static flags = {
     ...subscriber,
     ...workflowFlags,
-    trigger: enumFlag({
+    trigger: string({
       required: true,
       multiple: false,
       default: `POST`,
@@ -34,11 +34,11 @@ export class HttpWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(HttpWorkflowCommand)
+    const { flags } = await this.parse(HttpWorkflowCommand)
 
     try {
 
-      const workflow: HttpWorkflow = await createWorkflow(flags, raw) as HttpWorkflow
+      const workflow: HttpWorkflow = await createWorkflow(flags) as HttpWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_http = mapTap(flags.trigger)

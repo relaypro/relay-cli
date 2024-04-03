@@ -1,17 +1,18 @@
 // Copyright © 2023 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import { Command } from '../../../../lib/command'
-import * as flags from '../../../../lib/flags'
-import {  printMajors } from '../../../../lib/utils'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { isEmpty } from 'lodash'
-import { Err, Ok, Result } from 'ts-results'
-import { Major } from '../../../../lib/api'
+import { isEmpty } from 'lodash-es'
+import { Err, Ok, Result } from 'ts-results-es'
 
-const debug = debugFn(`task-types:list`)
+import { Command } from '../../../../lib/command.js'
+import * as flags from '../../../../lib/flags/index.js'
+import {  printMajors } from '../../../../lib/utils.js'
+import { Major } from '../../../../lib/api.js'
+import { namespace, type } from '../../../../lib/args.js'
+
+import debugFn from 'debug'
+const debug = debugFn(`task:types:list`)
 
 export default class TaskTypesListMajorsCommand extends Command {
   static description = `List task type configurations`
@@ -20,27 +21,19 @@ export default class TaskTypesListMajorsCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
-  static args = [
-    {
-      name: `namespace`,
-      required: true,
-      description: `Namespace of the task type`,
-      options: [`account`, `system`],
-    },
-    {
-      name: `type`,
-      required: true,
-      description: `Task type name`,
-    }
-  ]
+  static args = {
+    namespace,
+    type,
+  }
+
   async run(): Promise<Result<Major[], Error>> {
-    const { flags, argv } = await this.parse(TaskTypesListMajorsCommand)
+    const { flags, args } = await this.parse(TaskTypesListMajorsCommand)
     const subscriberId = flags[`subscriber-id`]
-    const namespace = argv[0] as string
-    const type = argv[1] as string
+    const namespace = args.namespace
+    const type = args.type
     try {
       const majors = await this.relay.fetchMajors(subscriberId, namespace, type)
 

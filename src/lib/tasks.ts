@@ -1,6 +1,6 @@
-import { IntegrationConfig, NewScheduledTask, NewTask, NewTaskGroup, TaskArgs, TaskGroupMembers } from './api'
-import { CreateTaskGroupArgs, ScheduleArgs, StartArgs } from './args'
-import { IntegrationStartFlags, ScheduledTaskFlags } from './flags'
+import { IntegrationConfig, NewScheduledTask, NewTask, NewTaskGroup, TaskArgs, TaskGroupMembers } from './api.js'
+import { CreateTaskGroupArgs, ScheduleArgs, StartArgs } from './args.js'
+import { IntegrationStartFlags, ScheduledTaskFlags } from './flags/index.js'
 
 export const deviceUri = (deviceName: string): string => {
   let deviceUri = deviceName

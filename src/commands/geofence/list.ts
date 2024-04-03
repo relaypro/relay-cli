@@ -1,20 +1,15 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { isEmpty } from 'lodash'
-import { Result, Err, Ok } from 'ts-results'
+import { ux } from '@oclif/core'
+import { isEmpty } from 'lodash-es'
+import { Result, Err, Ok } from 'ts-results-es'
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
-import { printGeofences } from '../../lib/utils'
-import { Geofence } from '../../lib/api'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
+import { printGeofences } from '../../lib/utils.js'
+import { Geofence } from '../../lib/api.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-
-
-
-
+import debugFn from 'debug'
 const debug = debugFn(`geofence`)
 
 export default class GeofenceList extends Command {
@@ -26,7 +21,7 @@ export default class GeofenceList extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
   async run(): Promise<Result<Geofence[], Error>> {

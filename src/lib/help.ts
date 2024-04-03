@@ -1,12 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { Help, Interfaces, CommandHelp, CliUx } from '@oclif/core'
+import { Help, Interfaces, CommandHelp, ux, Command } from '@oclif/core'
 
-import { orderBy } from 'lodash'
-import { RELAY } from './art'
+import {orderBy} from 'lodash-es'
 
-// eslint-disable-next-line quotes
-// import debugFn = require('debug')
+import { RELAY } from './art.js'
+
+// import debugFn from 'debug'
 // const debug = debugFn(`cli`)
 
 
@@ -21,7 +21,7 @@ export default class RelayHelp extends Help {
 
   // display the root help of a CLI
   async showRootHelp(): Promise<void> {
-    CliUx.ux.log(RELAY)
+    ux.log(RELAY)
     super.showRootHelp()
   }
 
@@ -35,7 +35,7 @@ export default class RelayHelp extends Help {
   }
 
   // display help for a command
-  async showCommandHelp(command: Interfaces.Command): Promise<void> {
+  async showCommandHelp(command: Command.Loadable): Promise<void> {
     super.showCommandHelp(command)
   }
 
@@ -63,12 +63,12 @@ export default class RelayHelp extends Help {
   }
 
   // the formatting for a list of commands
-  formatCommands(commands: Interfaces.Command[]): string {
+  formatCommands(commands: Command.Loadable[]): string {
     return super.formatCommands(commands)
   }
 
   // the formatting for an individual command
-  formatCommand(command: Interfaces.Command): string {
+  formatCommand(command: Command.Loadable): string {
     const help = new RelayCommandHelp(command, this.config, this.opts)
     return help.generate()
   }
@@ -79,7 +79,7 @@ interface RelayTopic extends Interfaces.Topic {
 }
 
 class RelayCommandHelp extends CommandHelp {
-  protected flags(flags: Interfaces.Command.Flag[]): [string, string | undefined][] | undefined {
+  protected flags(flags: Command.Flag.Any[]): [string, string | undefined][] | undefined {
     const priorityFlagOrder = orderBy(flags, [f => f.required || false], [`desc`])
     return super.flags(priorityFlagOrder)
   }

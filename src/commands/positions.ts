@@ -1,14 +1,13 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { Command } from '../lib/command'
-import * as flags from '../lib/flags'
+import { ux } from '@oclif/core'
+import { Command } from '../lib/command.js'
+import * as flags from '../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { Positions } from '../lib/api'
-import { Ok, Result } from 'ts-results'
-import { filter, isEmpty, join, last, toLower } from 'lodash'
+import debugFn from 'debug'
+import { Positions } from '../lib/api.js'
+import { Ok, Result } from 'ts-results-es'
+import { filter, isEmpty, join, last, toLower } from 'lodash-es'
 
 const debug = debugFn(`positions`)
 
@@ -34,7 +33,7 @@ export class PositionsCommand extends Command {
       allowNo: true,
       hidden: true,
     }),
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
   async run(): Promise<Result<Positions, Error>> {
@@ -53,7 +52,7 @@ export class PositionsCommand extends Command {
     }
 
     if (!this.jsonEnabled()) {
-      CliUx.ux.table(positions, {
+      ux.table(positions, {
         position_id: {
           header: `ID`
         },

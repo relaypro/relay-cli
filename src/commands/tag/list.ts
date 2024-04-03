@@ -1,15 +1,14 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { capitalize, fill, filter, isEmpty, keys, map, mapValues, replace, size, union, zipObject } from 'lodash'
-import { Tag } from '../../lib/api'
-import { Ok, Result } from 'ts-results'
+import debugFn from 'debug'
+import { capitalize, fill, filter, isEmpty, keys, map, mapValues, replace, size, union, zipObject } from 'lodash-es'
+import { Tag } from '../../lib/api.js'
+import { Ok, Result } from 'ts-results-es'
 
 const debug = debugFn(`tag`)
 
@@ -35,8 +34,8 @@ export class TagListCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
-    type: flags.enum({
+    ...ux.table.flags(),
+    type: flags.string({
       char: `t`,
       description: `Show only profile or custom tags`,
       options: [`user_profile`, `custom`],
@@ -104,10 +103,10 @@ export class TagListCommand extends Command {
       debug(`flags`, flags)
       debug(`tableFields`, tableFields)
 
-      CliUx.ux.styledHeader(`${replace(capitalize(flags.category || flags.type), `_`, ` `)} Tag Configuration${filteredTags.length > 1 ? `s` : ``}`)
+      ux.styledHeader(`${replace(capitalize(flags.category || flags.type), `_`, ` `)} Tag Configuration${filteredTags.length > 1 ? `s` : ``}`)
 
       if (!isEmpty(filteredTags)) {
-        CliUx.ux.table(filteredTags, {
+        ux.table(filteredTags, {
           tag_id: {
             header: `Tag ID`,
             minWidth: 25,

@@ -1,16 +1,15 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../lib/command'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { isEmpty } from 'lodash-es'
+import { Result, Ok } from 'ts-results-es'
+import { ux, Args } from '@oclif/core'
 
-import * as flags from '../lib/flags'
-import { CliUx } from '@oclif/core'
-import { WorkflowEventQuery, WorkflowEvents } from '../lib/api'
-import { isEmpty } from 'lodash'
-import { Result, Ok } from 'ts-results'
-import { printAnalytics } from '../lib/utils'
+import { Command } from '../lib/command.js'
+import * as flags from '../lib/flags/index.js'
+import { WorkflowEventQuery, WorkflowEvents } from '../lib/api.js'
+import { printAnalytics } from '../lib/utils.js'
 
+import debugFn from 'debug'
 const debug = debugFn(`analytics`)
 
 export default class Analytics extends Command {
@@ -43,7 +42,7 @@ export default class Analytics extends Command {
       hidden: false,
       multiple: false,
     }),
-    [`type`]: flags.enum({
+    [`type`]: flags.string({
       char: `t`,
       description: `analytic type`,
       options: [`system`, `user`],
@@ -64,19 +63,19 @@ export default class Analytics extends Command {
       default: 20,
       required: false,
     }),
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
-  static args = [
-    {
+  static args = {
+    category: Args.string({
       name: `category`,
       required: false,
       description: `Can be workflow, tasks, or a custom category`,
-    }
-  ]
+    }),
+  }
 
   async run(): Promise<Result<WorkflowEvents, Error>> {
-    const { flags, argv } = await this.parse(Analytics)
+    const { flags, args } = await this.parse(Analytics)
     const subscriberId = flags[`subscriber-id`]
     const workflowId = flags[`workflow-id`]
     const workflowInstanceId = flags[`workflow-instance-id`]
@@ -84,7 +83,7 @@ export default class Analytics extends Command {
     const type = flags[`type`]
     const parse = flags[`parse`]
     const limit = flags[`limit`]
-    const category = argv[0]
+    const category = args.category
 
     debug(`flags`, flags)
 

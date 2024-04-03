@@ -1,14 +1,14 @@
 // Copyright © 2022 Relay Inc.
 
-import { uniq } from 'lodash'
-import { CreateCommand } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { uniq } from 'lodash-es'
+import { CreateCommand } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { ALL } from '../../lib/constants'
-import { Workflow } from '../../lib/api'
+import debugFn from 'debug'
+import { ALL } from '../../lib/constants.js'
+import { Workflow } from '../../lib/api.js'
 import { HTTPError } from 'http-call'
+import { Args } from '@oclif/core'
 
 const debug = debugFn(`workflow`)
 
@@ -16,20 +16,22 @@ export class InstallWorkflowCommand extends CreateCommand {
 
   static description = `Install an existing workflow into one or more devices`
 
+  static strict = false
+
   static flags = {
     [`workflow-id`]: flags.workflowId,
     ...flags.subscriber,
     ...flags.installFlags,
   }
 
-  static args = [
-    { // deprecated in favor of explicit flags
+  static args = {
+    ID: Args.string({ // deprecated in favor of explicit flags
       name: `ID`,
       required: false,
       description: `device / user ID to install workflow on`,
       hidden: true,
-    }
-  ]
+    })
+  }
 
   async run(): Promise<void> {
     const { flags, argv } = await this.parse(InstallWorkflowCommand)
@@ -37,8 +39,9 @@ export class InstallWorkflowCommand extends CreateCommand {
     const subscriberId = flags[`subscriber-id`]
     const _install = flags[`install`]
     const hasInstall = (_install && _install.length > 0)
+    const args = argv as string[]
 
-    if (argv.length > 0 && (hasInstall || flags[`install-all`])) {
+    if (args.length > 0 && (hasInstall || flags[`install-all`])) {
       throw new Error(`command arguments and --install[-all] flags are mutually exclusive`)
     }
 
@@ -52,7 +55,7 @@ export class InstallWorkflowCommand extends CreateCommand {
         debug(`existing install`, { install_rule, install })
 
         if (argv.length > 0) {
-          workflow.install = uniq([...(install ?? []), ...argv])
+          workflow.install = uniq([...(install ?? []), ...args])
         } else if (hasInstall) {
           workflow.install = uniq([...(install ?? []), ..._install])
         } else if (flags[`install-all`]) {

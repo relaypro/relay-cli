@@ -1,13 +1,12 @@
 // Copyright © 2023 Relay Inc.
 
 import * as fs from 'fs'
-import { Command } from '../../lib/command'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { Command } from '../../lib/command.js'
+import debugFn from 'debug'
 
-import * as flags from '../../lib/flags'
-import { createHotSOSArgs, createTask } from '../../lib/tasks'
-import { integrationStartArgs } from '../../lib/args'
+import * as flags from '../../lib/flags/index.js'
+import { createHotSOSArgs, createTask } from '../../lib/tasks.js'
+import { integrationStartArgs } from '../../lib/args.js'
 
 const debug = debugFn(`hotsos:start`)
 
@@ -31,9 +30,9 @@ export default class HosSOSStartCommand extends Command {
     }),
   }
 
-  static args = [
+  static args = {
     ...integrationStartArgs
-  ]
+  }
   async run(): Promise<void> {
     const { flags, argv } = await this.parse(HosSOSStartCommand)
     const subscriberId = flags[`subscriber-id`]

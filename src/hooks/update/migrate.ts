@@ -2,8 +2,7 @@
 
 import { Hook } from '@oclif/core'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import debugFn from 'debug'
 
 const debug = debugFn(`migrate`)
 

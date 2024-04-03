@@ -1,27 +1,29 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../lib/command'
+import { Command } from '../lib/command.js'
 
-import { subscriber, string, timerFlags, boolean, TimerWorkflow, TimerFlags } from '../lib/flags'
+import { subscriber, string, timerFlags, boolean, TimerWorkflow, TimerFlags } from '../lib/flags/index.js'
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Confirm } = require('enquirer') // eslint-disable-line quotes
+import {
+  isEmpty,
+  reduce,
+  difference,
+  find,
+  join,
+} from 'lodash-es'
 
-import { createTimerWorkflow } from '../lib/workflow'
+import confirm from '@inquirer/confirm'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { uuid } from '../lib/utils'
-import userId from '../lib/user-id'
-import { getToken } from '../lib/session'
-import isEmpty from 'lodash/isEmpty'
-import reduce from 'lodash/reduce'
-import diff from 'lodash/difference'
-import find from 'lodash/find'
-import join from 'lodash/join'
+import { createTimerWorkflow } from '../lib/workflow.js'
 
+
+import { uuid } from '../lib/utils.js'
+import userId from '../lib/user-id.js'
+import { getToken } from '../lib/session.js'
+
+import debugFn from 'debug'
 const debug = debugFn(`broadcast`)
 
 export default class Broadcast extends Command {
@@ -54,7 +56,7 @@ export default class Broadcast extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags, /*argv,*/ raw } = await this.parse(Broadcast)
+    const { flags } = await this.parse(Broadcast)
 
     const token = getToken()
 
@@ -73,7 +75,7 @@ export default class Broadcast extends Command {
       hidden: true,
     }
 
-    const workflow: TimerWorkflow = await createTimerWorkflow(workflowFlags, raw)
+    const workflow: TimerWorkflow = await createTimerWorkflow(workflowFlags)
 
     workflow.install = [selfId]
 
@@ -84,7 +86,7 @@ export default class Broadcast extends Command {
       targets = allDevices
     } else {
       if (flags.device) {
-        const invalidDevices = diff(flags.device, allDevices)
+        const invalidDevices = difference(flags.device, allDevices)
         if (!isEmpty(invalidDevices)) {
           throw new Error(`Invalid device IDs: ${invalidDevices}`)
         }
@@ -115,19 +117,18 @@ export default class Broadcast extends Command {
 
     debug(workflow)
 
-    CliUx.ux.styledObject({
+    ux.styledObject({
       Who: _targets,
       When: flags.trigger === `immediately` ? `Immediately` : flags.start,
       How: flags.acknowledgement ? `Require Acknowledgement` : `Quick Announcement`,
       What: flags.text,
     })
 
-    const prompt = new Confirm({
-      name: `question`,
-      message: `Please confirm the details of your broadcast...`,
+    const answer = await confirm({
+      message: `Please confirm the details of your broadcast...`
     })
 
-    if (await prompt.run()) {
+    if (answer) {
       await this.relay.saveWorkflow(subscriber_id, workflow)
       this.log(`Broadcast saved!`)
     } else {

@@ -1,13 +1,11 @@
 // Copyright © 2022 Relay Inc.
 
-import { CreateCommand } from '../../../lib/command'
-import { subscriber, workflowFlags, timerFlags } from '../../../lib/flags'
+import { CreateCommand } from '../../../lib/command.js'
+import { subscriber, workflowFlags, timerFlags } from '../../../lib/flags/index.js'
 
-import { createTimerWorkflow } from '../../../lib/workflow'
+import { createTimerWorkflow } from '../../../lib/workflow.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-
+import debugFn from 'debug'
 const debug = debugFn(`workflow:create:timer`)
 
 export class TimerWorkflowCommand extends CreateCommand {
@@ -23,11 +21,11 @@ export class TimerWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(TimerWorkflowCommand)
+    const { flags } = await this.parse(TimerWorkflowCommand)
 
     try {
 
-      const workflow = await createTimerWorkflow(flags, raw)
+      const workflow = await createTimerWorkflow(flags)
 
       await this.saveWorkflow(flags[`subscriber_id`], workflow, flags[`dry-run`])
 

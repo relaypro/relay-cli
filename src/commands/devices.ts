@@ -1,12 +1,11 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { map } from 'lodash'
-import { Command } from '../lib/command'
-import * as flags from '../lib/flags'
+import { ux } from '@oclif/core'
+import { map } from 'lodash-es'
+import { Command } from '../lib/command.js'
+import * as flags from '../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import debugFn from 'debug'
 
 const debug = debugFn(`devices`)
 
@@ -25,7 +24,7 @@ export class DevicesCommand extends Command {
     const devices = await this.relay.devices(flags[`subscriber-id`])
     const mappedDevices = map(devices, d => ({ id: d }))
 
-    CliUx.ux.table(mappedDevices, {
+    ux.table(mappedDevices, {
       id: {
         header: `ID`
       },

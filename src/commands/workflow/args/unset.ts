@@ -1,12 +1,11 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { join, omit } from 'lodash'
-import { Command } from '../../../lib/command'
-import * as flags from '../../../lib/flags'
+import { ux } from '@oclif/core'
+import { join, omit } from 'lodash-es'
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import debugFn from 'debug'
 const debug = debugFn(`workflow`)
 
 export class UnsetArgsCommand extends Command {
@@ -31,21 +30,21 @@ export class UnsetArgsCommand extends Command {
 
     debug(argv)
 
-    CliUx.ux.action.start(`Unsetting args ${join(argv, `, `)} on Workflow ID: ${workflowId}`)
+    ux.action.start(`Unsetting args ${join(argv, `, `)} on Workflow ID: ${workflowId}`)
 
     const workflow = await this.relay.workflow(subscriberId, workflowId)
     if (workflow) {
       debug(`existing args`, workflow.config.trigger.start.workflow.args)
       workflow.config.trigger.start.workflow.args = omit(
         workflow.config.trigger.start.workflow.args,
-        argv,
+        argv as string[],
       )
       await this.relay.saveWorkflow(subscriberId, workflow)
-      CliUx.ux.action.stop(`success`)
-      CliUx.ux.styledHeader(`New Workflow arguments`)
-      CliUx.ux.styledJSON(workflow.config.trigger.start.workflow.args)
+      ux.action.stop(`success`)
+      ux.styledHeader(`New Workflow arguments`)
+      ux.styledJSON(workflow.config.trigger.start.workflow.args)
     } else {
-      CliUx.ux.action.stop(`failed`)
+      ux.action.stop(`failed`)
       this.log(`Workflow ID does not exist: ${workflowId}`)
     }
   }

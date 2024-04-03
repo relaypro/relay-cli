@@ -1,14 +1,13 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import { Command } from '../../lib/command'
-import isEmpty from 'lodash/isEmpty'
+import { isEmpty } from 'lodash-es'
 
-import * as flags from '../../lib/flags'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import debugFn from 'debug'
 
 const debug = debugFn(`audio`)
 
@@ -17,7 +16,7 @@ export default class AudioList extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
   async run(): Promise<void> {
@@ -29,8 +28,8 @@ export default class AudioList extends Command {
       debug(audioFiles)
 
       if (!isEmpty(audioFiles)) {
-        CliUx.ux.styledHeader(`Uploaded Audio Files`)
-        CliUx.ux.table(audioFiles, {
+        ux.styledHeader(`Uploaded Audio Files`)
+        ux.table(audioFiles, {
           id: {},
           short_name: {},
           audio_format: {},

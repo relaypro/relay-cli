@@ -1,13 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { CreateCommand } from '../../../lib/command'
-import { string, subscriber, workflowFlags } from '../../../lib/flags'
+import { CreateCommand } from '../../../lib/command.js'
+import { string, subscriber, workflowFlags } from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow } from '../../../lib/workflow'
+import { NewWorkflow } from '../../../lib/api.js'
+import { createWorkflow } from '../../../lib/workflow.js'
 
+import debugFn from 'debug'
 const debug = debugFn(`workflow:create:geofence`)
 
 type Transition = `entry` | `exit`
@@ -42,11 +41,11 @@ export class GeofenceWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(GeofenceWorkflowCommand)
+    const { flags } = await this.parse(GeofenceWorkflowCommand)
 
     try {
 
-      const workflow: GeofenceWorkflow = await createWorkflow(flags, raw) as GeofenceWorkflow
+      const workflow: GeofenceWorkflow = await createWorkflow(flags) as GeofenceWorkflow
 
       if (flags.trigger && flags.id) {
         workflow.config.trigger.on_geofence = {

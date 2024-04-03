@@ -1,6 +1,6 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../lib/command'
+import { Command } from '../lib/command.js'
 
 export default class Logout extends Command {
   static description = `logout and forget any tokens`

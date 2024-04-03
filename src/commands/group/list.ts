@@ -1,16 +1,15 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { ResourceFolder } from '../../lib/api'
-import { Ok, Result } from 'ts-results'
-import { isEmpty } from 'lodash'
-import { RESOURCE_PREFIX } from '../../lib/constants'
+import debugFn from 'debug'
+import { ResourceFolder } from '../../lib/api.js'
+import { Ok, Result } from 'ts-results-es'
+import { isEmpty } from 'lodash-es'
+import { RESOURCE_PREFIX } from '../../lib/constants.js'
 
 const debug = debugFn(`group`)
 
@@ -23,7 +22,7 @@ export class GroupListCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
   async run(): Promise<Result<ResourceFolder[], Error>> {
@@ -34,10 +33,10 @@ export class GroupListCommand extends Command {
     debug(`groups`, groups)
 
     if (!this.jsonEnabled()) {
-      CliUx.ux.styledHeader(`Groups`)
+      ux.styledHeader(`Groups`)
 
       if (!isEmpty(groups)) {
-        CliUx.ux.table(groups, {
+        ux.table(groups, {
           folder_name: {
             header: `Group`,
             minWidth: 25,

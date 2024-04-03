@@ -1,23 +1,21 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import HTTP from 'http-call'
+import { ux } from '@oclif/core'
+import { HTTP } from 'http-call'
 import encode from 'form-urlencoded'
 import open from 'open'
 import http from 'http'
 import { URL, URLSearchParams } from 'url'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import debugFn from 'debug'
-import crypto = require('crypto') // eslint-disable-line quotes
+import crypto from 'crypto'
+import confirm from '@inquirer/confirm'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Confirm } = require('enquirer') // eslint-disable-line quotes
-
-import { vars } from './vars'
-import { clearSubscribers, deleteSession, getToken, resolveSubscriber, setToken, Subscriber, TokenAccount, Tokens } from './session'
-import { uuid, base64url } from './utils'
-import jwtValues from './jwt'
-import { APIClient } from './api-client'
+import { vars } from './vars.js'
+import { clearSubscribers, deleteSession, getToken, resolveSubscriber, setToken, Subscriber, TokenAccount, Tokens } from './session.js'
+import { uuid, base64url } from './utils.js'
+import jwtValues from './jwt.js'
+import { APIClient } from './api-client.js'
 
 const debug = debugFn(`login`)
 
@@ -57,11 +55,11 @@ export class Login {
     let loggedIn = false
     try {
       setTimeout(() => {
-        if (!loggedIn) CliUx.ux.error(`timed out`)
+        if (!loggedIn) ux.error(`timed out`)
       }, 1000 * 60 * 10).unref()
 
       if (process.env.RELAY_API_KEY) {
-        CliUx.ux.error(`Cannot log in with RELAY_API_KEY set`)
+        ux.error(`Cannot log in with RELAY_API_KEY set`)
       }
 
       const tokens = getToken()
@@ -69,7 +67,7 @@ export class Login {
       const previousUsername = tokens?.username
 
       if (previousUsername) {
-        CliUx.ux.warn(`Previously logged in as ${previousUsername}... logging out.`)
+        ux.warn(`Previously logged in as ${previousUsername}... logging out.`)
         await this.logout()
       }
 
@@ -84,7 +82,7 @@ export class Login {
         if (success) {
           loggedIn = true
         } else {
-          CliUx.ux.warn(`Default Relay account not set... logging out.`)
+          ux.warn(`Default Relay account not set... logging out.`)
           this.doLogout()
         }
 
@@ -94,15 +92,15 @@ export class Login {
           throw new Error(`Legal Terms and Conditions not accepted`)
         }
 
-        CliUx.ux.log()
-        CliUx.ux.log(`Logged in`)
+        ux.log()
+        ux.log(`Logged in`)
 
         return auth
       } else {
         throw new Error(`Failed to discover subscriber id`)
       }
     } catch(err) {
-      CliUx.ux.log(`Logging out`)
+      ux.log(`Logging out`)
       await this.doLogout()
       throw err
     }
@@ -113,8 +111,8 @@ export class Login {
     let urlDisplayed = false
     const showUrl = () => {
       if (!urlDisplayed) {
-        CliUx.ux.warn(`Cannot open browser.`)
-        CliUx.ux.warn(`Copy and paste into a browser: ${CliUx.ux.url(`Click here to login`, url)}`)
+        ux.warn(`Cannot open browser.`)
+        ux.warn(`Copy and paste into a browser: ${ux.url(`Click here to login`, url)}`)
       }
       urlDisplayed = true
     }
@@ -138,11 +136,11 @@ export class Login {
 
     const { url } = this.createEndSession(vars.authCliId)
     debug(`endSessionEndpoint`, url)
-    CliUx.ux.log(`Opening browser to end authenticated session`)
-    await CliUx.ux.wait(500)
+    ux.log(`Opening browser to end authenticated session`)
+    await ux.wait(500)
     const cp = await open(url, { wait: false })
     cp.on(`error`, err => {
-      CliUx.ux.warn(err)
+      ux.warn(err)
       showUrl()
     })
     cp.on(`close`, code => {
@@ -151,10 +149,10 @@ export class Login {
       }
     })
 
-    CliUx.ux.action.start(`Waiting for your browser`)
+    ux.action.start(`Waiting for your browser`)
     const success = await response
     debug(`end session success`, success)
-    CliUx.ux.action.stop(`done`)
+    ux.action.stop(`done`)
 
     await this.doLogout()
   }
@@ -179,9 +177,9 @@ export class Login {
         throw new Error(`failed-to-generate-sdk-token`)
       }
       debug(`no refresh_token`)
-      CliUx.ux.log(`To generate an authorization token, you must check the 'Remember me' box when logging in`)
-      CliUx.ux.url(`First, click here to fully logout`, `${vars.endSessionEndpoint}`)
-      await CliUx.ux.anykey(`Then press any key to log in again`)
+      ux.log(`To generate an authorization token, you must check the 'Remember me' box when logging in`)
+      ux.url(`First, click here to fully logout`, `${vars.endSessionEndpoint}`)
+      await ux.anykey(`Then press any key to log in again`)
       return this.generateSdkTokenAccount(true)
     }
   }
@@ -226,8 +224,8 @@ export class Login {
     let urlDisplayed = false
     const showUrl = () => {
       if (!urlDisplayed) {
-        CliUx.ux.warn(`Cannot open browser.`)
-        CliUx.ux.warn(`Copy and paste into a browser: ${CliUx.ux.url(`Click here to login`, url)}`)
+        ux.warn(`Cannot open browser.`)
+        ux.warn(`Copy and paste into a browser: ${ux.url(`Click here to login`, url)}`)
       }
       urlDisplayed = true
     }
@@ -275,11 +273,11 @@ export class Login {
 
     const { response } = await this.startHttpCodeServer(httpHandler)
     debug(`authorization url`, url)
-    CliUx.ux.log(`Opening browser to login`)
-    await CliUx.ux.wait(500)
+    ux.log(`Opening browser to login`)
+    await ux.wait(500)
     const cp = await open(url, { wait: false })
     cp.on(`error`, err => {
-      CliUx.ux.warn(err)
+      ux.warn(err)
       showUrl()
     })
     cp.on(`close`, code => {
@@ -287,10 +285,10 @@ export class Login {
         showUrl()
       }
     })
-    CliUx.ux.action.start(`Waiting for you to login in your browser`)
+    ux.action.start(`Waiting for you to login in your browser`)
     const code = await response
     debug(`got code ${code}`)
-    CliUx.ux.action.stop(`done`)
+    ux.action.stop(`done`)
 
     const body = {
       grant_type: `authorization_code`,
@@ -446,7 +444,7 @@ export class Login {
     }
 
     const timeout = setTimeout(() => {
-      CliUx.ux.action.start(`Validating legal terms and conditions`)
+      ux.action.start(`Validating legal terms and conditions`)
     }, 2000)
 
     /*
@@ -468,17 +466,15 @@ export class Login {
       return true
     } else {
       const { body: { terms: { platform_api: { title, url } } } } = await HTTP.get<TermsPointers>(`${vars.contentUrl}/version.json`)
-      CliUx.ux.log()
-      CliUx.ux.styledHeader(`\n${title}`)
-      CliUx.ux.log(`In order to use the Relay CLI, API, and SDKs, you must accept our terms and conditions>Your rights and responsibilities when accessing the Relay publicly available application programming interfaces (the "APIs")`)
-      CliUx.ux.url(`Click here to read the legal agreement`, `${vars.contentUrl}${url}`)
-      CliUx.ux.log()
-      const prompt = new Confirm({
-        name: `accept_terms`,
-        message: `Do you and your organization accept these terms and conditions?`,
-      })
+      ux.log()
+      ux.styledHeader(`\n${title}`)
+      ux.log(`In order to use the Relay CLI, API, and SDKs, you must accept our terms and conditions>Your rights and responsibilities when accessing the Relay publicly available application programming interfaces (the "APIs")`)
+      ux.url(`Click here to read the legal agreement`, `${vars.contentUrl}${url}`)
+      ux.log()
       try {
-        const answer = await prompt.run()
+        const answer = await confirm({
+          message: `Do you and your organization accept these terms and conditions?`,
+        })
         if (answer) {
           const body = {
             terms_and_condition_id: `${apiTerm.id}`,
@@ -490,7 +486,7 @@ export class Login {
           })
           return true
         } else {
-          CliUx.ux.log(`You declined to accept ${title}`)
+          ux.log(`You declined to accept ${title}`)
           return false
         }
       } catch(err) {
@@ -502,7 +498,7 @@ export class Login {
   private async fetchSubscribers(): Promise<Subscriber[]> {
 
     const timeout = setTimeout(() => {
-      CliUx.ux.action.start(`Retrieving authorized subscribers`)
+      ux.action.start(`Retrieving authorized subscribers`)
     }, 2000)
 
     try {
@@ -510,8 +506,8 @@ export class Login {
 
       debug(`accounts`, accounts)
 
-      if (CliUx.ux.action.running) {
-        CliUx.ux.action.stop()
+      if (ux.action.running) {
+        ux.action.stop()
       }
 
       return accounts

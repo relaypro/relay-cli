@@ -1,14 +1,18 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { forEach, isEmpty, reduce, size } from 'lodash'
-import { Command } from '../../../lib/command'
-import * as flags from '../../../lib/flags'
+import { Args, ux } from '@oclif/core'
+import {
+  forEach,
+  isEmpty,
+  reduce,
+  size
+} from 'lodash-es'
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
 
-import { ArgValueType } from '../../../lib/api'
+import { ArgValueType } from '../../../lib/api.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import debugFn from 'debug'
 const debug = debugFn(`workflow`)
 
 type ArgType = {
@@ -17,7 +21,7 @@ type ArgType = {
   type: `string` | `number` | `boolean`
 }
 
-export class UnsetArgsCommand extends Command {
+export class GetArgsCommand extends Command {
 
   static strict = false
 
@@ -28,30 +32,31 @@ export class UnsetArgsCommand extends Command {
     ...flags.subscriber,
   }
 
-  static args = [
-    {
+  static args = {
+    ARG: Args.string({
       name: `ARG`,
       required: true,
-    }
-  ]
+    })
+  }
 
   async run(): Promise<void> {
-    const { argv, flags } = await this.parse(UnsetArgsCommand)
+    const { flags, argv } = await this.parse(GetArgsCommand)
+    const _argv = argv as string[]
     const workflowId = flags[`workflow-id`]
     const subscriberId = flags[`subscriber-id`]
 
-    if (argv.length === 0) {
+    if (_argv.length === 0) {
       this.error(`Usage: relay workflow:args:get ARG\nMust specify ARG.`)
     }
 
-    debug(argv)
+    debug(_argv)
 
     const workflow = await this.relay.workflow(subscriberId, workflowId)
     if (workflow) {
 
       const unsets: string[] = []
       const args = workflow?.config?.trigger?.start?.workflow?.args
-      const mappedArgs = reduce<string, ArgType[]>(argv, (mappedArgs, arg) => {
+      const mappedArgs = reduce<string, ArgType[]>(_argv, (mappedArgs, arg) => {
         const value = args[arg]
         const type = typeof value
         if (value !== undefined) {
@@ -67,18 +72,16 @@ export class UnsetArgsCommand extends Command {
       }, [])
 
       if (size(argv) !== size(unsets)) {
-        CliUx.ux.styledHeader(`Workflow arguments for ID ${workflowId}`)
-        CliUx.ux.table(mappedArgs, {
+        ux.styledHeader(`Workflow arguments for ID ${workflowId}`)
+        ux.table(mappedArgs, {
           arg: {},
           value: {},
           type: {}
-        }, {
-
-        })
+        }, {})
       }
 
       if (!isEmpty(unsets)) {
-        CliUx.ux.styledHeader(`Following arguments are not set on Workflow`)
+        ux.styledHeader(`Following arguments are not set on Workflow`)
         forEach(unsets, arg => {
           this.error(`${arg}`)
         })

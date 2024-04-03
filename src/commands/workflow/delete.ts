@@ -1,14 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import confirm from '@inquirer/confirm'
 
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
+
+import debugFn from 'debug'
 const debug = debugFn(`workflow`)
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
 export class DeleteWorkflowCommand extends Command {
 
@@ -30,12 +28,9 @@ export class DeleteWorkflowCommand extends Command {
       debug(workflow)
 
       if (workflow) {
-        const prompt = new Confirm({
-          name: `question`,
+        const answer = await confirm({
           message: `Deleting ${workflow.name} (ID: ${workflowId}). Are you sure?`
         })
-
-        const answer = await prompt.run()
 
         if (answer) {
           const success = await this.relay.removeWorkflow(subscriberId, workflow.workflow_id)

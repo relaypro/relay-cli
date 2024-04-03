@@ -1,15 +1,12 @@
-import filter from 'lodash/filter'
-import reduce from 'lodash/reduce'
 
-import { CreateCommand } from '../../../lib/command'
-import * as Flags from '../../../lib/flags'
+import { CreateCommand } from '../../../lib/command.js'
+import * as Flags from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow } from '../../../lib/workflow'
-import { parseArg } from '../../../lib/utils'
+import { NewWorkflow } from '../../../lib/api.js'
+import { createWorkflow } from '../../../lib/workflow.js'
+import { mergeArgs } from '../../../lib/utils.js'
 
+import debugFn from 'debug'
 const debug = debugFn(`workflow:create:nfc`)
 
 type NfcType = `custom`|`user_profile`
@@ -32,7 +29,7 @@ export class NfcWorkflowCommand extends CreateCommand {
   static flags = {
     ...Flags.subscriber,
     ...Flags.workflowFlags,
-    matcher: Flags.string({
+    matcher: Flags.stringValue({
       char: `m`,
       hidden: true,
       required: false,
@@ -40,7 +37,7 @@ export class NfcWorkflowCommand extends CreateCommand {
       description: `Arbitrary name/value pair to match against the triggering NFC Tag's content`,
       helpValue: `"category=task"`
     }),
-    type: Flags.enum({
+    type: Flags.string({
       char: `t`,
       hidden: true,
       description: `Tag type to match against when tapped`,
@@ -64,11 +61,11 @@ export class NfcWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(NfcWorkflowCommand)
+    const { flags } = await this.parse(NfcWorkflowCommand)
     const type = flags[`type`] as NfcType
     try {
 
-      const workflow: NfcWorkflow = await createWorkflow(flags, raw) as NfcWorkflow
+      const workflow: NfcWorkflow = await createWorkflow(flags) as NfcWorkflow
 
       const onNfc: OnNfc = { type }
 
@@ -80,17 +77,7 @@ export class NfcWorkflowCommand extends CreateCommand {
         onNfc.label = flags.label
       }
 
-      let matcher = {}
-
-      if (flags.matcher) {
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const nfcArgFlags = filter(raw, ({ flag }: any) => `matcher` === flag)
-        matcher = reduce(nfcArgFlags, (args, flag) => {
-          const [, name, value] = parseArg(flag.input)
-          return { ...args, [name]: value }
-        }, {})
-      }
+      let matcher = mergeArgs(flags.matcher)
 
       workflow.config.trigger.on_nfc = {
         ...matcher,

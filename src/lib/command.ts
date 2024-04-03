@@ -2,13 +2,11 @@
 
 import { Command as Base } from '@oclif/core'
 
-import { APIClient } from './api-client'
-import deps from './deps'
+import { APIClient } from './api-client.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { NewWorkflow } from './api'
-import { printWorkflows } from './utils'
+import debugFn from 'debug'
+import { NewWorkflow } from './api.js'
+import { printWorkflows } from './utils.js'
 const debug = debugFn(`error`)
 
 export abstract class Command extends Base {
@@ -17,7 +15,7 @@ export abstract class Command extends Base {
 
   get relay(): APIClient {
     if (this._relay) return this._relay
-    this._relay = new deps.APIClient(this.config)
+    this._relay = new APIClient(this.config)
     return this._relay
   }
 

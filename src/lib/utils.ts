@@ -1,13 +1,13 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup, TaskTypeDump, WorkflowEvents, WorkflowEvent } from './api'
+import { ux } from '@oclif/core'
+import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash-es'
+import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup, TaskTypeDump, WorkflowEvents, WorkflowEvent } from './api.js'
 
-import { ALL, RESOURCE_PREFIX } from './constants'
+import { ALL, RESOURCE_PREFIX } from './constants.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const formatWorkflowArgs = (workflow: any, json=false): string => { // eslint-disable-line @typescript-eslint/no-explicit-any
+
+export const formatWorkflowArgs = (workflow: any, json=false): string => {
   const args = workflow?.config?.trigger?.start?.workflow?.args||{}
   if (json) {
     return JSON.stringify(args, null, 2)
@@ -27,9 +27,18 @@ export const parseArg = (input: string): ([boolean, string]|[boolean, string, st
   return [true, name, value]
 }
 
+export const mergeArgs = (
+  strings?: Record<string, string>[],
+  booleans?: Record<string, boolean>[],
+  numbers?: Record<string, number>[]
+): Record<string, any> => {
+  const merged = reduce([...strings ?? [], ...booleans ?? [], ...numbers ?? []], (acc, obj) => {
+    return { ...acc, ...obj }
+  }, {})
+  return merged
+}
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const formatWorkflowType = (workflow: any): string => { // eslint-disable-line @typescript-eslint/no-explicit-any
+export const formatWorkflowType = (workflow: any): string => {
   const type = find<string>(keys(workflow.config.trigger), key => startsWith(key, `on_`))
   if (type) {
     const trigger = workflow.config.trigger[type]
@@ -121,8 +130,8 @@ const displayInstall = (workflow: Workflow) => {
 
 export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Installed Workflow${workflows.length > 1 ? `s` : ``}`)
-  CliUx.ux.table(workflows, {
+  options.output ?? ux.styledHeader(`Installed Workflow${workflows.length > 1 ? `s` : ``}`)
+  ux.table(workflows, {
     workflow_id: {
       header: `ID`,
       get: row => row.workflow_id,
@@ -136,7 +145,7 @@ export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
       get: row => row.config.trigger.start.workflow.uri,
     },
     install: {
-      header: `Installed on`,
+  header: `Installed on`,
       get: displayInstall,
     },
     args: {
@@ -148,8 +157,8 @@ export const printWorkflows = (workflows: Workflow[], flags: unknown): void => {
 
 export const printGeofences = (geofences: Geofence[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Configured geofence${geofences.length > 1 ? `s` : ``}`)
-  CliUx.ux.table(geofences, {
+  options.output ?? ux.styledHeader(`Configured geofence${geofences.length > 1 ? `s` : ``}`)
+  ux.table(geofences, {
     geofence_id: {
       header: `ID`,
     },
@@ -171,8 +180,8 @@ const formatTerminateReason = (reason = ``): string => {
 
 export const printWorkflowInstances = (instances: MergedWorkflowInstance[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  CliUx.ux.styledHeader(`Workflow Instance${instances.length > 1 ? `s` : ``}`)
-  CliUx.ux.table(instances, {
+  ux.styledHeader(`Workflow Instance${instances.length > 1 ? `s` : ``}`)
+  ux.table(instances, {
     instance_id: {
       header: `Instance id`,
       minWidth: 25,
@@ -209,8 +218,8 @@ export const printWorkflowInstances = (instances: MergedWorkflowInstance[], flag
 
 export const printTasks = (tasks: Task[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
-  CliUx.ux.table(tasks, {
+  options.output ?? ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
+  ux.table(tasks, {
     workflow_instance_id: {
       header: `Workflow Instance ID`,
     },
@@ -249,8 +258,8 @@ export const printTasks = (tasks: Task[], flags: unknown): void => {
 
 export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
-  CliUx.ux.table(tasks, {
+  options.output ?? ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
+  ux.table(tasks, {
     task_name: {
       header: `Task name`,
     },
@@ -294,16 +303,16 @@ export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): voi
 
 export const printTaskTypes = (taskTypes: TaskType[], flags: unknown, namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Installed Task Type${taskTypes.length > 1 ? `s` : ``} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
-  CliUx.ux.table(taskTypes, {
+  options.output ?? ux.styledHeader(`Installed Task Type${taskTypes.length > 1 ? `s` : ``} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
+  ux.table(taskTypes, {
     name: {}
   }, options)
 }
 
 export const printMajors = (majors: Major[], flags: unknown, type: string, namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
-  CliUx.ux.table(majors, {
+  options.output ?? ux.styledHeader(`Major${majors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
+  ux.table(majors, {
     major: {
       header: `Major`,
     }
@@ -312,8 +321,8 @@ export const printMajors = (majors: Major[], flags: unknown, type: string, names
 
 export const printMinors = (minors: Minor[], flags: unknown, type: string, latest: boolean, namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Minor${minors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
-  CliUx.ux.table(minors, {
+  options.output ?? ux.styledHeader(`Minor${minors.length > 1 ? `s` : ``} for ${type} on ${namespace[0]?.toUpperCase() + namespace.slice(1)}`)
+  ux.table(minors, {
     minor: {
       header: `${latest ? `Latest ` : ``}Minor`,
     },
@@ -326,8 +335,8 @@ export const printMinors = (minors: Minor[], flags: unknown, type: string, lates
 
 export const printDump = (taskTypes: TaskTypeDump[], flags: unknown,namespace: string): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Latest versions of task types on ${namespace}`)
-  CliUx.ux.table(taskTypes, {
+  options.output ?? ux.styledHeader(`Latest versions of task types on ${namespace}`)
+  ux.table(taskTypes, {
     type: {},
     major: {},
     minor: {},
@@ -339,8 +348,8 @@ export const printDump = (taskTypes: TaskTypeDump[], flags: unknown,namespace: s
 
 export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
   const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Task Groups`)
-  CliUx.ux.table(groups, {
+  options.output ?? ux.styledHeader(`Task Groups`)
+  ux.table(groups, {
     group_name: {
       header: `Group Name`,
     },
@@ -365,8 +374,8 @@ export const printTaskGroups = (groups: TaskGroup[], flags: unknown): void => {
 
 export const printAnalytics = (analytics: WorkflowEvents, flags: unknown, parse: boolean): void => {
   const options = { ...(flags as Record<string, unknown>)}
-  options.output ?? CliUx.ux.log(`=> Showing ${analytics?.length} events`)
-  CliUx.ux.table(analytics, {
+  options.output ?? ux.log(`=> Showing ${analytics?.length} events`)
+  ux.table(analytics, {
     workflow_id: {
       header: `Workflow ID`,
     },
@@ -399,7 +408,7 @@ export const printAnalytics = (analytics: WorkflowEvents, flags: unknown, parse:
       }
     },
   }, options)
-  options.output ?? CliUx.ux.log(`=> Showing ${analytics?.length} events`)
+  options.output ?? ux.log(`=> Showing ${analytics?.length} events`)
 }
 
 const parseContent = (row: WorkflowEvent): string => {

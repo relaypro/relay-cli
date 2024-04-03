@@ -1,16 +1,16 @@
 // Copyright © 2022 Relay Inc.
 
-// eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { CliUx } from '@oclif/core'
-import { filter, join, keys, reduce } from 'lodash'
-import { Command } from '../../../lib/command'
-import * as flags from '../../../lib/flags'
+import { ux } from '@oclif/core'
+import {
+  join,
+  keys,
+} from 'lodash-es'
 
-import { parseArg } from '../../../lib/utils'
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
+import { mergeArgs } from '../../../lib/utils.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import debugFn from 'debug'
 const debug = debugFn(`workflow`)
 
 export class SetArgsCommand extends Command {
@@ -21,55 +21,23 @@ export class SetArgsCommand extends Command {
 
   static flags = {
     [`workflow-id`]: flags.workflowId,
-    arg: flags.string({
-      char: `a`,
-      multiple: true,
-      required: false,
-      description: `String name/value pair workflow arg`,
-    }),
+    arg: flags.stringValue(),
     boolean: flags.booleanValue(),
     number: flags.numberValue(),
     ...flags.subscriber,
   }
 
   async run(): Promise<void> {
-    const parsed = await this.parse(SetArgsCommand)
-    const { flags,  raw } = parsed
+    const { flags,  /*raw*/ } = await this.parse(SetArgsCommand)
     const workflowId = flags[`workflow-id`]
     const subscriberId = flags[`subscriber-id`]
 
     try {
-      const normalArgFlags = filter(raw, ({ flag }: any) => `arg` === flag)
-      const normalArgs = reduce(normalArgFlags, (args: Record<string, any>, flag) => {
-        const [success, name, value] = parseArg(flag.input)
-        if (!success) {
-          this.error(`${flag.input} is invalid. Must be in the format of 'foo=bar'`)
-        }
-        args[name] = value
-        return args
-      }, {})
-
-      const booleanFlags = filter(raw, ({ flag }: any) => `boolean` === flag)
-      debug(`booleanFlags`, booleanFlags)
-      let booleanArgs = {}
-      for (const flag of booleanFlags)  {
-        const nameValue = await SetArgsCommand.flags.boolean.parse(flag.input, null, flag)
-        booleanArgs = { ...booleanArgs, ...nameValue }
-      }
-
-      const numberFlags = filter(raw, ({ flag }: any) => `number` === flag)
-      debug(`numberFlags`, numberFlags)
-      let numberArgs = {}
-      for (const flag of numberFlags)  {
-        const nameValue = await SetArgsCommand.flags.number.parse(flag.input, null, flag)
-        numberArgs = { ...numberArgs, ...nameValue }
-      }
-
-      const args = { ...normalArgs, ...booleanArgs, ...numberArgs }
+      const args = mergeArgs(flags.arg ?? [], flags.boolean ?? [], flags.number ?? [])
 
       debug(`args`, args)
 
-      CliUx.ux.action.start(`Setting args ${join(keys(args), `, `)} on Workflow ID: ${workflowId}`)
+      ux.action.start(`Setting args ${join(keys(args), `, `)} on Workflow ID: ${workflowId}`)
 
       const workflow = await this.relay.workflow(subscriberId, workflowId)
 
@@ -80,11 +48,11 @@ export class SetArgsCommand extends Command {
           ...args,
         }
         await this.relay.saveWorkflow(subscriberId, workflow)
-        CliUx.ux.action.stop(`success`)
-        CliUx.ux.styledHeader(`New Workflow arguments`)
-        CliUx.ux.styledJSON(workflow.config.trigger.start.workflow.args)
+        ux.action.stop(`success`)
+        ux.styledHeader(`New Workflow arguments`)
+        ux.styledJSON(workflow.config.trigger.start.workflow.args)
       } else {
-        CliUx.ux.action.stop(`failed`)
+        ux.action.stop(`failed`)
         this.log(`Workflow ID does not exist: ${workflowId}`)
       }
 

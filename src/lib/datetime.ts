@@ -1,8 +1,8 @@
 // Copyright © 2022 Relay Inc.
 
 import { DateTime } from 'luxon'
-import { Day, DayValue } from './api'
-import { timerFlags } from './flags'
+import { Day, DayValue } from './api.js'
+import { timerFlags } from './flags/index.js'
 
 export const getFormattedTimestamp = (value: string, format: string): string => {
   if (format === `relative`) {
@@ -43,7 +43,12 @@ export const withoutZ = (dateTimeStr: string): string => {
 }
 
 const format = (dateTime: DateTime): string  => {
-  return dateTime.set({ millisecond: 0 }).toISO({ suppressMilliseconds: true, includeOffset: false })
+  const result = dateTime.set({ millisecond: 0 }).toISO({ suppressMilliseconds: true, includeOffset: false })
+  if (result) {
+    return result
+  } else {
+    return ``
+  }
 }
 
 export const getTimestampFarFuture = (): string => {

@@ -1,13 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { Command } from '../../lib/command'
+import { ux } from '@oclif/core'
+import { Command } from '../../lib/command.js'
 
-import * as flags from '../../lib/flags'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { SubscriberQuery } from '../../lib/session'
+import debugFn from 'debug'
+import { SubscriberQuery } from '../../lib/session.js'
 
 const debug = debugFn(`subscriber`)
 
@@ -69,7 +68,7 @@ export default class SubscriberList extends Command {
     }
 
     const timeout = setTimeout(() => {
-      CliUx.ux.action.start(`Retrieving authorized subscribers`)
+      ux.action.start(`Retrieving authorized subscribers`)
     }, 2000)
 
     try {
@@ -78,11 +77,11 @@ export default class SubscriberList extends Command {
       // debug(subscribers)
       debug(pagedPath)
 
-      if (CliUx.ux.action.running) {
-        CliUx.ux.action.stop()
+      if (ux.action.running) {
+        ux.action.stop()
       }
 
-      CliUx.ux.table(subscribers, {
+      ux.table(subscribers, {
         name:{},
         email: {},
         id: {},

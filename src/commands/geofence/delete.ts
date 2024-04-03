@@ -1,11 +1,10 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../../lib/command'
+import { Command } from '../../lib/command.js'
 
-import * as flags from '../../lib/flags'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import debugFn from 'debug'
 
 const debug = debugFn(`geofence`)
 

@@ -1,16 +1,15 @@
 // Copyright © 2023 Relay Inc.
 
 import * as fs from 'fs'
-import { CreateCommand } from '../../../lib/command'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { lowerCase, map } from 'lodash-es'
 
-import * as flags from '../../../lib/flags'
-import { NewWorkflow } from '../../../lib/api'
-import { createTicketingWorkflow } from '../../../lib/workflow'
-import { lowerCase, map } from 'lodash'
-import { aliceTicketerStartArgs, integrationStartArgs } from '../../../lib/args'
+import { CreateCommand } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
+import { NewWorkflow } from '../../../lib/api.js'
+import { createTicketingWorkflow } from '../../../lib/workflow.js'
+import { aliceTicketerStartArgs, integrationStartArgs } from '../../../lib/args.js'
 
+import debugFn from 'debug'
 const debug = debugFn(`alice:ticketer:start`)
 
 type PhraseWorkflow = NewWorkflow & { config: { trigger: { on_phrases: string[] }}}
@@ -41,10 +40,10 @@ export default class AliceTicketerStartCommand extends CreateCommand {
     })
   }
 
-  static args = [
+  static args = {
     ...integrationStartArgs,
     ...aliceTicketerStartArgs
-  ]
+  }
 
   async run(): Promise<void> {
     const { flags, argv } = await this.parse(AliceTicketerStartCommand)

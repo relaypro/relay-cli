@@ -1,17 +1,16 @@
 // Copyright © 2023 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
-import { isEmpty } from 'lodash'
-import { filterByTag, getTaskGroup, printScheduledTasks, printTasks } from '../../lib/utils'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
+import { isEmpty } from 'lodash-es'
+import { filterByTag, getTaskGroup, printScheduledTasks, printTasks } from '../../lib/utils.js'
 
-import { ScheduledTask, Task } from '../../lib/api'
-import { Err, Ok, Result } from 'ts-results'
+import { ScheduledTask, Task } from '../../lib/api.js'
+import { Err, Ok, Result } from 'ts-results-es'
 
+import debugFn from 'debug'
 const debug = debugFn(`tasks:list`)
 
 export default class TaskListCommand extends Command {
@@ -21,7 +20,7 @@ export default class TaskListCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
     scheduled: flags.boolean({
       description: `List scheduled tasks`,
       required: false,

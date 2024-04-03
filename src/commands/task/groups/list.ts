@@ -1,15 +1,14 @@
 // Copyright © 2023 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import { Command } from '../../../lib/command'
-import * as flags from '../../../lib/flags'
-import {  printTaskGroups } from '../../../lib/utils'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { isEmpty } from 'lodash'
-import { Err, Ok, Result } from 'ts-results'
-import { TaskGroup } from '../../../lib/api'
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
+import {  printTaskGroups } from '../../../lib/utils.js'
+import debugFn from 'debug'
+import { isEmpty } from 'lodash-es'
+import { Err, Ok, Result } from 'ts-results-es'
+import { TaskGroup } from '../../../lib/api.js'
 
 const debug = debugFn(`task-groups:list`)
 
@@ -20,7 +19,7 @@ export default class TaskGroupsListCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
   async run(): Promise<Result<TaskGroup[], Error>> {
@@ -45,4 +44,3 @@ export default class TaskGroupsListCommand extends Command {
     }
   }
 }
-

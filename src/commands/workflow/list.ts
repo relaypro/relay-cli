@@ -1,18 +1,16 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import { Command } from '../../lib/command'
-import isEmpty from 'lodash/isEmpty'
+import { isEmpty } from 'lodash-es'
 
-import { printWorkflows } from '../../lib/utils'
+import { Command } from '../../lib/command.js'
+import { printWorkflows } from '../../lib/utils.js'
+import * as flags from '../../lib/flags/index.js'
 
-import * as flags from '../../lib/flags'
-
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { Err, Ok, Result } from 'ts-results'
-import * as api from '../../lib/api'
+import debugFn from 'debug'
+import { Err, Ok, Result } from 'ts-results-es'
+import * as api from '../../lib/api.js'
 
 const debug = debugFn(`workflow`)
 
@@ -22,7 +20,7 @@ export default class Workflow extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
   async run(): Promise<Result<api.Workflow[], Error>> {

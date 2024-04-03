@@ -1,10 +1,10 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { Command } from '../../lib/command'
-import { vars } from '../../lib/vars'
+import { ux } from '@oclif/core'
+import { Command } from '../../lib/command.js'
+import { vars } from '../../lib/vars.js'
 
-import * as flags from '../../lib/flags'
+import * as flags from '../../lib/flags/index.js'
 
 export default class GenerateToken extends Command {
   static description = `generate a token that can be used with the Relay SDK`
@@ -27,9 +27,9 @@ export default class GenerateToken extends Command {
 
     const token = await this.relay.generateToken()
 
-    CliUx.ux.styledHeader(`SDK TOKEN`)
-    CliUx.ux.log(`The following token can be used in the configured environment`)
-    CliUx.ux.styledObject({
+    ux.styledHeader(`SDK TOKEN`)
+    ux.log(`The following token can be used in the configured environment`)
+    ux.styledObject({
       env: vars.rawEnv,
       api: vars.host,
       token,

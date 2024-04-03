@@ -1,17 +1,17 @@
 // Copyright © 2023 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
+import { isEmpty } from 'lodash-es'
+import { Err, Ok, Result } from 'ts-results-es'
 
-import { Command } from '../../../../lib/command'
-import * as flags from '../../../../lib/flags'
-import { printMinors } from '../../../../lib/utils'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { isEmpty } from 'lodash'
-import { Minor } from '../../../../lib/api'
-import { Err, Ok, Result } from 'ts-results'
+import { Command } from '../../../../lib/command.js'
+import * as flags from '../../../../lib/flags/index.js'
+import { printMinors } from '../../../../lib/utils.js'
+import { Minor } from '../../../../lib/api.js'
+import { major, namespace, type } from '../../../../lib/args.js'
 
-const debug = debugFn(`task-types:list`)
+import debugFn from 'debug'
+const debug = debugFn(`task:types:list`)
 
 export default class TaskTypesListMinorsCommand extends Command {
   static description = `List task type configurations`
@@ -20,34 +20,21 @@ export default class TaskTypesListMinorsCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags()
+    ...ux.table.flags()
   }
 
-  static args = [
-    {
-      name: `namespace`,
-      required: true,
-      description: `Namespace of the task type`,
-      options: [`account`, `system`],
-    },
-    {
-      name: `type`,
-      required: true,
-      description: `Task type name`,
-    },
-    {
-      name: `major`,
-      required: true,
-      description: `Major version`,
-    }
-  ]
+  static args = {
+    namespace,
+    type,
+    major,
+  }
 
   async run(): Promise<Result<Minor[], Error>> {
-    const { flags, argv } = await this.parse(TaskTypesListMinorsCommand)
+    const { flags, args } = await this.parse(TaskTypesListMinorsCommand)
     const subscriberId = flags[`subscriber-id`]
-    const namespace = argv[0] as string
-    const type = argv[1] as string
-    const major = argv[2] as string
+    const namespace = args.namespace
+    const type = args.type
+    const major = args.major
     try {
       const minors = await this.relay.fetchMinors(subscriberId, namespace, type, major)
 

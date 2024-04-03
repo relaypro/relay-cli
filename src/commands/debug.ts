@@ -1,13 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../lib/command'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { ux } from '@oclif/core'
+import { get } from 'lodash-es'
 
-import * as flags from '../lib/flags'
-import { CliUx } from '@oclif/core'
-import { get } from 'lodash'
+import { Command } from '../lib/command.js'
+import * as flags from '../lib/flags/index.js'
 
+import debugFn from 'debug'
 const debug = debugFn(`debug`)
 
 export default class Debug extends Command {
@@ -40,7 +39,7 @@ export default class Debug extends Command {
       debug(`dump`)
       const session = this.relay.session()
       debug(`session`)
-      CliUx.ux.styledJSON(get(session, flags.path || ``, session))
+      ux.styledJSON(get(session, flags.path || ``, session))
     }
 
     if (flags.clear) {
@@ -52,8 +51,8 @@ export default class Debug extends Command {
     if (flags[`refresh-auth`]) {
       try {
         const tokens = await this.relay.refresh()
-        CliUx.ux.styledHeader(`Auth token refreshed`)
-        CliUx.ux.styledJSON(tokens)
+        ux.styledHeader(`Auth token refreshed`)
+        ux.styledJSON(tokens)
       } catch(e) {
         debug(`failed to refresh token`, e)
         this.error(`Failed to refresh token`)

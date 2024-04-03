@@ -1,33 +1,32 @@
 {
   "compilerOptions": {
-    "target": "es2019",
-    "lib": ["es2019"],
+    "declaration": true,
+    "module": "Node16",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "target": "es2022",
+    "moduleResolution": "node16",
+    "lib": ["es2022"],
     "allowSyntheticDefaultImports": true,
     "incremental": true,
     "esModuleInterop": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "declaration": true,
     "pretty": true,
     "newLine": "lf",
     "stripInternal": true,
-    "strict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
-    "useDefineForClassFields": false,
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "importHelpers": true,
-    "outDir": "dist",
-    "rootDir": "src",
     "composite": true,
     "strictNullChecks": true
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"],
+  "ts-node": {
+    "esm": true
+  }
 }

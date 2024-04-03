@@ -1,15 +1,14 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { ux } from '@oclif/core'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { ProfileAuditEventResults } from '../../lib/api'
-import { Ok, Result } from 'ts-results'
-import { isEmpty } from 'lodash'
-import { getFormattedTimestamp } from '../../lib/datetime'
+import debugFn from 'debug'
+import { ProfileAuditEventResults } from '../../lib/api.js'
+import { Ok, Result } from 'ts-results-es'
+import { isEmpty } from 'lodash-es'
+import { getFormattedTimestamp } from '../../lib/datetime.js'
 
 const debug = debugFn(`users:audit`)
 
@@ -30,13 +29,13 @@ export class AuditCommand extends Command {
       required: false,
       multiple: false,
     }),
-    [`timestamp-format`]: flags.enum({
+    [`timestamp-format`]: flags.string({
       char: `f`,
       options: [`relative`, `none`],
       default: `none`,
       description: `Timestamp output format`,
     }),
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
   async run(): Promise<Result<ProfileAuditEventResults, Error>> {
@@ -56,9 +55,9 @@ export class AuditCommand extends Command {
 
     if (!this.jsonEnabled()) {
       const cursorOutput = !isEmpty(response.cursor) ? `(cursor => ${response.cursor})` : ``
-      CliUx.ux.styledHeader(`User Assignment Results ${cursorOutput}`)
+      ux.styledHeader(`User Assignment Results ${cursorOutput}`)
       if (!isEmpty(response.results)) {
-        CliUx.ux.table(response.results, {
+        ux.table(response.results, {
           id: {},
           action: {},
           device_id: {},

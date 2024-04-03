@@ -1,12 +1,11 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { map } from 'lodash'
-import { Command } from '../../../lib/command'
-import * as flags from '../../../lib/flags'
+import { ux } from '@oclif/core'
+import { map } from 'lodash-es'
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import debugFn from 'debug'
 const debug = debugFn(`workflow`)
 
 export class SetArgsCommand extends Command {
@@ -27,10 +26,10 @@ export class SetArgsCommand extends Command {
       const workflow = await this.relay.workflow(subscriberId, workflowId)
 
       if (workflow) {
-        CliUx.ux.styledHeader(`Workflow arguments for ID ${workflowId}`)
+        ux.styledHeader(`Workflow arguments for ID ${workflowId}`)
         const args = workflow?.config?.trigger?.start?.workflow?.args||{}
         const mappedArgs = map(args, (value, arg) => ({ arg, value, type: typeof value }))
-        CliUx.ux.table(mappedArgs, {
+        ux.table(mappedArgs, {
           arg: {},
           value: {},
           type: {}

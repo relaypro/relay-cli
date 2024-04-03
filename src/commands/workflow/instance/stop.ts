@@ -1,35 +1,17 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
+import confirm from '@inquirer/confirm'
+import { filter, isEmpty, every, fill, size, values, zipObject, map } from 'lodash-es'
 
-import filter from 'lodash/filter'
-import isEmpty from 'lodash/isEmpty'
-import every from 'lodash/every'
-import fill from 'lodash/fill'
-import size from 'lodash/size'
-import values from 'lodash/values'
-import zipObject from 'lodash/zipObject'
-import map from 'lodash/map'
+import { Command } from '../../../lib/command.js'
+import * as cliflags from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Confirm } = require('enquirer') // eslint-disable-line quotes
-
-import { Command } from '../../../lib/command'
-
-import * as cliflags from '../../../lib/flags'
-
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-
+import debugFn from 'debug'
 const debug = debugFn(`workflow`)
 
 const runConfirm = async (message: string): Promise<boolean> => {
-  const prompt = new Confirm({
-    name: `confirm`,
-    message
-  })
-
-  return !!(await prompt.run())
+  return !!(await confirm({ message }))
 }
 
 export default class WorkflowInstancesStop extends Command {
@@ -63,13 +45,13 @@ export default class WorkflowInstancesStop extends Command {
       debug(`matched instances to stop`, instances)
 
       if (isEmpty(instances)) {
-        CliUx.ux.log(`No matching workflow instances to stop`)
+        ux.log(`No matching workflow instances to stop`)
         return
       }
 
       if (dryRun) {
 
-        CliUx.ux.log(`Stop workflow instance(s) dry-run: ${instances.toString()}`)
+        ux.log(`Stop workflow instance(s) dry-run: ${instances.toString()}`)
 
       } else {
 
@@ -90,7 +72,7 @@ export default class WorkflowInstancesStop extends Command {
           if (wait) {
             const toConfirm = map(fulfilled, `value`)
             const waitConfirmation = zipObject(toConfirm, fill(Array(size(toConfirm)), false))
-            CliUx.ux.action.start(`Waiting for stop confirmation`)
+            ux.action.start(`Waiting for stop confirmation`)
 
             while(!every(values(waitConfirmation), Boolean)) {
               for (const instanceId of toConfirm) {
@@ -99,14 +81,14 @@ export default class WorkflowInstancesStop extends Command {
                   waitConfirmation[instanceId] = results[0]?.status === `terminated`
                 }
               }
-              await CliUx.ux.wait(1000)
+              await ux.wait(1000)
             }
 
-            CliUx.ux.action.stop()
+            ux.action.stop()
           }
 
           if (!isEmpty(rejected)) {
-            CliUx.ux.styledHeader(`Workflow `)
+            ux.styledHeader(`Workflow `)
           }
 
         } else {

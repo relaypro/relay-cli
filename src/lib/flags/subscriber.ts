@@ -1,7 +1,13 @@
+
+
+
+
+
+
 // Copyright © 2022 Relay Inc.
 
 import { Flags } from '@oclif/core'
-import { getDefaultSubscriberId } from '../session'
+import { getDefaultSubscriberId } from '../session.js'
 
 export const subscriberId = Flags.string({
   char: `s`,
@@ -10,6 +16,7 @@ export const subscriberId = Flags.string({
   hidden: false,
   multiple: false,
   env: `RELAY_SUBSCRIBER_ID`,
+  noCacheDefault: true,
   default: async () => {
     try {
       return getDefaultSubscriberId()

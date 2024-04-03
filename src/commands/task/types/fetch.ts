@@ -1,14 +1,14 @@
 // Copyright © 2023 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import { Command } from '../../../lib/command'
-import * as flags from '../../../lib/flags'
-import { printMinors } from '../../../lib/utils'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
+import { printMinors } from '../../../lib/utils.js'
+import debugFn from 'debug'
+import { major, minor, namespace, type } from '../../../lib/args.js'
 
-const debug = debugFn(`task-types:list`)
+const debug = debugFn(`task:types:list`)
 
 export default class TaskTypesFetchCommand extends Command {
   static description = `Fetch a specific minor`
@@ -16,34 +16,16 @@ export default class TaskTypesFetchCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags()
+    ...ux.table.flags()
   }
 
-  static args = [
-    {
-      name: `namespace`,
-      required: true,
-      description: `Namespace of the task type`,
-      options: [`account`, `system`],
-      hidden: false
-    },
-    {
-      name: `type`,
-      required: true,
-      description: `Task type name`,
-      hidden: false,
-    },
-    {
-      name: `major`,
-      required: true,
-      description: `Major version`,
-    },
-    {
-      name: `minor`,
-      required: true,
-      description: `Minor version. Pass in "latest" to get latest version`
-    }
-  ]
+  static args = {
+    namespace,
+    type,
+    major,
+    minor,
+  }
+
   async run(): Promise<void> {
     const { flags, argv } = await this.parse(TaskTypesFetchCommand)
     const subscriberId = flags[`subscriber-id`]
@@ -65,6 +47,3 @@ export default class TaskTypesFetchCommand extends Command {
 
   }
 }
-
-
-

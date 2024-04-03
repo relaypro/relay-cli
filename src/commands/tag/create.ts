@@ -1,11 +1,10 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { createTagContent } from '../../lib/tag'
+import debugFn from 'debug'
+import { createTagContent } from '../../lib/tag.js'
 
 const debug = debugFn(`tag`)
 
@@ -19,10 +18,10 @@ export class TagCreateCommand extends Command {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(TagCreateCommand)
+    const { flags } = await this.parse(TagCreateCommand)
     const subscriberId = flags[`subscriber-id`]
 
-    const tagContent = createTagContent(flags.type, flags.category, flags.label, raw)
+    const tagContent = createTagContent(flags.type, flags.category, flags.label, flags.arg ?? [])
 
     debug(`tagContent`, tagContent)
 

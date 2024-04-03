@@ -1,19 +1,20 @@
 // Copyright © 2023 Relay Inc.
 
-import * as flags from '../../../../lib/flags'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-
-import { updateMinor } from '../../../../lib/task-types'
-import { NewMinor } from '../../../../lib/api'
-import { Command } from '../../../../lib/command'
 import { readFileSync } from 'fs'
-
+import { Args } from '@oclif/core'
 import util from 'node:util'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const exec = util.promisify(require(`node:child_process`).exec)
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const debug = debugFn(`task-types:update:minor`)
+import { exec as _exec } from 'node:child_process'
+
+import * as flags from '../../../../lib/flags/index.js'
+import { updateMinor } from '../../../../lib/task-types.js'
+import { NewMinor } from '../../../../lib/api.js'
+import { Command } from '../../../../lib/command.js'
+import { major, namespace } from '../../../../lib/args.js'
+
+import debugFn from 'debug'
+const debug = debugFn(`task:types:update:minor`)
+
+const exec = util.promisify(_exec)
 
 async function execute (command: string): Promise<string> {
   const { stdout } = (await exec(command))
@@ -36,37 +37,29 @@ export default class TaskTypesUpdateMinorCommand extends Command {
     })
   }
 
-  static args = [
-    {
-      name: `namespace`,
-      required: true,
-      description: `Namespace of the task type`,
-      options: [`account`, `system`],
-    },
-    {
+  static args = {
+    namespace,
+    name: Args.string({
       name: `name`,
       required: true,
       description: `Task type name`,
-    },
-    {
-      name: `major`,
-      required: true,
-      description: `Major version`,
-    },
-    {
+    }),
+    major,
+    source: Args.string({
       name: `source`,
       required: true,
       description: `Capsule source file name`,
-    },
-  ]
+    }),
+  }
 
   async run(): Promise<void> {
-    const { flags, argv } = await this.parse(TaskTypesUpdateMinorCommand)
+    const { flags, args } = await this.parse(TaskTypesUpdateMinorCommand)
     const subscriberId = flags[`subscriber-id`]
-    const namespace = argv[0] as string
-    const name = argv[1] as string
-    const major = argv[2] as string
-    let source = argv[3] as string
+    const namespace = args.namespace
+    const name = args.name
+    const major = args.major
+    let source = args.source
+
     try {
       if (!flags.key) {
         const scriptDir = (await execute(`dirname ${source}`))

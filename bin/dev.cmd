@@ -2,4 +2,4 @@
 
 rem Copyright © 2022 Relay Inc.
 
-node "%~dp0\dev" %*
+node --loader ts-node/esm --no-warnings=ExperimentalWarning "%~dp0\dev" %*

@@ -2,8 +2,8 @@
 
 import { Flags } from '@oclif/core'
 
-import { NewWorkflow } from '../api'
-import { getTimestampNextHour } from '../datetime'
+import { NewWorkflow } from '../api.js'
+import { getTimestampNextHour } from '../datetime.js'
 
 export type TimerOptions = {
   timezone?: string,
@@ -18,23 +18,24 @@ export type TimerOptions = {
 export type TimerWorkflow = NewWorkflow & { config: { trigger: { on_timer: TimerOptions }}}
 
 export const timerFlags = {
-  trigger: Flags.enum({
+  trigger: Flags.string({
     required: true,
     multiple: false,
     default: `immediately`,
-    options: [`immediately`, `schedule`, `repeat`],
+    options: [`immediately`, `schedule`, `repeat`] as const,
     description: `Trigger immediately or based on a repeating rule`,
   }),
-  timezone: Flags.enum({
+  timezone: Flags.string({
     char: `z`,
     required: true,
     multiple: false,
     default: `local`,
-    options: [`local`, `America/New_York`, `America/Chicago`, `America/Denver`, `America/Los_Angeles`, `America/Phoenix`, `Pacific/Honolulu`],
+    options: [`local`, `America/New_York`, `America/Chicago`, `America/Denver`, `America/Los_Angeles`, `America/Phoenix`, `Pacific/Honolulu`] as const,
   }),
   start: Flags.string({
     char: `s`,
     default: getTimestampNextHour(),
+    noCacheDefault: true,
   }),
   until: Flags.string({
     char: `l`,
@@ -44,11 +45,11 @@ export const timerFlags = {
     char: `c`,
     exclusive: [`until`],
   }),
-  frequency: Flags.enum({
+  frequency: Flags.string({
     char: `f`,
     multiple: false,
     default: `daily`,
-    options: [`daily`, `weekly`, `monthly`, `yearly`],
+    options: [`daily`, `weekly`, `monthly`, `yearly`] as const,
     hidden: true,
   }),
   interval: Flags.integer({

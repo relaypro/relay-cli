@@ -1,13 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { Command } from '../lib/command'
-import * as flags from '../lib/flags'
+import { ux } from '@oclif/core'
+import { Command } from '../lib/command.js'
+import * as flags from '../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { Ok, Result } from 'ts-results'
-import { Venues } from '../lib/api'
+import debugFn from 'debug'
+import { Ok, Result } from 'ts-results-es'
+import { Venues } from '../lib/api.js'
 
 const debug = debugFn(`venues`)
 
@@ -19,7 +18,7 @@ export class VenuesCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
   async run(): Promise<Result<Venues, Error>> {
@@ -30,7 +29,7 @@ export class VenuesCommand extends Command {
     debug(venues)
 
     if (!this.jsonEnabled()) {
-      CliUx.ux.table(venues, {
+      ux.table(venues, {
         venue_id: {
           header: `ID`
         },

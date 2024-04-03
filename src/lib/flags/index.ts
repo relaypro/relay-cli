@@ -1,20 +1,27 @@
 // Copyright © 2022 Relay Inc.
 
 import { Flags } from '@oclif/core'
-export * from '@oclif/core/lib/flags'
 
-import { subscriberId } from './subscriber'
-import { workflowId } from './workflow'
-import { booleanValue } from './boolean'
-import { numberValue, coordinate } from './number'
-import { flags } from '@oclif/core/lib/parser'
-export { timerFlags, TimerOptions, TimerWorkflow } from './timer'
+export * from '@oclif/core/lib/flags.js'
+
+import { subscriberId } from './subscriber.js'
+import { workflowId } from './workflow.js'
+import { booleanValue } from './boolean.js'
+import { numberValue, coordinate } from './number.js'
+import { stringValue } from './string.js'
+export { timerFlags, TimerOptions, TimerWorkflow } from './timer.js'
 
 const subscriber = {
   [`subscriber-id`]: subscriberId,
 }
 
-export type WorkflowFlags = {
+export interface WorkflowArgs {
+  arg?: Record<string, string>[],
+  boolean?: Record<string, boolean>[],
+  number?: Record<string, number>[],
+}
+
+export type WorkflowFlags = WorkflowArgs & {
   install?: string[],
   [`install-all`]?: boolean,
   [`install-group`]?: string,
@@ -59,7 +66,7 @@ export type TimerFlags = WorkflowFlags & {
 export type TagFlags = {
   type: `custom`|`user_profile`,
   category: string,
-   label: string,
+  label: string,
 }
 
 const dryRunFlags = {
@@ -124,16 +131,11 @@ const workflowFlags = {
   absorb: Flags.string({
     required: false,
     multiple: true,
-    options: [`on_call_request`, `on_incoming_call`],
+    options: [`on_call_request`, `on_incoming_call`] as const,
     description: `If matching workflow is already running, absorb and deliver specified triggering events as in-workflow events instead`,
     hidden: true,
   }),
-  arg: Flags.string({
-    char: `a`,
-    multiple: true,
-    required: false,
-    description: `String name/value pair workflow arg`,
-  }),
+  arg: stringValue(),
   boolean: booleanValue(),
   number: numberValue(),
 }
@@ -207,22 +209,22 @@ const apiFlags = {
   //   char: `q`,
   //   description: `Query to select values from the response using jq syntax`
   // }),
-  method: Flags.enum({
+  method: Flags.string({
     char: `X`,
     description: `The HTTP method for the request`,
     default: `GET`,
-    options: [`GET`,`POST`,`PUT`,`DELETE`],
+    options: [`GET`,`POST`,`PUT`,`DELETE`] as const,
     required: false,
     multiple: false,
   }),
 }
 
 const tagFlags = {
-  type: Flags.enum({
+  type: Flags.string({
     char: `t`,
     hidden: true,
     description: `Sets the tag to profile or custom type`,
-    options: [`user_profile`, `custom`],
+    options: [`user_profile`, `custom`] as const,
     default: `custom`,
     multiple: false,
     required: true,
@@ -239,7 +241,7 @@ const tagFlags = {
     multiple: false,
     required: true,
   }),
-  arg: Flags.string({
+  arg: stringValue({
     char: `a`,
     hidden: true,
     multiple: true,
@@ -250,22 +252,22 @@ const tagFlags = {
 }
 
 const pagingFlags = {
-  oldest: flags.string({
+  oldest: Flags.string({
     required: false,
     multiple: false,
     description: `timestamp of the oldest event to return`
   }),
-  latest: flags.string({
+  latest: Flags.string({
     required: false,
     multiple: false,
     description: `timestamp of the latest event to return`
   }),
-  cursor: flags.string({
+  cursor: Flags.string({
     required: false,
     multiple: false,
     description: `string returned from a previous query; useful to page through data`
   }),
-  limit: flags.integer({
+  limit: Flags.integer({
     required: false,
     multiple: false,
     description: `maximum number of events to return; 100 if not specified`
@@ -280,6 +282,7 @@ export {
   dryRunFlags,
   subscriberId,
   workflowId,
+  stringValue,
   booleanValue,
   numberValue,
   subscriber,

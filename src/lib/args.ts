@@ -1,7 +1,10 @@
 // Copyright © 2022 Relay Inc.
 
-import { zipObject } from "lodash"
-import { TaskArgs, TaskGroupMembers } from "./api"
+import {readFile, stat} from 'node:fs/promises'
+
+import { Args } from '@oclif/core'
+
+import { TaskArgs, TaskGroupMembers } from './api.js'
 
 type StartArgs = {
   namespace: string,
@@ -24,107 +27,99 @@ type CreateTaskGroupArgs = {
   members: string | TaskGroupMembers
 }
 
-const createScheduleArgs = (args: string[]): ScheduleArgs => {
-  return zipObject([`namespace`, `type`, `major`, `name`, `args`, `start`, `timezone`],args) as ScheduleArgs
-}
+const fileOrStringArg = Args.custom<string>({
+  async parse(argsOrFilename) {
+    if (argsOrFilename.charAt(0) == `@`) {
+      const filename = argsOrFilename.substring(1, argsOrFilename.length)
+      const stats = await stat(filename)
+      const fileSizeInMegabytes = stats.size / (1024*1024)
+      if (fileSizeInMegabytes > 10) {
+        throw new Error(`args file is too large`)
+      }
+      return await readFile(filename,  { encoding: `utf8`, flag: `r` }).toString()
+    } else {
+      return argsOrFilename
+    }
+  }
+})
 
-const createStartArgs = (args: string[]): StartArgs => {
-  return zipObject([`namespace`, `type`,`major`, `name`, `args`], args) as StartArgs
-}
+export const namespace = Args.string({
+  name: `namespace`,
+  required: true,
+  description: `Namespace of the task type`,
+  options: [`account`, `system`] as const,
+  default: `account`,
+})
 
-const createTaskGroupArgs = (args: string[]): CreateTaskGroupArgs => {
-  return zipObject([`namespace`,`type`, `major`, `name`, `members`], args) as CreateTaskGroupArgs
-}
+export const type = Args.string({
+  name: `type`,
+  required: true,
+  description: `Name of the task type for this task`,
+})
 
-const taskStartArgs = [
-  {
-    name: `namespace`,
-    required: true,
-    description: `Namespace of the task type`,
-    options: [`account`, `system`]
-  },
-  {
-    name: `type`,
-    required: true,
-    description: `Name of the task type for this task`
-  },
-  {
-    name: `major`,
-    required: true,
-    description: `Major version of the task type`
-  },
-  {
+export const major = Args.string({
+  name: `major`,
+  required: true,
+  description: `Major version`
+})
+
+export const minor = Args.string({
+  name: `minor`,
+  required: true,
+  description: `Minor version. Pass in "latest" to get latest version`
+})
+
+const taskStartArgs = {
+  namespace,
+  type,
+  major,
+  name: Args.string({
     name: `name`,
     required: true,
     description: `Name of the task`
-  },
-  {
+  }),
+  args: fileOrStringArg({
     name: `args`,
     required: true,
-    description: `Encoded JSON or @filename`
-  }
-]
+    description: `Encoded JSON or @filename`,
+  }),
+}
 
-const taskGroupCreateArgs = [
-  {
-    name: `namespace`,
-    required: true,
-    description: `Namespace of the task type`,
-    options: [`account`, `system`]
-  },
-  {
-    name: `type`,
-    required: true,
-    description: `Task type`
-  },
-  {
-    name: `major`,
-    required: true,
-    description: `Major version`
-  },
-  {
+const taskGroupCreateArgs = {
+  namespace,
+  type,
+  major,
+  name: Args.string({
     name: `name`,
     required: true,
     description: `Group name`
-  },
-  {
+  }),
+  members: fileOrStringArg({
     name: `members`,
     required: true,
     description: `Encoded JSON or @filename`
-  }
-]
+  }),
+}
 
-const integrationStartArgs = [
-  {
-    name: `namespace`,
-    required: true,
-    description: `Namespace of the task type`,
-    options: [`account`, `system`]
-  },
-  {
-    name: `major`,
-    required: true,
-    description: `Major version`
-  },
-  {
+const integrationStartArgs = {
+  namespace,
+  major,
+  config: fileOrStringArg({
     name: `config`,
     required: true,
     description: `Subscriber config file name`,
-  }
-]
+    exists: true,
+  })
+}
 
-const aliceTicketerStartArgs = [
-  {
-    name: `type`,
-    required: true,
-    description: `Name of task type`
-  },
-  {
+const aliceTicketerStartArgs = {
+  type,
+  [`service-id`]: Args.string({
     name: `service-id`,
     required: true,
     description: `Tickets are created in this Alice service`
-  }
-]
+  })
+}
 
 export {
   taskStartArgs,
@@ -134,7 +129,4 @@ export {
   StartArgs,
   ScheduleArgs,
   CreateTaskGroupArgs,
-  createStartArgs,
-  createScheduleArgs,
-  createTaskGroupArgs
 }

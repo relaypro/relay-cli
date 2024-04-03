@@ -1,7 +1,8 @@
 import split from 'split2'
 import { Duplex } from 'stream'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+
+import debugFn from 'debug'
+const debug = debugFn(`parser:json`)
 
 export type Log = {
   level: `info`|`error`,
@@ -17,8 +18,6 @@ export type Log = {
 export type Options = {
   parse?: (input: string) => Log,
 }
-
-const debug = debugFn(`parser:json`)
 
 const defaultParse: Options[`parse`] = (input: string) => JSON.parse(input)
 

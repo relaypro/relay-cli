@@ -1,16 +1,14 @@
 // Copyright © 2023 Relay Inc.
 
-import * as flags from '../../../lib/flags'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { Args } from '@oclif/core'
+import confirm from '@inquirer/confirm'
 
-import { Command } from '../../../lib/command'
+import * as flags from '../../../lib/flags/index.js'
+import { Command } from '../../../lib/command.js'
+import { namespace } from '../../../lib/args.js'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Confirm } = require('enquirer') // eslint-disable-line quotes
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const debug = debugFn(`task-types:delete`)
+import debugFn from 'debug'
+const debug = debugFn(`task:types:delete`)
 
 export default class TaskTypesDeleteCommand extends Command {
 
@@ -22,31 +20,24 @@ export default class TaskTypesDeleteCommand extends Command {
     ...flags.subscriber
   }
 
-  static args = [
-    {
-      name: `namespace`,
-      required: true,
-      description: `Namespace of the task type`,
-      options: [`account`, `system`],
-    },
-    {
+  static args = {
+    namespace,
+    name: Args.string({
       name: `name`,
       required: true,
       description: `Task type name`,
-    }
-  ]
+    })
+  }
 
   async run(): Promise<void> {
-    const { flags, argv } = await this.parse(TaskTypesDeleteCommand)
+    const { flags, args } = await this.parse(TaskTypesDeleteCommand)
     const subscriberId = flags[`subscriber-id`]
-    const namespace = argv[0] as string
-    const name = argv[1] as string
+    const namespace = args.namespace
+    const name = args.name
     try {
-      const prompt = new Confirm({
-        name: `question`,
+      const answer = await confirm({
         message: `Deleting ${name}. Are you sure?`
       })
-      const answer = await prompt.run()
       if (answer) {
         const success = await this.relay.deleteTaskType(subscriberId, name, namespace)
         success ? this.log(`Task type deleted`) : this.error(`Task type NOT deleted, make sure task type exists (relay task-types list types)`)

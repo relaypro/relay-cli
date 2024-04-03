@@ -1,16 +1,14 @@
 // Copyright © 2023 Relay Inc.
 
-import { ScheduledTask } from '../../lib/api'
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
-import { filterByTag } from '../../lib/utils'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { ScheduledTask } from '../../lib/api.js'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
+import { filterByTag } from '../../lib/utils.js'
+import debugFn from 'debug'
 
 const debug = debugFn(`tasks:delete`)
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Confirm } = require('enquirer') // eslint-disable-line quotes
+import confirm from '@inquirer/confirm'
 
 export default class TaskDeleteCommand extends Command {
   static description = `Delete a running or scheduled task`
@@ -57,12 +55,9 @@ export default class TaskDeleteCommand extends Command {
     debug(`flags`, flags)
 
     try {
-      const prompt = new Confirm({
-        name: `question`,
+      const answer = flags.confirm ? true : await confirm({
         message: `Deleting ${taskId ?? flags.tag}. Are you sure?`
       })
-
-      const answer = flags.confirm ? true : await prompt.run()
 
       if (answer) {
         if (taskId) {

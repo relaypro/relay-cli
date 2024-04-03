@@ -1,18 +1,18 @@
 // Copyright © 2023 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
+import { isEmpty } from 'lodash-es'
+import { Err, Ok, Result } from 'ts-results-es'
 
-import { Command } from '../../../lib/command'
-import * as flags from '../../../lib/flags'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { printDump } from '../../../lib/utils'
-import { TaskTypeDump } from '../../../lib/api'
-import { createTaskTypeDump } from '../../../lib/task-types'
-import { Err, Ok, Result } from 'ts-results'
-import { isEmpty } from 'lodash'
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
+import { printDump } from '../../../lib/utils.js'
+import { TaskTypeDump } from '../../../lib/api.js'
+import { createTaskTypeDump } from '../../../lib/task-types.js'
+import { namespace } from '../../../lib/args.js'
 
-const debug = debugFn(`task-types:dump`)
+import debugFn from 'debug'
+const debug = debugFn(`task:types:dump`)
 
 export default class TaskTypesDumpCommand extends Command {
   static description = `Dumps task types along with their latest minor, major, and comment`
@@ -22,22 +22,17 @@ export default class TaskTypesDumpCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags()
+    ...ux.table.flags()
   }
 
-  static args = [
-    {
-      name: `namespace`,
-      required: true,
-      description: `Namespace of the task type`,
-      options: [`account`, `system`],
-      hidden: false
-    }
-  ]
+  static args = {
+    namespace
+  }
+
   async run(): Promise<Result<TaskTypeDump[], Error>> {
-    const { flags, argv } = await this.parse(TaskTypesDumpCommand)
+    const { flags, args } = await this.parse(TaskTypesDumpCommand)
     const subscriberId = flags[`subscriber-id`]
-    const namespace = argv[0] as string
+    const namespace = args.namespace
 
     try {
       const latestTaskTypes: TaskTypeDump[] = []
@@ -62,6 +57,3 @@ export default class TaskTypesDumpCommand extends Command {
 
   }
 }
-
-
-

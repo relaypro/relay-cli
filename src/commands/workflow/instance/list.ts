@@ -1,22 +1,15 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import isEmpty from 'lodash/isEmpty'
-import keyBy from 'lodash/keyBy'
-import map from 'lodash/map'
+import { isEmpty, keyBy, map } from 'lodash-es'
 
-import { Command } from '../../../lib/command'
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
+import { printWorkflowInstances } from '../../../lib/utils.js'
+import { MergedWorkflowInstance } from '../../../lib/api.js'
 
-import * as flags from '../../../lib/flags'
-
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { printWorkflowInstances } from '../../../lib/utils'
-
-import { MergedWorkflowInstance } from '../../../lib/api'
-
-
+import debugFn from 'debug'
 const debug = debugFn(`workflow`)
 
 export default class WorkflowInstances extends Command {
@@ -31,7 +24,7 @@ export default class WorkflowInstances extends Command {
     [`include-history`]: flags.boolean({
       char: `H`,
     }),
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
   async run(): Promise<Record<string, unknown>> {

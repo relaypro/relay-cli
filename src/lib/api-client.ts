@@ -1,30 +1,27 @@
 // Copyright © 2022 Relay Inc.
 
-import { Interfaces, Errors, CliUx } from '@oclif/core'
+import { Interfaces, Errors, ux } from '@oclif/core'
 import { HTTP, HTTPError, HTTPRequestOptions } from 'http-call'
-import { find, includes, isString, map, filter, pick, isEmpty } from 'lodash'
+import { find, includes, isString, map, filter, pick, isEmpty } from 'lodash-es'
 import * as url from 'url'
-
-import deps from './deps'
-import { Login } from './login'
-// import { RequestId, requestIdHeader } from './request-id'
-import { vars } from './vars'
-
-import debugFn = require('debug') // eslint-disable-line quotes
-import { clearConfig, clearSubscribers, getDefaultSubscriber, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup } from './api'
-
-import { normalize } from './utils'
 import { createReadStream } from 'fs'
 import { access, stat } from 'fs/promises'
 import { R_OK } from 'constants'
-import userId from './user-id'
 import { IncomingMessage } from 'http'
-import jwtValues from './jwt'
 
+import { Login } from './login.js'
+import { vars } from './vars.js'
+import { clearConfig, clearSubscribers, getDefaultSubscriber, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session.js'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup } from './api.js'
+import { normalize } from './utils.js'
+
+
+import userId from './user-id.js'
+import jwtValues from './jwt.js'
+
+import debugFn from 'debug'
 const debug = debugFn(`api-client`)
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace APIClient {
   export interface Options extends HTTPRequestOptions {
     retryAuth?: boolean
@@ -84,7 +81,7 @@ export class APIClient {
         ...envHeaders,
       },
     }
-    this.http = class APIHTTPClient<T> extends deps.HTTP.HTTP.create(opts)<T> {
+    this.http = class APIHTTPClient<T> extends HTTP.create(opts)<T> {
       // static trackRequestIds<T>(response: HTTP<T>) {
       //   const responseRequestIdHeader = response.headers[requestIdHeader]
       //   if (responseRequestIdHeader) {
@@ -106,7 +103,7 @@ export class APIClient {
           // this.trackRequestIds<T>(response)
           return response
         } catch(err) {
-          if (!(err instanceof deps.HTTP.HTTPError)) throw err
+          if (!(err instanceof HTTPError)) throw err
           if (retries > 0) {
             if (opts.retryAuth !== false && err.http.statusCode === 401) {
               debug(`Token not authorized`)
@@ -123,7 +120,7 @@ export class APIClient {
                 debug(`re-requesting original`)
                 return this.request<T>(url, opts, retries)
               } else {
-                CliUx.ux.log(`Not logged in`)
+                ux.log(`Not logged in`)
                 debug(`attempting login`)
                 if (!self.authPromise) self.authPromise = self.login()
                 await self.authPromise
@@ -142,7 +139,7 @@ export class APIClient {
   get auth(): string | undefined {
     if (!this._auth) {
       if (process.env.RELAY_API_TOKEN && !process.env.RELAY_API_KEY) {
-        CliUx.ux.warn(`RELAY_API_TOKEN is set but you probably meant RELAY_API_KEY`)
+        ux.warn(`RELAY_API_TOKEN is set but you probably meant RELAY_API_KEY`)
       }
       this._auth = process.env.RELAY_API_KEY
       if (!this._auth) {
@@ -424,7 +421,7 @@ export class APIClient {
     await this.delete(`/ibot/workflow/${id}?subscriber_id=${subscriberId}`)
     return true
   }
-  async triggerWorkflow(subscriberId: string, workflowId: string, userId: string, args: Record<string, string>): Promise<void> {
+  async triggerWorkflow(subscriberId: string, workflowId: string, userId: string, args: Record<string, any>): Promise<void> {
 
     const uri = `/ibot/workflow/${workflowId}?subscriber_id=${subscriberId}&user_id=${userId}`
 
@@ -516,7 +513,7 @@ export class APIClient {
 
       debug(uploadUrl)
 
-      await deps.HTTP.HTTP.put<never>(uploadUrl, {
+      await HTTP.put<never>(uploadUrl, {
         body: stream,
         headers: {
           'content-type': `audio/wave`,
@@ -555,22 +552,6 @@ export class APIClient {
     await this.delete(`/ibot/relay_nfc_tag/${tagId}?subscriber_id=${subscriberId}`)
     return true
   }
-
-  // async assignNfcTag(subscriberId: string, tagId: string, tagUri: string) {
-  //   await this.put(`/ibot/relay_nfc_tag/${tagId}?subscriber_id=${subscriberId}`, { body: { tag_uri: tagUri } })
-  // }
-
-  // async unassignNfcTag(subscriberId: string, tagId: string) {
-  //   // unassign is currently fetch content, delete, create a new tag with same content
-  //   // this will result in a new tag_id
-  //   const nfcTag = await this.fetchNfcTag(subscriberId, tagId)
-  //   await this.deleteNfcTag(subscriberId, tagId)
-  //   await this.createNfcTag(subscriberId, nfcTag.content)
-  // }
-
-  // API client functions for capsule. Must have IBOT environment variable set.
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
   async fetchTasks(subscriberId: string, taskEndpoint: string, groupId=``): Promise<Task[]> {
     const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}${groupId && groupId.length > 0 ? `&task_group_id=${groupId}` : ``}`)
@@ -629,19 +610,16 @@ export class APIClient {
     return true
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async fetchTaskTypes(subscriberId: string, namespace: string): Promise<TaskType[]> {
     const response =  await this.get<TaskTypeResults>(`/relaypro/api/v1/task_types/${namespace}?subscriber_id=${subscriberId}`)
     return response.body.results
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async fetchMajors(subscriberId: string, namespace: string, name: string): Promise<Major[]> {
     const response =  await this.get<MajorResults>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors?subscriber_id=${subscriberId}`)
     return response.body.results
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async fetchMinors(subscriberId: string, namespace: string, name: string, major: string): Promise<Minor[]> {
     const response =  await this.get<MinorResults>(`/relaypro/api/v1/task_types/${namespace}/${name}/majors/${major}/minors?subscriber_id=${subscriberId}`)
     return response.body.results

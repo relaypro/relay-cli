@@ -1,13 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { CreateCommand } from '../../../lib/command'
-import { string, subscriber, workflowFlags } from '../../../lib/flags'
+import { CreateCommand } from '../../../lib/command.js'
+import { string, subscriber, workflowFlags } from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow } from '../../../lib/workflow'
+import { NewWorkflow } from '../../../lib/api.js'
+import { createWorkflow } from '../../../lib/workflow.js'
 
+import debugFn from 'debug'
 const debug = debugFn(`workflow:create:position`)
 
 type Transition = `entry` | `exit`
@@ -31,7 +30,7 @@ export class PositionWorkflowCommand extends CreateCommand {
       required: true,
       multiple: false,
       default: `entry`,
-      options: [`entry`, `exit`],
+      options: [`entry`, `exit`] as const,
       description: `Transition trigger for the specified position`,
     }),
     venue_id: string({
@@ -49,11 +48,11 @@ export class PositionWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(PositionWorkflowCommand)
+    const { flags } = await this.parse(PositionWorkflowCommand)
 
     try {
 
-      const workflow: PositionWorkflow = await createWorkflow(flags, raw) as PositionWorkflow
+      const workflow: PositionWorkflow = await createWorkflow(flags) as PositionWorkflow
       if (flags.trigger && flags.venue_id && flags.position_id) {
         workflow.config.trigger.on_position = {
           venue_id: flags.venue_id,

@@ -1,22 +1,16 @@
 // Copyright © 2022 Relay Inc.
 
-// import { CliUx } from '@oclif/core'
-// import split from 'split2'
-
-import { Command } from '../../lib/command'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-
+import { pipeline } from 'stream'
 import { DateTime } from 'luxon'
 
-import * as flags from '../../lib/flags'
-import { WorkflowEventQuery } from '../../lib/api'
-import { pipeline, /*Transform*/ } from 'stream'
-import { jsonStreamParser, Log } from '../../lib/ndjson'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
+import { WorkflowEventQuery } from '../../lib/api.js'
+import { jsonStreamParser, Log } from '../../lib/ndjson.js'
 
+import debugFn from 'debug'
 const debug = debugFn(`workflow:logs`)
 
-// type Filter = (log: Log) => boolean
 type Formatter = (log: Log) => string
 
 const formatLevel = (log: Log): `I`|`E`|`U` => {
@@ -39,8 +33,6 @@ const formatWorkflowId = (log: Log) => {
 
 const formatTimestamp = (log: Log) => DateTime.fromISO(log.timestamp).toFormat(`LL-dd HH:mm:ss.SSS`)
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// const defaultFilter: Filter = (_log: Log) => true
 const defaultFormat: Formatter = (log: Log) => `${formatTimestamp(log)} ${formatLevel(log)} ${formatWorkflowId(log)} ${log.message}`
 defaultFormat
 export default class WorkflowLogs extends Command {
@@ -87,17 +79,6 @@ export default class WorkflowLogs extends Command {
 
     debug(`query`, query)
 
-    // const logTransform = new Transform({
-    //   transform: (log: Log, _encoding, callback) => {
-    //     debug(`log`, log)
-    //     if (log && defaultFilter(log)) {
-    //       callback(null, defaultFormat(log))
-    //     } else {
-    //       callback(null, ``)
-    //     }
-    //   }
-    // })
-
     try {
 
       const response = await this.relay.workflowLogs(subscriberId, query)
@@ -108,8 +89,6 @@ export default class WorkflowLogs extends Command {
 
       pipeline(
         response,
-        // jsonStreamParser(),
-        // logTransform,
         process.stdout,
         (err) => {
           if (err) {
@@ -119,39 +98,9 @@ export default class WorkflowLogs extends Command {
           }
         }
       )
-
-      // await CliUx.ux.anykey()
-
-      // this.exit()
     } catch (err) {
       debug(err)
       this.safeError(err)
     }
   }
 }
-
-/*
-      response
-        .pipe(split((line: string) => {
-          debug(`line`, line)
-          try {
-            if (line) {
-              return JSON.parse(line)
-            }
-          } catch (err) {
-            debug(`parse error`, err)
-          }
-        }))
-        .on(`data`, (log: Log) => {
-          debug(`data log`, log)
-          // if (log && defaultFilter(log)) {
-          // this.log(defaultFormat(log))
-          // } else {
-          // debug(`filtered data log`)
-          // }
-        })
-        .on(`error`, err => {
-          debug(err)
-          this.log(`Error in log stream processing`, err)
-        })
-*/

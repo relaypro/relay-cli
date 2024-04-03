@@ -1,48 +1,14 @@
 // Copyright © 2022 Relay Inc.
 
-import filter from 'lodash/filter'
-import reduce from 'lodash/reduce'
-// import last from 'lodash/last'
+import { IntegrationStartFlags, TimerFlags, TimerOptions, TimerWorkflow, WorkflowFlags } from './flags/index.js'
+import { NewWorkflow } from './api.js'
+import { getTimestampFarFuture, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime.js'
+import { ALL } from './constants.js'
+import { mergeArgs } from './utils.js'
 
-import type { Interfaces } from '@oclif/core'
+export const createWorkflow = async (flags: WorkflowFlags): Promise<NewWorkflow> => {
 
-import { IntegrationStartFlags, booleanValue, numberValue, TimerFlags, TimerOptions, TimerWorkflow, WorkflowFlags } from './flags'
-import { parseArg } from './utils'
-import { NewWorkflow } from './api'
-import { getTimestampFarFuture, getTimestampNow, resolveDayValues, resolveTimezone, withoutZ } from './datetime'
-import { ALL } from './constants'
-
-export const parseArgs = async (tokens: Interfaces.ParsingToken[]): Promise<Record<string, never>> => {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  const normalArgFlags = filter(tokens, ({ flag }: any) => `arg` === flag)
-  const normalArgs = reduce(normalArgFlags, (args, flag) => {
-    const [, name, value] = parseArg(flag.input)
-    return { ...args, [name]: value }
-  }, {})
-
-  const booleanParser = booleanValue().parse
-  const booleanFlags = filter(tokens, ({ flag }: any) => `boolean` === flag)
-  let booleanArgs = {}
-  for (const flag of booleanFlags)  {
-    const nameValue = await booleanParser(flag.input, null, flag)
-    booleanArgs = { ...booleanArgs, ...nameValue }
-  }
-
-  const numberParser = numberValue().parse
-  const numberFlags = filter(tokens, ({ flag }: any) => `number` === flag)
-  let numberArgs = {}
-  for (const flag of numberFlags)  {
-    const nameValue = await numberParser(flag.input, null, flag)
-    numberArgs = { ...numberArgs, ...nameValue }
-  }
-  /* eslint-enable @typescript-eslint/no-explicit-any */
-
-  return { ...normalArgs, ...booleanArgs, ...numberArgs }
-}
-
-export const createWorkflow = async (flags: WorkflowFlags, tokens: Interfaces.ParsingToken[]): Promise<NewWorkflow> => {
-
-  const args = await parseArgs(tokens)
+  const args = mergeArgs(flags.arg, flags.boolean, flags.number)
 
   const workflow: NewWorkflow = {
     name: flags.name,
@@ -74,8 +40,8 @@ export const createWorkflow = async (flags: WorkflowFlags, tokens: Interfaces.Pa
   return workflow
 }
 
-export const createTimerWorkflow = async (flags: TimerFlags, tokens: Interfaces.ParsingToken[]): Promise<TimerWorkflow> => {
-  const workflow: TimerWorkflow = await createWorkflow(flags, tokens) as TimerWorkflow
+export const createTimerWorkflow = async (flags: TimerFlags): Promise<TimerWorkflow> => {
+  const workflow: TimerWorkflow = await createWorkflow(flags) as TimerWorkflow
 
   if (flags.trigger === `immediately`) {
     workflow.config.trigger.on_timer = { start_time: `immediately` }

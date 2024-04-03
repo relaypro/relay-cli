@@ -1,19 +1,21 @@
+/* global debugScope */
 // Copyright © 2023 Relay Inc.
 
-import * as flags from '../../../lib/flags'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-
-import { createTaskType } from '../../../lib/task-types'
-import { TaskType } from '../../../lib/api'
-import { Command } from '../../../lib/command'
-import { readFileSync } from 'fs'
-
+import { Args } from '@oclif/core'
 import util from 'node:util'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const exec = util.promisify(require(`node:child_process`).exec)
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const debug = debugFn(`task-types:create`)
+import { exec as _exec } from 'node:child_process'
+import { readFileSync } from 'fs'
+import debugFn from 'debug'
+
+import * as flags from '../../../lib/flags/index.js'
+import { createTaskType } from '../../../lib/task-types.js'
+import { TaskType } from '../../../lib/api.js'
+import { Command } from '../../../lib/command.js'
+import { namespace } from '../../../lib/args.js'
+
+const debug = debugFn(`task:types:create`)
+
+const exec = util.promisify(_exec)
 
 async function execute (command: string): Promise<string> {
   const { stdout } = (await exec(command))
@@ -37,31 +39,26 @@ export default class TaskTypesCreateCommand extends Command {
     })
   }
 
-  static args = [
-    {
-      name: `namespace`,
-      required: true,
-      description: `Namespace of the task type`,
-      options: [`account`, `system`],
-    },
-    {
+  static args = {
+    namespace,
+    name: Args.string({
       name: `name`,
       required: true,
       description: `Task type name`,
-    },
-    {
+    }),
+    source: Args.string({
       name: `source`,
       required: true,
       description: `Capsule source file name`,
-    }
-  ]
+    }),
+  }
 
   async run(): Promise<void> {
-    const { flags,argv } = await this.parse(TaskTypesCreateCommand)
+    const { flags, args } = await this.parse(TaskTypesCreateCommand)
     const subscriberId = flags[`subscriber-id`]
-    const namespace = argv[0] as string
-    const name = argv[1] as string
-    let source = argv[2] as string
+    const namespace = args.namespace
+    const name = args.name
+    let source = args.source
 
     try {
       if (!flags.key) {

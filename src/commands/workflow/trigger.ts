@@ -1,12 +1,10 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { Command } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
+import { mergeArgs } from '../../lib/utils.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { parseArgs } from '../../lib/workflow'
-
+import debugFn from 'debug'
 const debug = debugFn(`workflow:trigger`)
 
 export default class Trigger extends Command {
@@ -22,20 +20,15 @@ export default class Trigger extends Command {
       description: `Target user id on behalf of which to trigger a workflow`,
     }),
     ...flags.subscriber,
-    arg: flags.string({
-      char: `a`,
-      multiple: true,
-      required: false,
-      description: `String name/value pair workflow arg`,
-    }),
+    arg: flags.stringValue(),
     boolean: flags.booleanValue(),
     number: flags.numberValue(),
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(Trigger)
-    const args = await parseArgs(raw)
-    debug(`triggering with`, { flags, args })
+    const { flags } = await this.parse(Trigger)
+    const args = mergeArgs(flags.arg ?? [], flags.boolean ?? [], flags.number ?? [])
+    debug(`triggering with`, args)
     await this.relay.triggerWorkflow(flags[`subscriber-id`], flags[`workflow-id`], flags[`user-id`], args)
     this.log(`Relay CLI trigger submitted`)
   }

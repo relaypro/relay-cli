@@ -1,12 +1,11 @@
 // Copyright © 2022 Relay Inc.
 
-import { CreateCommand } from '../../../lib/command'
-import { enum as enumFlag, integer, subscriber, workflowFlags } from '../../../lib/flags'
+import { CreateCommand } from '../../../lib/command.js'
+import { string, integer, subscriber, workflowFlags } from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow } from '../../../lib/workflow'
+import debugFn from 'debug'
+import { NewWorkflow } from '../../../lib/api.js'
+import { createWorkflow } from '../../../lib/workflow.js'
 
 const debug = debugFn(`workflow:create:battery`)
 
@@ -24,7 +23,7 @@ export class BatteryWorkflowCommand extends CreateCommand {
   static flags = {
     ...subscriber,
     ...workflowFlags,
-    trigger: enumFlag({
+    trigger: string({
       required: true,
       multiple: false,
       default: `discharge`,
@@ -40,11 +39,11 @@ export class BatteryWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(BatteryWorkflowCommand)
+    const { flags } = await this.parse(BatteryWorkflowCommand)
 
     try {
 
-      const workflow: BatteryWorkflow = await createWorkflow(flags, raw) as BatteryWorkflow
+      const workflow: BatteryWorkflow = await createWorkflow(flags) as BatteryWorkflow
 
       if (!flags.trigger) {
         throw new Error(`Trigger type battery requires specifying a trigger of charge or discharge. For instance '--trigger discharge'`)

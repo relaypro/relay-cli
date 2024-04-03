@@ -1,13 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { CreateCommand } from '../../../lib/command'
-import { enum as enumFlag, subscriber, workflowFlags } from '../../../lib/flags'
+import { CreateCommand } from '../../../lib/command.js'
+import { string, subscriber, workflowFlags } from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow } from '../../../lib/workflow'
+import { NewWorkflow } from '../../../lib/api.js'
+import { createWorkflow } from '../../../lib/workflow.js'
 
+import debugFn from 'debug'
 const debug = debugFn(`workflow:create:button`)
 
 type TapType = `action_button_single_tap` | `action_button_double_tap`
@@ -24,7 +23,7 @@ export class ButtonWorkflowCommand extends CreateCommand {
   static flags = {
     ...subscriber,
     ...workflowFlags,
-    trigger: enumFlag({
+    trigger: string({
       required: true,
       multiple: false,
       default: `single`,
@@ -34,11 +33,11 @@ export class ButtonWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(ButtonWorkflowCommand)
+    const { flags } = await this.parse(ButtonWorkflowCommand)
 
     try {
 
-      const workflow: ButtonWorkflow = await createWorkflow(flags, raw) as ButtonWorkflow
+      const workflow: ButtonWorkflow = await createWorkflow(flags) as ButtonWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_button = mapTap(flags.trigger)

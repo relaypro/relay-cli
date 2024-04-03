@@ -1,13 +1,13 @@
 // Copyright © 2022 Relay Inc.
 
-import { CreateCommand } from '../../../lib/command'
-import { enum as enumFlag, subscriber, workflowFlags } from '../../../lib/flags'
+import { CreateCommand } from '../../../lib/command.js'
+import { string, subscriber, workflowFlags } from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow } from '../../../lib/workflow'
 
+import { NewWorkflow } from '../../../lib/api.js'
+import { createWorkflow } from '../../../lib/workflow.js'
+
+import debugFn from 'debug'
 const debug = debugFn(`workflow:create:call`)
 
 type Direction = `inbound` | `outbound`
@@ -29,7 +29,7 @@ export class CallWorkflowCommand extends CreateCommand {
   static flags = {
     ...subscriber,
     ...workflowFlags,
-    trigger: enumFlag({
+    trigger: string({
       required: true,
       multiple: false,
       default: `outbound`,
@@ -39,11 +39,10 @@ export class CallWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(CallWorkflowCommand)
+    const { flags } = await this.parse(CallWorkflowCommand)
 
     try {
-
-      const workflow: CallWorkflow = await createWorkflow(flags, raw) as CallWorkflow
+      const workflow: CallWorkflow = await createWorkflow(flags) as CallWorkflow
 
       if (!flags.trigger) {
         throw new Error(`Trigger type call requires specifying a trigger of inbound or outbound. For instance '--trigger outbound'`)

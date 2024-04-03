@@ -1,16 +1,14 @@
 // Copyright © 2023 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { Args, ux } from '@oclif/core'
 
-import { Command } from '../../../lib/command'
-import * as flags from '../../../lib/flags'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { getTaskGroup } from '../../../lib/utils'
+import { Command } from '../../../lib/command.js'
+import * as flags from '../../../lib/flags/index.js'
+import { getTaskGroup } from '../../../lib/utils.js'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Confirm } = require('enquirer') // eslint-disable-line quotes
+import confirm from '@inquirer/confirm'
 
+import debugFn from 'debug'
 const debug = debugFn(`task-groups:delete`)
 
 export default class TaskGroupDeleteCommand extends Command {
@@ -20,28 +18,26 @@ export default class TaskGroupDeleteCommand extends Command {
   static flags = {
     ...flags.subscriber,
     ...flags.confirmFlags,
-    ...CliUx.ux.table.flags(),
+    ...ux.table.flags(),
   }
 
-  static args = [
-    {
-      name: `group name`,
+  static args = {
+    name: Args.string({
+      name: `name`,
       required: true,
       description: `Task group name`,
-    }
-  ]
+    })
+  }
 
   async run(): Promise<void> {
-    const { flags, argv } = await this.parse(TaskGroupDeleteCommand)
+    const { flags, args } = await this.parse(TaskGroupDeleteCommand)
     const subscriberId = flags[`subscriber-id`]
-    const groupName = argv[0] as string
+    const groupName = args.name
 
     try {
-      const prompt = new Confirm({
-        name: `question`,
+      const answer = flags.confirm ? true : await confirm({
         message: `Deleting "${groupName}". Are you sure?`
       })
-      const answer = flags.confirm ? true : await prompt.run()
       if (answer) {
         const groups = await this.relay.fetchTaskGroups(subscriberId)
         const group = getTaskGroup(groups, groupName)
@@ -62,4 +58,3 @@ export default class TaskGroupDeleteCommand extends Command {
 
   }
 }
-

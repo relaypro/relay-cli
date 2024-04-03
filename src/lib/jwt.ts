@@ -1,4 +1,4 @@
-import atob from './atob'
+import atob from './atob.js'
 
 export type TokenInfoKeys = `preferred_username`|`given_name`|`family_name`|`email`
 

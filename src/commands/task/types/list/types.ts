@@ -1,17 +1,17 @@
 // Copyright © 2023 Relay Inc.
 
-import { CliUx } from '@oclif/core'
+import { ux } from '@oclif/core'
 
-import { Command } from '../../../../lib/command'
-import * as flags from '../../../../lib/flags'
-import { isEmpty } from 'lodash'
-import { printTaskTypes } from '../../../../lib/utils'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { TaskType } from '../../../../lib/api'
-import { Err, Ok, Result } from 'ts-results'
+import { Command } from '../../../../lib/command.js'
+import * as flags from '../../../../lib/flags/index.js'
+import { isEmpty } from 'lodash-es'
+import { printTaskTypes } from '../../../../lib/utils.js'
+import debugFn from 'debug'
+import { TaskType } from '../../../../lib/api.js'
+import { Err, Ok, Result } from 'ts-results-es'
+import { namespace } from '../../../../lib/args.js'
 
-const debug = debugFn(`task-types:list`)
+const debug = debugFn(`task:types:list`)
 
 export default class TaskTypesListTypesCommand extends Command {
   static description = `List task type configurations`
@@ -20,22 +20,17 @@ export default class TaskTypesListTypesCommand extends Command {
 
   static flags = {
     ...flags.subscriber,
-    ...CliUx.ux.table.flags()
+    ...ux.table.flags()
   }
 
-  static args = [
-    {
-      name: `namespace`,
-      required: true,
-      description: `Namespace of the task type`,
-      options: [`account`, `system`],
-      default: `account`,
-    },
-  ]
+  static args = {
+    namespace
+  }
+
   async run(): Promise<Result<TaskType[], Error>> {
-    const { flags, argv } = await this.parse(TaskTypesListTypesCommand)
+    const { flags, args } = await this.parse(TaskTypesListTypesCommand)
     const subscriberId = flags[`subscriber-id`]
-    const namespace = argv[0] as string
+    const namespace = args.namespace
     try {
       const taskTypes = await this.relay.fetchTaskTypes(subscriberId, namespace)
 
@@ -55,4 +50,3 @@ export default class TaskTypesListTypesCommand extends Command {
     }
   }
 }
-

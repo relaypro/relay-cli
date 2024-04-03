@@ -1,5 +1,5 @@
-import { NewMinor, TaskType, NewMajor, TaskTypeDump } from './api'
-import { TaskTypeFlags, UpdateFlags } from './flags'
+import { NewMinor, TaskType, NewMajor, TaskTypeDump } from './api.js'
+import { TaskTypeFlags, UpdateFlags } from './flags/index.js'
 
 export const createTaskType = async (flags: TaskTypeFlags, source: string, name: string): Promise<TaskType> => {
   const minor: NewMinor = {

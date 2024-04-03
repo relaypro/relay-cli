@@ -1,16 +1,13 @@
 // Copyright © 2022 Relay Inc.
 
-import { size, map } from 'lodash'
-import { CliUx } from '@oclif/core'
+import { size, map } from 'lodash-es'
+import { ux } from '@oclif/core'
+import select from '@inquirer/select'
+
+import { config, susbscriberConfig } from './deps.js'
+import { vars } from './vars.js'
 
 import debugFn from 'debug'
-
-import deps from './deps'
-import { vars } from './vars'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { AutoComplete, Select } = require('enquirer') // eslint-disable-line quotes
-
 const debug = debugFn(`session`)
 
 export type Subscriber = {
@@ -53,38 +50,38 @@ export type Session = {
 }
 
 export const getSession = (): Session => {
-  return deps.config.get(`session`) as Session
+  return config.get(`session`) as Session
 }
 
 export const clearConfig = (): void => {
-  deps.config.clear()
+  config.clear()
 }
 
 export const deleteSession = (): void => {
-  deps.config.delete(`session`)
+  config.delete(`session`)
 }
 
 export const clearSubscribers = (): void => {
-  deps.susbscriberConfig.clear()
+  susbscriberConfig.clear()
 }
 
 export const getToken = (host: string = vars.apiHost): TokenAccount | undefined => {
-  const tokens = deps.config.get(`session.tokens`) as SessionTokens
+  const tokens = config.get(`session.tokens`) as SessionTokens
   return tokens?.[host]
 }
 
 export const setToken = (token: TokenAccount, host: string = vars.apiHost): void => {
-  const tokens: SessionTokens = (deps.config.get(`session.tokens`) || {}) as SessionTokens
+  const tokens: SessionTokens = (config.get(`session.tokens`) || {}) as SessionTokens
   tokens[host] = token
-  deps.config.set(`session.tokens`, tokens)
+  config.set(`session.tokens`, tokens)
 }
 
 export const saveDefaultSubscriber = (subscriber: Subscriber): void => {
-  deps.config.set(`session.subscriber`, subscriber)
+  config.set(`session.subscriber`, subscriber)
 }
 
 export const getDefaultSubscriber = (): Subscriber => {
-  const subscriber = deps.config.get(`session.subscriber`)
+  const subscriber = config.get(`session.subscriber`)
   if (subscriber === undefined) {
     throw new Error(`no default subscriber set`)
   } else {
@@ -104,27 +101,23 @@ export const resolveSubscriber = async (subscribers: Subscriber[]): Promise<bool
     return true
   } else {
     if (subscribersSize >= 100) {
-      CliUx.ux.log(`Too many results to select during login`)
-      CliUx.ux.log(`Use the following command to search subscribers:`)
-      CliUx.ux.log(`    relay subscriber list --name "Account Name"`)
-      CliUx.ux.log(`    relay subscriber list --email "Owner Email"`)
-      CliUx.ux.log(`    `)
-      CliUx.ux.log(`Use the follwing command to set the default subscriber:`)
-      CliUx.ux.log(`    relay subscriber set --subscriber-id "Account ID"`)
-      CliUx.ux.log(`    relay subscriber set --name "Account Name"`)
-      CliUx.ux.log(`    relay subscriber set --email "Owner Email"`)
+      ux.log(`Too many results to select during login`)
+      ux.log(`Use the following command to search subscribers:`)
+      ux.log(`    relay subscriber list --name "Account Name"`)
+      ux.log(`    relay subscriber list --email "Owner Email"`)
+      ux.log(`    `)
+      ux.log(`Use the follwing command to set the default subscriber:`)
+      ux.log(`    relay subscriber set --subscriber-id "Account ID"`)
+      ux.log(`    relay subscriber set --name "Account Name"`)
+      ux.log(`    relay subscriber set --email "Owner Email"`)
       return true
     } else {
-      const selector = (subscribersSize > 25) ? AutoComplete : Select
-      const subscriberPrompt = new selector({
-        multiple: false,
-        name: `subscriber`,
+      const subscriberIdx: number = await select({
         message: `Pick your default Relay account`,
         choices: map(subscribers, (subscriber, value) => ({ name: `${subscriber.name} (${subscriber.id})`, value })),
-        limit: 10,
+        pageSize: 10,
       })
 
-      const subscriberIdx: number = await subscriberPrompt.run()
       debug(`choosen index`, subscriberIdx)
 
       const subscriber = subscribers[subscriberIdx]
@@ -132,10 +125,10 @@ export const resolveSubscriber = async (subscribers: Subscriber[]): Promise<bool
         debug(`choosen subscriber`, subscriber)
         saveDefaultSubscriber(subscriber)
         if (subscribersSize > 1) {
-          CliUx.ux.log(`=====================`)
-          CliUx.ux.log(`Default Relay Account`)
-          CliUx.ux.log(`${subscriber.name} (${subscriber.id})`)
-          CliUx.ux.log(`=====================`)
+          ux.log(`=====================`)
+          ux.log(`Default Relay Account`)
+          ux.log(`${subscriber.name} (${subscriber.id})`)
+          ux.log(`=====================`)
         }
         return true
       } else {

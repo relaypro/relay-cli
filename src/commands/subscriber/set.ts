@@ -1,18 +1,14 @@
 // Copyright © 2022 Relay Inc.
 
-import { Command } from '../../lib/command'
-import { size } from 'lodash'
+import { Command } from '../../lib/command.js'
+import { size } from 'lodash-es'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Confirm } = require('enquirer') // eslint-disable-line quotes
+import confirm from '@inquirer/confirm'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
+import { SubscriberQuery, saveDefaultSubscriber } from '../../lib/session.js'
+import * as flags from '../../lib/flags/index.js'
 
-import { SubscriberQuery, saveDefaultSubscriber } from '../../lib/session'
-import * as flags from '../../lib/flags'
-
-
+import debugFn from 'debug'
 const debug = debugFn(`subscriber`)
 
 export default class SubscriberSet extends Command {
@@ -82,11 +78,7 @@ export default class SubscriberSet extends Command {
       if (newSubscriber) {
         debug(`new default subscriber`, newSubscriber)
         this.log(`Changing default subscriber to ${newSubscriber.name} (${newSubscriber.id})`)
-        const prompt = new Confirm({
-          name: `change`,
-          message: `Are you sure?`
-        })
-        const answer = await prompt.run()
+        const answer = await confirm({ message: `Are you sure?` })
         if (answer) {
           saveDefaultSubscriber(newSubscriber)
         }

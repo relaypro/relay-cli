@@ -1,14 +1,12 @@
 // Copyright © 2023 Relay Inc.
 
-import * as fs from 'fs'
-import * as flags from '../../lib/flags'
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
 
-import { createTask } from '../../lib/tasks'
+import * as flags from '../../lib/flags/index.js'
+import { createTask } from '../../lib/tasks.js'
+import { Command } from '../../lib/command.js'
+import { taskStartArgs } from '../../lib/args.js'
 
-import { Command } from '../../lib/command'
-import { StartArgs, createStartArgs, taskStartArgs } from '../../lib/args'
+import debugFn from 'debug'
 
 const debug = debugFn(`tasks:start`)
 
@@ -26,30 +24,17 @@ export default class TasksStartCommand extends Command {
     })
   }
 
-  static args = [
+  static args = {
     ...taskStartArgs
-  ]
+  }
 
   async run(): Promise<void> {
-    const { flags, argv } = await this.parse(TasksStartCommand)
+    const { flags, args: commandArgs } = await this.parse(TasksStartCommand)
     const subscriberId = flags[`subscriber-id`]
-    const startArgs: StartArgs =  createStartArgs(argv)
 
-    let encoded_string = startArgs.args as string
-    if (encoded_string.charAt(0) == `@`) {
-
-      const stats = fs.statSync(encoded_string.substring(1, encoded_string.length))
-      const fileSizeInMegabytes = stats.size / (1024*1024)
-      if (fileSizeInMegabytes > 10) {
-        this.error(`args file is too large`)
-      }
-
-      encoded_string = fs.readFileSync(encoded_string.substring(1, encoded_string.length),{ encoding: `utf8`, flag: `r` }).toString()
-    }
-
-    const args = JSON.parse(encoded_string)
-    args.tags = [startArgs.type, ...(flags.tag ?? [])]
-    startArgs.args = args
+    const startArgs = JSON.parse(commandArgs.args)
+    startArgs.tags = [startArgs.type, ...(flags.tag ?? [])]
+    commandArgs.args = startArgs
 
     try {
       const task = await createTask(startArgs)
@@ -67,4 +52,3 @@ export default class TasksStartCommand extends Command {
     }
   }
 }
-

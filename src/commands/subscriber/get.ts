@@ -1,9 +1,9 @@
 // Copyright © 2022 Relay Inc.
 
-import { CliUx } from '@oclif/core'
-import { Command } from '../../lib/command'
+import { ux } from '@oclif/core'
+import { Command } from '../../lib/command.js'
 
-import { getDefaultSubscriber } from '../../lib/session'
+import { getDefaultSubscriber } from '../../lib/session.js'
 
 
 
@@ -12,7 +12,7 @@ export default class SubscriberGet extends Command {
 
   async run(): Promise<void> {
     const subscriber = getDefaultSubscriber()
-    CliUx.ux.styledHeader(`Default Subscriber`)
-    CliUx.ux.styledObject(subscriber, [`id`, `name`])
+    ux.styledHeader(`Default Subscriber`)
+    ux.styledObject(subscriber, [`id`, `name`])
   }
 }

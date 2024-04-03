@@ -1,14 +1,13 @@
 // Copyright © 2022 Relay Inc.
 
-import { CreateCommand } from '../../../lib/command'
-import { string, subscriber, workflowFlags } from '../../../lib/flags'
+import { CreateCommand } from '../../../lib/command.js'
+import { string, subscriber, workflowFlags } from '../../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { NewWorkflow } from '../../../lib/api'
-import { createWorkflow } from '../../../lib/workflow'
-import { lowerCase, map } from 'lodash'
+import { NewWorkflow } from '../../../lib/api.js'
+import { createWorkflow } from '../../../lib/workflow.js'
+import { lowerCase, map } from 'lodash-es'
 
+import debugFn from 'debug'
 const debug = debugFn(`workflow:create:phrase`)
 
 type PhraseWorkflow = NewWorkflow & { config: { trigger: { on_phrases: string[] }}}
@@ -31,11 +30,10 @@ export class PhraseWorkflowCommand extends CreateCommand {
   }
 
   async run(): Promise<void> {
-    const { flags, raw } = await this.parse(PhraseWorkflowCommand)
+    const { flags } = await this.parse(PhraseWorkflowCommand)
 
     try {
-
-      const workflow: PhraseWorkflow = await createWorkflow(flags, raw) as PhraseWorkflow
+      const workflow: PhraseWorkflow = await createWorkflow(flags) as PhraseWorkflow
 
       if (flags.trigger) {
         workflow.config.trigger.on_phrases = map(flags.trigger, lowerCase)

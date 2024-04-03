@@ -1,12 +1,12 @@
 // Copyright © 2022 Relay Inc.
 
-import { filter, includes, uniq } from 'lodash'
-import { CreateCommand } from '../../lib/command'
-import * as flags from '../../lib/flags'
+import { filter, includes, uniq } from 'lodash-es'
+import { CreateCommand } from '../../lib/command.js'
+import * as flags from '../../lib/flags/index.js'
 
-// eslint-disable-next-line quotes
-import debugFn = require('debug')
-import { Workflow } from '../../lib/api'
+import debugFn from 'debug'
+import { Workflow } from '../../lib/api.js'
+import { Args } from '@oclif/core'
 
 const debug = debugFn(`workflow`)
 
@@ -14,20 +14,22 @@ export class UninstallWorkflowCommand extends CreateCommand {
 
   static description = `Uninstall an existing workflow from one or more devices`
 
+  static strict = false
+
   static flags = {
     [`workflow-id`]: flags.workflowId,
     ...flags.subscriber,
     ...flags.installFlags,
   }
 
-  static args = [
-    { // deprecated in favor of explicit flags
+  static args = {
+    ID: Args.string({ // deprecated in favor of explicit flags
       name: `ID`,
       required: false,
       description: `device / user ID to uninstall workflow on`,
       hidden: true,
-    }
-  ]
+    })
+  }
 
   async run(): Promise<void> {
     const { flags, argv } = await this.parse(UninstallWorkflowCommand)
