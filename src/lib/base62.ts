@@ -170,11 +170,8 @@ class Base62Str {
     const lookup = new Array<number>(256)
 
     for (let i = 0; i < 256; i++) {
-      const l = this.alphabet[i]
-      if (!l) {
-        throw new Error(`cannot create lookup table`)
-      }
-      lookup[l] = (i & 0xFF)
+      // @ts-ignore
+      lookup[this.alphabet[i]] = (i & 0xFF)
     }
     return lookup
   }
