@@ -1,7 +1,7 @@
 {
   "name": "@relaypro/cli",
   "description": "Relay developer CLI",
-  "version": "1.8.1",
+  "version": "2.0.0",
   "keywords": [
     "relay",
     "relaypro",
@@ -91,9 +91,6 @@
   "main": "dist/index.js",
   "publishConfig": {
     "access": "public"
-  },
-  "_moduleAliases": {
-    "@lib": "dist/lib"
   },
   "oclif": {
     "scope": "relaypro",
