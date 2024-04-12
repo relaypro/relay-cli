@@ -26,10 +26,9 @@ export class TimerWorkflowCommand extends CreateCommand {
     const { flags, raw } = await this.parse(TimerWorkflowCommand)
 
     try {
-
       const workflow = await createTimerWorkflow(flags, raw)
 
-      await this.saveWorkflow(flags[`subscriber_id`], workflow, flags[`dry-run`])
+      await this.saveWorkflow(flags[`subscriber-id`], workflow, flags[`dry-run`])
 
     } catch (err) {
       debug(err)

@@ -48,7 +48,7 @@ export const timerFlags = {
     char: `f`,
     multiple: false,
     default: `daily`,
-    options: [`daily`, `weekly`, `monthly`, `yearly`],
+    options: [`minutely`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`],
     hidden: true,
   }),
   interval: Flags.integer({
