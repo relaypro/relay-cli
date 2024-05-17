@@ -19,7 +19,7 @@ ARGUMENTS
   CATEGORY  Can be workflow, tasks, or a custom category
 
 FLAGS
-  -s, --subscriber-id=<value>         (required) subscriber id
+  -s, --subscriber-id=<value>         (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -i, --workflow-instance-id=<value>  workflow instance id
   -l, --limit=<value>                 [default: 20] limit the number of events to retrieve
   -p, --parse                         whether to parse/process the analytic content based on the 'content_type'
@@ -43,4 +43,4 @@ DESCRIPTION
   Display and filter analytics
 ```
 
-_See code: [dist/commands/analytics.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/analytics.ts)_
+_See code: [dist/commands/analytics.ts](https://github.com/relaypro/relay-cli/blob/v1.9.0/dist/commands/analytics.ts)_

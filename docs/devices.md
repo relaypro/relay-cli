@@ -14,10 +14,10 @@ USAGE
   $ relay devices -s <value>
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
 
 DESCRIPTION
   list all device ids
 ```
 
-_See code: [dist/commands/devices.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/devices.ts)_
+_See code: [dist/commands/devices.ts](https://github.com/relaypro/relay-cli/blob/v1.9.0/dist/commands/devices.ts)_

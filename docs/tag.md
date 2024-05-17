@@ -19,13 +19,13 @@ USAGE
 FLAGS
   -c, --category=<value>       (required) Sets the custom category; useful to group like tags in the same category
   -l, --label=<value>          (required) Sets the tag label; useful to differentiate individual tags
-  -s, --subscriber-id=<value>  (required) subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
 
 DESCRIPTION
   Creates a tag configuration.
 ```
 
-_See code: [dist/commands/tag/create.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tag/create.ts)_
+_See code: [dist/commands/tag/create.ts](https://github.com/relaypro/relay-cli/blob/v1.9.0/dist/commands/tag/create.ts)_
 
 ## `relay tag delete`
 
@@ -36,14 +36,14 @@ USAGE
   $ relay tag:delete -s <value> -t <value>
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -t, --tag-id=<value>         (required) Tag identifier to delete
 
 DESCRIPTION
   Deletes a tag configuration.
 ```
 
-_See code: [dist/commands/tag/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tag/delete.ts)_
+_See code: [dist/commands/tag/delete.ts](https://github.com/relaypro/relay-cli/blob/v1.9.0/dist/commands/tag/delete.ts)_
 
 ## `relay tag list`
 
@@ -55,7 +55,7 @@ USAGE
     csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ] [-c <value>]
 
 FLAGS
-  -s, --subscriber-id=<value>  (required) subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -c, --category=<value>       Show only tags of this category
   -x, --extended               show extra columns
   --columns=<value>            only show provided columns (comma-separated)
@@ -74,7 +74,7 @@ DESCRIPTION
   Lists all tag configurations.
 ```
 
-_See code: [dist/commands/tag/list.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tag/list.ts)_
+_See code: [dist/commands/tag/list.ts](https://github.com/relaypro/relay-cli/blob/v1.9.0/dist/commands/tag/list.ts)_
 
 ## `relay tag update`
 
@@ -87,11 +87,11 @@ USAGE
 FLAGS
   -c, --category=<value>       (required) Sets the custom category; useful to group like tags in the same category
   -l, --label=<value>          (required) Sets the tag label; useful to differentiate individual tags
-  -s, --subscriber-id=<value>  (required) subscriber id
+  -s, --subscriber-id=<value>  (required) [default: 282b5c81-2410-4302-8f74-95207bdbe9d9] subscriber id
   -t, --tag-id=<value>         (required) Tag identifier to update
 
 DESCRIPTION
   Updates a tag configuration.
 ```
 
-_See code: [dist/commands/tag/update.ts](https://github.com/relaypro/relay-cli/blob/v1.8.1/dist/commands/tag/update.ts)_
+_See code: [dist/commands/tag/update.ts](https://github.com/relaypro/relay-cli/blob/v1.9.0/dist/commands/tag/update.ts)_
