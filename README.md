@@ -20,7 +20,7 @@ $ npm install -g @relaypro/cli
 $ relay COMMAND
 running command...
 $ relay (--version|-v)
-@relaypro/cli/1.9.0 darwin-arm64 node-v20.11.0
+@relaypro/cli/1.9.1 darwin-arm64 node-v20.11.0
 $ relay --help [COMMAND]
 USAGE
   $ relay COMMAND
