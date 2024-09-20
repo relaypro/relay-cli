@@ -25,12 +25,6 @@ export type WorkflowFlags = {
   hidden: boolean,
 }
 
-export type ScheduledTaskFlags = {
-  frequency?: string,
-  count?: number,
-  until?: string,
-}
-
 export type TaskTypeFlags = {
   key: string | undefined
 }

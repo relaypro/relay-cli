@@ -2,7 +2,7 @@
 
 import { CliUx } from '@oclif/core'
 import { forEach, reduce, get, isEmpty, times, find, indexOf, isArray, join, keys, map, replace, startsWith } from 'lodash'
-import { Geofence, Major, MergedWorkflowInstance, Minor, ScheduledTask, Task, TaskType, TaskArgs, Workflow, TaskGroup, TaskTypeDump, WorkflowEvents, WorkflowEvent } from './api'
+import { Geofence, Major, MergedWorkflowInstance, Minor, Task, TaskType, TaskArgs, Workflow, TaskGroup, TaskTypeDump, WorkflowEvents, WorkflowEvent } from './api'
 
 import { ALL, RESOURCE_PREFIX } from './constants'
 
@@ -231,51 +231,6 @@ export const printTasks = (tasks: Task[], flags: unknown): void => {
     status: {},
     task_type_namespace: {
       header: `Namespace`,
-    },
-    task_type_major: {
-      header: `Major`,
-    },
-    subscriber_id: {
-      header: `Subscriber ID`,
-    },
-    tags: {
-      get: row => row.args.tags
-    },
-    args: {
-      get: row => row.args
-    },
-  }, options)
-}
-
-export const printScheduledTasks = (tasks: ScheduledTask[], flags: unknown): void => {
-  const options = { ...(flags as Record<string, unknown>) }
-  options.output ?? CliUx.ux.styledHeader(`Installed Task${tasks.length > 1 ? `s` : ``}`)
-  CliUx.ux.table(tasks, {
-    task_name: {
-      header: `Task name`,
-    },
-    scheduled_task_id: {
-      header: `Scheduled Task ID`,
-      minWidth: 25
-    },
-    task_type_name: {
-      header: `Task type name`,
-    },
-    task_type_namespace: {
-      header: `Namespace`,
-    },
-    start_time: {
-      header: `Start time`,
-    },
-    timezone: {},
-    frequency: {
-      get: row => `${row.frequency ?? `N/A`}`
-    },
-    until: {
-      get: row => `${row.until ?? `N/A`}`
-    },
-    count: {
-      get: row => `${row.count ?? `N/A`}`
     },
     task_type_major: {
       header: `Major`,

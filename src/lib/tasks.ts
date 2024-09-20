@@ -1,6 +1,6 @@
-import { IntegrationConfig, NewScheduledTask, NewTask, NewTaskGroup, TaskArgs, TaskGroupMembers } from './api'
-import { CreateTaskGroupArgs, ScheduleArgs, StartArgs } from './args'
-import { IntegrationStartFlags, ScheduledTaskFlags } from './flags'
+import { IntegrationConfig, NewTask, NewTaskGroup, TaskArgs, TaskGroupMembers } from './api'
+import { CreateTaskGroupArgs, StartArgs } from './args'
+import { IntegrationStartFlags } from './flags'
 
 export const deviceUri = (deviceName: string): string => {
   let deviceUri = deviceName
@@ -21,22 +21,6 @@ export const createTask = async (startArgs: StartArgs): Promise<NewTask> => {
   return task
 }
 
-export const createScheduledTask = async (flags: ScheduledTaskFlags, scheduleArgs: ScheduleArgs): Promise<NewScheduledTask> => {
-  const scheduledTask: NewScheduledTask = {
-    task_type_name: scheduleArgs.type,
-    task_type_major: +scheduleArgs.major,
-    task_name: scheduleArgs.name,
-    task_type_namespace: scheduleArgs.namespace,
-    args: scheduleArgs.args as TaskArgs,
-    frequency: flags.frequency,
-    count: flags.count,
-    until: flags.until,
-    start_time: scheduleArgs.start,
-    timezone: scheduleArgs.timezone
-  }
-  return scheduledTask
-}
-
 export const createTaskGroup = async (createGroupArgs: CreateTaskGroupArgs): Promise<NewTaskGroup> => {
   const taskGroup: NewTaskGroup = {
     group_name: createGroupArgs.name,
@@ -55,8 +39,8 @@ export const createAliceArgs = async (config: IntegrationConfig, flags: Integrat
     request_path: `/alice`,
     done_path: `/_alice/` + flags.name + `.done`,
     task_types: {
-      alert: {namespace: namespace, name: `alice_alert`, major: major},
-      ticket: {namespace: namespace, name: `alice_ticket`, major: major}
+      alert: {namespace: namespace, name: `alice_alert`, major: +major},
+      ticket: {namespace: namespace, name: `alice_ticket`, major: +major}
     },
     tags: [`alice_webhook`]
   }
