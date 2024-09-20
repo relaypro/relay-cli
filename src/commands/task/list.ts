@@ -5,11 +5,11 @@ import { CliUx } from '@oclif/core'
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
 import { isEmpty } from 'lodash'
-import { filterByTag, getTaskGroup, printScheduledTasks, printTasks } from '../../lib/utils'
+import { filterByTag, getTaskGroup, printTasks } from '../../lib/utils'
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-import { ScheduledTask, Task } from '../../lib/api'
+import { Task } from '../../lib/api'
 import { Err, Ok, Result } from 'ts-results'
 
 const debug = debugFn(`tasks:list`)
@@ -22,10 +22,6 @@ export default class TaskListCommand extends Command {
   static flags = {
     ...flags.subscriber,
     ...CliUx.ux.table.flags(),
-    scheduled: flags.boolean({
-      description: `List scheduled tasks`,
-      required: false,
-    }),
     tag: flags.string({
       required: false,
       multiple: true,
@@ -46,23 +42,17 @@ export default class TaskListCommand extends Command {
     const subscriberId = flags[`subscriber-id`]
     const groupName = flags[`group-name`]
     try {
-      let taskEndpoint
       let tasks
-      if (flags.scheduled) {
-        taskEndpoint = `scheduled_task`
-      } else {
-        taskEndpoint = `task`
-      }
       if (groupName) {
         const groups = await this.relay.fetchTaskGroups(subscriberId)
         const group = getTaskGroup(groups, groupName)
         if (group == undefined) {
           tasks = [] as Task[]
         } else {
-          tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint, group?.task_group_id)
+          tasks = await this.relay.fetchTasks(subscriberId, group?.task_group_id)
         }
       } else {
-        tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
+        tasks = await this.relay.fetchTasks(subscriberId)
       }
       if (flags.tag) {
         tasks = filterByTag(tasks, flags.tag)
@@ -72,9 +62,7 @@ export default class TaskListCommand extends Command {
 
       if (!this.jsonEnabled()) {
         if (isEmpty(tasks) && !flags.output) {
-          this.log(`No tasks have been ${flags.scheduled ? `scheduled` : `started`} yet${groupName ? ` with group name ${groupName}` : ``}`)
-        } else if (flags.scheduled) {
-          printScheduledTasks((tasks as ScheduledTask[]), flags)
+          this.log(`No tasks have been started yet${groupName ? ` with group name ${groupName}` : ``}`)
         } else {
           printTasks(tasks, flags)
         }

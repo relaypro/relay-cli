@@ -1,6 +1,5 @@
 // Copyright © 2023 Relay Inc.
 
-import { ScheduledTask } from '../../lib/api'
 import { Command } from '../../lib/command'
 import * as flags from '../../lib/flags'
 import { filterByTag } from '../../lib/utils'
@@ -13,15 +12,11 @@ const debug = debugFn(`tasks:delete`)
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
 export default class TaskDeleteCommand extends Command {
-  static description = `Delete a running or scheduled task`
+  static description = `Delete a running task`
 
   static flags = {
     ...flags.subscriber,
     ...flags.confirmFlags,
-    scheduled: flags.boolean({
-      required: false,
-      description: `Delete a scheduled task`,
-    }),
     [`task-id`]: flags.string({
       char: `i`,
       required: false,
@@ -47,13 +42,6 @@ export default class TaskDeleteCommand extends Command {
       return
     }
 
-    let taskEndpoint
-    if (flags.scheduled) {
-      taskEndpoint = `scheduled_task`
-    } else {
-      taskEndpoint = `task`
-    }
-
     debug(`flags`, flags)
 
     try {
@@ -66,18 +54,15 @@ export default class TaskDeleteCommand extends Command {
 
       if (answer) {
         if (taskId) {
-          const success = await this.relay.deleteTask(subscriberId, taskEndpoint, taskId)
+          const success = await this.relay.deleteTask(subscriberId, taskId)
           success ? this.log(`Task deleted`) : this.error(`Task NOT deleted, make sure task exists (relay tasks list)`)
         }
         else if (flags.tag) {
-          let tasks = await this.relay.fetchTasks(subscriberId, taskEndpoint)
+          let tasks = await this.relay.fetchTasks(subscriberId)
           tasks = filterByTag(tasks, flags.tag)
           if (tasks.length > 0) {
             for (const task of tasks) {
-
-              const id = flags.scheduled ? (task as ScheduledTask).scheduled_task_id : task.task_id
-
-              await this.relay.deleteTask(subscriberId, taskEndpoint, id)
+              await this.relay.deleteTask(subscriberId, task.task_id)
             }
             this.log(`Tasks deleted`)
           } else {

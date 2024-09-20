@@ -311,23 +311,6 @@ export type Task = NewTask & {
   subscriber_id: string
 }
 
-export type NewScheduledTask = NewTask & {
-  timezone: string,
-  start_time: string,
-  frequency?: string,
-  count?: integer,
-  until?: string
-}
-
-export type ScheduledTask = Task & {
-  scheduled_task_id: string,
-  timezone: string,
-  start_time: string,
-  frequency?: string,
-  count?: integer,
-  until?: string
-}
-
 export type NewMinor = {
   capsule_source: string,
   comment: string

@@ -11,21 +11,12 @@ type StartArgs = {
   args: string | TaskArgs,
 }
 
-type ScheduleArgs = StartArgs & {
-  start: string,
-  timezone: string
-}
-
 type CreateTaskGroupArgs = {
   namespace: string,
   name: string,
   type: string,
   major: string,
   members: string | TaskGroupMembers
-}
-
-const createScheduleArgs = (args: string[]): ScheduleArgs => {
-  return zipObject([`namespace`, `type`, `major`, `name`, `args`, `start`, `timezone`],args) as ScheduleArgs
 }
 
 const createStartArgs = (args: string[]): StartArgs => {
@@ -132,9 +123,7 @@ export {
   integrationStartArgs,
   aliceTicketerStartArgs,
   StartArgs,
-  ScheduleArgs,
   CreateTaskGroupArgs,
   createStartArgs,
-  createScheduleArgs,
   createTaskGroupArgs
 }

@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, getDefaultSubscriber, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, NewScheduledTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup } from './api'
 
 import { normalize } from './utils'
 import { createReadStream } from 'fs'
@@ -572,14 +572,14 @@ export class APIClient {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-  async fetchTasks(subscriberId: string, taskEndpoint: string, groupId=``): Promise<Task[]> {
-    const response =  await this.get<TaskResults>(`/relaypro/api/v1/${taskEndpoint}?subscriber_id=${subscriberId}${groupId && groupId.length > 0 ? `&task_group_id=${groupId}` : ``}`)
+  async fetchTasks(subscriberId: string, groupId=``): Promise<Task[]> {
+    const response =  await this.get<TaskResults>(`/relaypro/api/v1/task?subscriber_id=${subscriberId}${groupId && groupId.length > 0 ? `&task_group_id=${groupId}` : ``}`)
     return response.body.results
   }
 
-  async deleteTask(subscriberId: string, taskEndpoint: string, taskId: string): Promise<boolean> {
+  async deleteTask(subscriberId: string, taskId: string): Promise<boolean> {
     try {
-      await this.delete(`/relaypro/api/v1/${taskEndpoint}/${taskId}?subscriber_id=${subscriberId}`)
+      await this.delete(`/relaypro/api/v1/task/${taskId}?subscriber_id=${subscriberId}`)
       return true
     } catch(err) {
       return false
@@ -588,13 +588,6 @@ export class APIClient {
 
   async startTask(subscriberId: string, task: NewTask): Promise<boolean> {
     await this.post(`/relaypro/api/v1/task?subscriber_id=${subscriberId}`, {
-      body: task,
-    })
-    return true
-  }
-
-  async scheduleTask(subscriberId: string, task: NewScheduledTask): Promise<boolean> {
-    await this.post(`/relaypro/api/v1/scheduled_task?subscriber_id=${subscriberId}`, {
       body: task,
     })
     return true
