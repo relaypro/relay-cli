@@ -20,16 +20,6 @@ import { APIClient } from './api-client'
 
 const debug = debugFn(`login`)
 
-type TermsPointers = {
-  terms: {
-    platform_api: {
-      json: string,
-      title: string,
-      url: string,
-    }
-  }
-}
-
 type ResponseHandler = (code: number, message: string, callback: () => void) => void
 type HttpHandler<T> = (url: string, responseHandler: ResponseHandler, resolve: (value: T) => void, reject: (reason: Error) => void) => void
 
