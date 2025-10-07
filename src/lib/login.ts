@@ -77,11 +77,10 @@ export class Login {
       loggedIn = true
 
       if (!hasPreviouslyAcceptedTerms()) {
-        const { body: { terms: { platform_api: { title, url } } } } = await HTTP.get<TermsPointers>(`${vars.contentUrl}/version.json`)
         CliUx.ux.log()
-        CliUx.ux.styledHeader(`\n${title}`)
+        CliUx.ux.styledHeader(`\nAPI TERMS OF SERVICE`)
         CliUx.ux.log(`In order to use the Relay CLI, API, and SDKs, you must accept our terms and conditions>Your rights and responsibilities when accessing the Relay publicly available application programming interfaces (the "APIs")`)
-        CliUx.ux.url(`Click here to read the legal agreement`, `${vars.contentUrl}${url}`)
+        CliUx.ux.url(`Click here to read the legal agreement`, `${vars.contentUrl}/legal/relay-api-terms-of-service/`)
         CliUx.ux.log()
         const prompt = new Confirm({
           name: `accept_terms`,
@@ -92,7 +91,7 @@ export class Login {
           if (answer) {
             acceptTerms()
           } else {
-            CliUx.ux.log(`You declined to accept ${title}`)
+            CliUx.ux.log(`You declined to accept API TERMS OF SERVICE`)
             throw new Error(`Legal Terms and Conditions not accepted`)
           }
         } catch(err) {
