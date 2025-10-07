@@ -34,4 +34,4 @@ DESCRIPTION
   list all positions by venue
 ```
 
-_See code: [dist/commands/positions.ts](https://github.com/relaypro/relay-cli/blob/v1.9.1/dist/commands/positions.ts)_
+_See code: [dist/commands/positions.ts](https://github.com/relaypro/relay-cli/blob/v1.10.0/dist/commands/positions.ts)_

@@ -17,4 +17,4 @@ DESCRIPTION
   login with your Relay credentials
 ```
 
-_See code: [dist/commands/login.ts](https://github.com/relaypro/relay-cli/blob/v1.9.1/dist/commands/login.ts)_
+_See code: [dist/commands/login.ts](https://github.com/relaypro/relay-cli/blob/v1.10.0/dist/commands/login.ts)_
