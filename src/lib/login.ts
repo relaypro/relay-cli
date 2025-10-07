@@ -30,13 +30,6 @@ type TermsPointers = {
   }
 }
 
-// type TermsContents = {
-//   description: string,
-//   stratus_key: string,
-//   url: string,
-//   content: string
-// }
-
 type ResponseHandler = (code: number, message: string, callback: () => void) => void
 type HttpHandler<T> = (url: string, responseHandler: ResponseHandler, resolve: (value: T) => void, reject: (reason: Error) => void) => void
 

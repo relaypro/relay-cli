@@ -12,7 +12,6 @@ type EnvConfig = {
   authorizationEndpoint: string,
   tokenEndpoint: string,
   endSessionEndpoint: string,
-  stratusHost: string,
   contentHost: string,
   cli_id: string,
   sdk_id: string,
@@ -28,7 +27,6 @@ const qa: EnvConfig = {
   authorizationEndpoint: `/realms/Relay/protocol/openid-connect/auth`,
   tokenEndpoint: `/realms/Relay/protocol/openid-connect/token`,
   endSessionEndpoint: `/realms/Relay/protocol/openid-connect/logout`,
-  stratusHost: `all-qa-api-proxy.nocell.io`,
   contentHost: `qa.relaygo.info`,
   cli_id: `4EgeETYm`,
   sdk_id: `rGGK996c`,
@@ -42,7 +40,6 @@ const pro: EnvConfig = {
   authorizationEndpoint: `/realms/Relay/protocol/openid-connect/auth`,
   tokenEndpoint: `/realms/Relay/protocol/openid-connect/token`,
   endSessionEndpoint: `/realms/Relay/protocol/openid-connect/logout`,
-  stratusHost: `all-pro-api-proxy.nocell.io`,
   contentHost: `relaypro.com`,
   cli_id: `83756T4P`,
   sdk_id: `RJZKRhh9`,
@@ -166,14 +163,6 @@ export class Vars {
 
   get postLogoutRedirectUrl(): string {
     return `${this.authRedirectUrlBase}/end-session/callback`
-  }
-
-  get stratusHost(): string {
-    return config[this.env].stratusHost
-  }
-
-  get stratusUrl(): string {
-    return `https://${this.stratusHost}/stratus/rest`
   }
 
   get contentHost(): string {
