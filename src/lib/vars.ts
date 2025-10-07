@@ -145,11 +145,11 @@ export class Vars {
   }
 
   get authCliId(): string {
-    return config[this.env].cli_id
+    return process.env.RELAY_AUTH_CLIENT_ID ?? config[this.env].cli_id
   }
 
   get authSdkId(): string {
-    return config[this.env].sdk_id
+    return process.env.RELAY_AUTH_SDK_CLIENT_ID ?? config[this.env].sdk_id
   }
 
   get authRedirectPort(): number {

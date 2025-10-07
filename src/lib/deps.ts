@@ -15,6 +15,10 @@ const susbscriberConfig = new Conf({
   projectName: `@relaypro/cli`,
   configName: `subscriber`,
 })
+const termsConfig = new Conf({
+  projectName: `@relaypro/cli`,
+  configName: `terms`,
+})
 
 export const deps = {
   get HTTP(): typeof HTTP { return fetch(`http-call`) },
@@ -23,6 +27,7 @@ export const deps = {
   get flags(): typeof flags { return fetch(`./flags`) },
   get config(): Conf<Record<string, unknown>> { return config },
   get susbscriberConfig(): Conf<Record<string, unknown>> { return susbscriberConfig },
+  get termsConfig(): Conf<Record<string, unknown>> { return termsConfig },
 }
 
 const cache: Record<string, any> = {} // eslint-disable-line @typescript-eslint/no-explicit-any

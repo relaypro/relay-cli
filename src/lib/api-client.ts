@@ -2,7 +2,7 @@
 
 import { Interfaces, Errors, CliUx } from '@oclif/core'
 import { HTTP, HTTPError, HTTPRequestOptions } from 'http-call'
-import { find, includes, isString, map, filter, pick, isEmpty } from 'lodash'
+import { find, includes, isString, map, filter, pick, isEmpty, head } from 'lodash'
 import * as url from 'url'
 
 import deps from './deps'
@@ -11,8 +11,8 @@ import { Login } from './login'
 import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
-import { clearConfig, clearSubscribers, getDefaultSubscriber, getSession, getToken, Session, Subscriber, TokenAccount, SubscriberPagedResults, SubscriberQuery } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup } from './api'
+import { clearConfig, clearSubscribers, getDefaultSubscriber, getSession, getToken, Session, TokenAccount } from './session'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup, Authz } from './api'
 
 import { normalize } from './utils'
 import { createReadStream } from 'fs'
@@ -245,6 +245,15 @@ export class APIClient {
 
 
   }
+  async authz(): Promise<Authz> {
+    const { body: results } = await this.get<Authz[]>(`/ibot/authz_context`)
+    debug(`authz`, results)
+    const result = head(results)
+    if (!result) {
+      throw new Error(`invalid-requirements`)
+    }
+    return result
+  }
   async capabilities(subscriberId: string): Promise<Capabilities> {
     const subscriberInfo = await this.subscriberInfo(subscriberId)
     return subscriberInfo.capabilities
@@ -469,24 +478,6 @@ export class APIClient {
   }
   session(): Session {
     return getSession()
-  }
-  async subscribers(query: SubscriberQuery={}, paged=false, size=100): Promise<[Subscriber[], string]> {
-    const allSubscribers: Subscriber[] = []
-    let path = `/stratus/rest/v3/subscribers;view=paged_dash_overview?page_size=${size}`
-    let pagedPath = ``
-    let search = ``
-    if (!isEmpty(query)) {
-      const params = new URLSearchParams(query)
-      search = `&${params}`
-    }
-    do {
-      const { body: subscribers } = await this.request<SubscriberPagedResults>(`https://${vars.stratusHost}${path}${search}`)
-      allSubscribers.push(...subscribers.members)
-      path = subscribers.next
-      pagedPath = path
-    } while(paged && !isEmpty(path))
-
-    return [allSubscribers, pagedPath]
   }
   async listAudio(subscriberId: string): Promise<CustomAudio[]> {
     const { body } = await this.get<CustomAudio[]>(`/ibot/custom_audio?subscriber_id=${subscriberId}`)

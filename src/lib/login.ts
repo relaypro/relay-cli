@@ -6,7 +6,6 @@ import encode from 'form-urlencoded'
 import open from 'open'
 import http from 'http'
 import { URL, URLSearchParams } from 'url'
-import { isEmpty } from 'lodash'
 import debugFn from 'debug'
 import crypto = require('crypto') // eslint-disable-line quotes
 
@@ -14,20 +13,12 @@ import crypto = require('crypto') // eslint-disable-line quotes
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
 
 import { vars } from './vars'
-import { clearSubscribers, deleteSession, getToken, resolveSubscriber, setToken, Subscriber, TokenAccount, Tokens } from './session'
+import { acceptTerms, clearSubscribers, deleteSession, getToken, hasPreviouslyAcceptedTerms, saveDefaultSubscriber, setToken, TokenAccount, Tokens } from './session'
 import { uuid, base64url } from './utils'
 import jwtValues from './jwt'
 import { APIClient } from './api-client'
 
 const debug = debugFn(`login`)
-
-type Term = {
-  id: number,
-  name: string,
-  product: string,
-  version_number: string,
-}
-type Terms = Term[]
 
 type TermsPointers = {
   terms: {
@@ -76,31 +67,50 @@ export class Login {
       const auth = await this.generateCliTokenAccount()
       debug(`auth`, auth)
       setToken(auth)
-      const subscribers = await this.fetchSubscribers()
-      debug(`subscribers`, subscribers)
 
-      if (!isEmpty(subscribers)) {
-        const success = await resolveSubscriber(subscribers)
-        if (success) {
-          loggedIn = true
-        } else {
-          CliUx.ux.warn(`Default Relay account not set... logging out.`)
-          this.doLogout()
-        }
+      // get subscriber from authz
+      const authz = await this.api.authz()
 
-        const hasAcceptedTerms = await this.hasAcceptedTerms(auth)
+      if (authz.subscriber_id) {
+        saveDefaultSubscriber({ id: authz.subscriber_id })
+        CliUx.ux.log(`=====================`)
+        CliUx.ux.log(`Default Relay Account: ${authz.subscriber_id}`)
+        CliUx.ux.log(`=====================`)
+      } else {
+        // no authz subscriber, given instructions to set or use env
+        CliUx.ux.log(`Use the follwing command to set the default subscriber:`)
+        CliUx.ux.log(`    relay subscriber set --subscriber-id "Account ID"`)
+      }
+      loggedIn = true
 
-        if (!hasAcceptedTerms) {
+      if (!hasPreviouslyAcceptedTerms()) {
+        const { body: { terms: { platform_api: { title, url } } } } = await HTTP.get<TermsPointers>(`${vars.contentUrl}/version.json`)
+        CliUx.ux.log()
+        CliUx.ux.styledHeader(`\n${title}`)
+        CliUx.ux.log(`In order to use the Relay CLI, API, and SDKs, you must accept our terms and conditions>Your rights and responsibilities when accessing the Relay publicly available application programming interfaces (the "APIs")`)
+        CliUx.ux.url(`Click here to read the legal agreement`, `${vars.contentUrl}${url}`)
+        CliUx.ux.log()
+        const prompt = new Confirm({
+          name: `accept_terms`,
+          message: `Do you and your organization accept these terms and conditions?`,
+        })
+        try {
+          const answer = await prompt.run()
+          if (answer) {
+            acceptTerms()
+          } else {
+            CliUx.ux.log(`You declined to accept ${title}`)
+            throw new Error(`Legal Terms and Conditions not accepted`)
+          }
+        } catch(err) {
           throw new Error(`Legal Terms and Conditions not accepted`)
         }
-
-        CliUx.ux.log()
-        CliUx.ux.log(`Logged in`)
-
-        return auth
-      } else {
-        throw new Error(`Failed to discover subscriber id`)
       }
+
+      CliUx.ux.log()
+      CliUx.ux.log(`Logged in`)
+
+      return auth
     } catch(err) {
       CliUx.ux.log(`Logging out`)
       await this.doLogout()
@@ -435,91 +445,6 @@ export class Login {
       id_token: auth.id_token,
       access_token: auth.access_token,
       refresh_token: auth.refresh_token,
-    }
-  }
-
-  private async hasAcceptedTerms(account: TokenAccount): Promise<boolean> {
-    const options = {
-      headers: {
-        authorization: `Bearer ${account.access_token}`
-      }
-    }
-
-    const timeout = setTimeout(() => {
-      CliUx.ux.action.start(`Validating legal terms and conditions`)
-    }, 2000)
-
-    /*
-      [
-        {
-          id: 52,
-          name: 'platform_api',
-          product: 'Relay_Platform',
-          version_number: '1.0'
-        }
-      ]
-    */
-    const { body: unacceptedTerms } = await HTTP.get<Terms>(`${vars.stratusUrl}/v3/terms?product=Relay_Platform&unaccepted=true&version=latest`, options)
-
-    clearTimeout(timeout)
-
-    const apiTerm = (unacceptedTerms ?? []).find(t => t.product === `Relay_Platform`)
-    if (!apiTerm) {
-      return true
-    } else {
-      const { body: { terms: { platform_api: { title, url } } } } = await HTTP.get<TermsPointers>(`${vars.contentUrl}/version.json`)
-      CliUx.ux.log()
-      CliUx.ux.styledHeader(`\n${title}`)
-      CliUx.ux.log(`In order to use the Relay CLI, API, and SDKs, you must accept our terms and conditions>Your rights and responsibilities when accessing the Relay publicly available application programming interfaces (the "APIs")`)
-      CliUx.ux.url(`Click here to read the legal agreement`, `${vars.contentUrl}${url}`)
-      CliUx.ux.log()
-      const prompt = new Confirm({
-        name: `accept_terms`,
-        message: `Do you and your organization accept these terms and conditions?`,
-      })
-      try {
-        const answer = await prompt.run()
-        if (answer) {
-          const body = {
-            terms_and_condition_id: `${apiTerm.id}`,
-            contact_uuid: account.uuid
-          }
-          await HTTP.post(`${vars.stratusUrl}/v3/agreements`, {
-            ...options,
-            body,
-          })
-          return true
-        } else {
-          CliUx.ux.log(`You declined to accept ${title}`)
-          return false
-        }
-      } catch(err) {
-        return false
-      }
-    }
-  }
-
-  private async fetchSubscribers(): Promise<Subscriber[]> {
-
-    const timeout = setTimeout(() => {
-      CliUx.ux.action.start(`Retrieving authorized subscribers`)
-    }, 2000)
-
-    try {
-      const [accounts] = await this.api.subscribers({}, false, 100)
-
-      debug(`accounts`, accounts)
-
-      if (CliUx.ux.action.running) {
-        CliUx.ux.action.stop()
-      }
-
-      return accounts
-    } catch (err) {
-      debug(`accounts error`, err)
-      return []
-    } finally {
-      clearTimeout(timeout)
     }
   }
 }

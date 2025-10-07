@@ -1,7 +1,6 @@
 // Copyright © 2022 Relay Inc.
 
 import { Command } from '../../lib/command'
-import { size } from 'lodash'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require('enquirer') // eslint-disable-line quotes
@@ -9,7 +8,7 @@ const { Confirm } = require('enquirer') // eslint-disable-line quotes
 // eslint-disable-next-line quotes
 import debugFn = require('debug')
 
-import { SubscriberQuery, saveDefaultSubscriber } from '../../lib/session'
+import { saveDefaultSubscriber } from '../../lib/session'
 import * as flags from '../../lib/flags'
 
 
@@ -25,7 +24,8 @@ export default class SubscriberSet extends Command {
       required: false,
       hidden: false,
       multiple: false,
-      exclusive: [`name`, `email`]
+      exclusive: [`name`, `email`],
+
     }),
     name: flags.string({
       char: `n`,
@@ -39,9 +39,9 @@ export default class SubscriberSet extends Command {
       char: `e`,
       description: `owner email`,
       required: false,
-      hidden: false,
+      hidden: true,
       multiple: false,
-      exclusive: [`name`, `subscriber-id`]
+      exclusive: [`name`, `subscriber-id`],
     }),
   }
 
@@ -52,48 +52,27 @@ export default class SubscriberSet extends Command {
     const name = flags[`name`]
     const email = flags[`email`]
 
-    const query: SubscriberQuery = {}
-    let type
-    let value
-    if (subscriberId) {
-      query.subscriber_id = subscriberId
-      type = SubscriberSet.flags[`subscriber-id`].description
-      value = subscriberId
-    }
     if (name) {
-      query.account_name = name
-      type = SubscriberSet.flags[`name`].description
-      value = name
+      this.error(`--${SubscriberSet.flags.name.name}" is not longer supported`)
+      return
     }
     if (email) {
-      query.owner_email = email
-      type = SubscriberSet.flags[`email`].description
-      value = email
+      this.error(`--${SubscriberSet.flags.email.name}" is not longer supported`)
+      return
     }
 
-    const [subscribers] = await this.relay.subscribers(query, false, 10)
-    const numResults = size(subscribers)
-    if (numResults === 0) {
-      this.error(`No results. ${type} "${value}" returned more than one result.`)
-    } else if (numResults > 1) {
-      this.error(`Please be more specific. ${type} "${value}" returned more than one result.`)
-    } else {
-      const newSubscriber = subscribers[0]
-      if (newSubscriber) {
-        debug(`new default subscriber`, newSubscriber)
-        this.log(`Changing default subscriber to ${newSubscriber.name} (${newSubscriber.id})`)
-        const prompt = new Confirm({
-          name: `change`,
-          message: `Are you sure?`
-        })
-        const answer = await prompt.run()
-        if (answer) {
-          saveDefaultSubscriber(newSubscriber)
-        }
-      } else {
-        debug(`find resulted in no valid subscriber`)
-        this.error(`Failed to find a subscriber`)
+    if (subscriberId) {
+      debug(`new default subscriber`, subscriberId)
+      this.log(`Changing default subscriber to ${subscriberId}`)
+      const prompt = new Confirm({
+        name: `change`,
+        message: `Are you sure?`
+      })
+      const answer = await prompt.run()
+      if (answer) {
+        saveDefaultSubscriber({ id: subscriberId })
       }
     }
+
   }
 }

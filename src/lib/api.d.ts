@@ -190,6 +190,10 @@ export type Day = {
   value: DayValue,
 }
 
+export type Authz = {
+  subscriber_id: string,
+}
+
 export type Capability =
   `sip_register` |
   `enable_audit_logs` |
