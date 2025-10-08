@@ -96,7 +96,7 @@ There are two commands that are the "entry points" into the Relay CLI.
 Each has a distinct purpose:
 
 * `bin/dev` is slow, but accurate. Every time you execute, the entire
-  project is rescannded and the source is compiled. On average, this
+  project is rescanned and the source is compiled. On average, this
   command can take up to 5 seconds. This command is primarily used
   during development. If you are editing source code regularly and
   testing those changes, this is the command to use.
@@ -132,7 +132,7 @@ command as follows:
 $ npm run prepack
 ```
 
-It is safe to run this multiple times as you make changesas the command
+It is safe to run this multiple times as you make changes as the command
 will overwrite the metadata cache and compiled code. No need to manually
 clean up the output of the `prepack` command.
 <!-- contributionstop -->
