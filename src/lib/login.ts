@@ -377,12 +377,26 @@ export class Login {
     })
   }
 
-  private createEndSession(client_id: string): { url: string } {
-    const params = {
-      client_id,
-      post_logout_redirect_uri: vars.postLogoutRedirectUrl,
+  private makeEndSessionParams(client_id: string): Record<string, string> {
+    // attempt to fetch the ID token if it exists
+    const tokens = getToken()
+
+    if (tokens?.id_token) {
+      return {
+        client_id,
+        post_logout_redirect_uri: vars.postLogoutRedirectUrl,
+        id_token_hint: tokens.id_token
+      }
+    } else {
+      return {
+        client_id,
+        redirect_uri: vars.postLogoutRedirectUrl,
+      }
     }
-    const queryString = (new URLSearchParams(params)).toString()
+  }
+
+  private createEndSession(client_id: string): { url: string } {
+    const queryString = (new URLSearchParams(this.makeEndSessionParams(client_id))).toString()
 
     return {
       url: `${vars.endSessionEndpoint}?${queryString}`
