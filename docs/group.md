@@ -33,4 +33,4 @@ DESCRIPTION
   Lists all groups.
 ```
 
-_See code: [dist/commands/group/list.ts](https://github.com/relaypro/relay-cli/blob/v1.10.0/dist/commands/group/list.ts)_
+_See code: [dist/commands/group/list.ts](https://github.com/relaypro/relay-cli/blob/v1.10.1/dist/commands/group/list.ts)_

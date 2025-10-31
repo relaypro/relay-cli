@@ -43,4 +43,4 @@ DESCRIPTION
   Display and filter analytics
 ```
 
-_See code: [dist/commands/analytics.ts](https://github.com/relaypro/relay-cli/blob/v1.10.0/dist/commands/analytics.ts)_
+_See code: [dist/commands/analytics.ts](https://github.com/relaypro/relay-cli/blob/v1.10.1/dist/commands/analytics.ts)_
