@@ -98,7 +98,7 @@ export class APIClient {
         // opts.headers[requestIdHeader] = RequestId.create() && RequestId.headerValue
 
         if (!Object.keys(opts.headers).find(h => h.toLowerCase() === `authorization`)) {
-          opts.headers.authorization = `Bearer ${self.auth}`
+          opts.headers.authorization = `${process.env.RELAY_AUTH_METHOD ?? `Bearer`} ${self.auth}`
         }
         retries--
         try {
