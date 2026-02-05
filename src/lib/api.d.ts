@@ -407,3 +407,12 @@ export type ResourceResults = {
     entities: ResourceEntity[],
   }
 }
+
+export type UserProfile = {
+  user_profile_id: string,
+  username: string,
+}
+
+export type UserProfileResults = {
+  results: UserProfile[],
+}

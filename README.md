@@ -44,6 +44,7 @@ USAGE
 * [`relay tag`](docs/tag.md) - Manages configurations that can be associated with an NFC tag
 * [`relay token`](docs/token.md) - generate a token that can be used with the Relay SDK
 * [`relay update`](docs/update.md) - update the relay CLI
+* [`relay user`](docs/user.md) - list current user profiles
 * [`relay venues`](docs/venues.md) - list all venues
 * [`relay version`](docs/version.md)
 * [`relay whoami`](docs/whoami.md) - display the current logged in user

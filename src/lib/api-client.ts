@@ -12,7 +12,7 @@ import { vars } from './vars'
 
 import debugFn = require('debug') // eslint-disable-line quotes
 import { clearConfig, clearSubscribers, getDefaultSubscriber, getSession, getToken, Session, TokenAccount } from './session'
-import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup, Authz } from './api'
+import { Capabilities, CustomAudio, CustomAudioUpload, DeviceId, DeviceIds, Geofence, GeofenceResults, Group, HistoricalWorkflowInstance, HttpMethod, NewWorkflow, Tag, TagForCreate, TagResults, SubscriberInfo, Workflow, WorkflowEventQuery, WorkflowEventResults, WorkflowEvents, WorkflowInstance, Workflows, Venues, VenueResults, Positions, PositionResults, AuditEventType, ProfileAuditEventResults, RawAuditEventResults, ProfileAuditEvent, PagingParams, TaskResults, WorkflowLogQuery, NewTask, Task, TaskType, TaskTypeResults, MajorResults, MinorResults, NewMajor, Minor, Major, ResourceResults, NewMinor, TaskGroup, TaskGroupResults, NewTaskGroup, Authz, UserProfileResults, UserProfile } from './api'
 
 import { normalize } from './utils'
 import { createReadStream } from 'fs'
@@ -694,5 +694,9 @@ export class APIClient {
       body: {},
     })
     return true
+  }
+
+  async fetchUserProfiles(subscriberId: string): Promise<UserProfile[]> {
+    return (await this.get<UserProfileResults>(`/ibot/user_profile?subscriber_id=${subscriberId}`)).body.results
   }
 }

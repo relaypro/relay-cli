@@ -438,7 +438,7 @@ FLAGS
       Number name/value pair workflow arg
 
   -s, --start=<value>
-      [default: 2025-10-31T13:00:00]
+      [default: 2026-02-05T15:00:00]
 
   -t, --[no-]transient
       Allow workflow to run in the background; otherwise terminate workflow
