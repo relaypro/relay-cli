@@ -33,4 +33,4 @@ DESCRIPTION
   list current user profiles
 ```
 
-_See code: [dist/commands/user/list.ts](https://github.com/relaypro/relay-cli/blob/v1.10.1/dist/commands/user/list.ts)_
+_See code: [dist/commands/user/list.ts](https://github.com/relaypro/relay-cli/blob/v1.10.2/dist/commands/user/list.ts)_
