@@ -1,10 +1,10 @@
 {
   "name": "@relaypro/cli",
   "description": "Relay developer CLI",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "author": "Brandon Smith @BrandonSmith",
   "bin": {
-    "relay": "./bin/run"
+    "relay": "bin/run"
   },
   "bugs": "https://github.com/relaypro/relay-cli/issues",
   "dependencies": {
@@ -175,7 +175,10 @@
       }
     }
   },
-  "repository": "relaypro/relay-cli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/relaypro/relay-cli.git"
+  },
   "scripts": {
     "lint": "eslint . --ext .ts --config .eslintrc.json",
     "postpack": "rm -f oclif.manifest.json",

@@ -17,4 +17,4 @@ DESCRIPTION
   logout and forget any tokens
 ```
 
-_See code: [dist/commands/logout.ts](https://github.com/relaypro/relay-cli/blob/v1.10.1/dist/commands/logout.ts)_
+_See code: [dist/commands/logout.ts](https://github.com/relaypro/relay-cli/blob/v1.10.2/dist/commands/logout.ts)_
